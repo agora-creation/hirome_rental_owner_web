@@ -1,5 +1,5 @@
 name: hirome_rental_owner_web
-description: ひろめ市場 食器レンタルシステム - 管理者用
+description: ひろめ市場 食器レンタルシステム - 管理者専用
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl: ^0.18.0
   fluent_ui: ^4.6.2
+  flutter_spinkit: ^5.2.0
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +28,11 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+  fonts:
+    - family: SourceHanSansJP-Bold
+      fonts:
+        - asset: assets/fonts/SourceHanSansJP-Bold.otf
+    - family: SourceHanSansJP-Regular
+      fonts:
+        - asset: assets/fonts/SourceHanSansJP-Regular.otf
