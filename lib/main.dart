@@ -5,6 +5,7 @@ import 'package:hirome_rental_owner_web/screens/splash.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //Firebase init
   runApp(const MyApp());
 }
 

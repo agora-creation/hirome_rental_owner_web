@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/screens/order.dart';
+import 'package:hirome_rental_owner_web/screens/product.dart';
+import 'package:hirome_rental_owner_web/screens/shop.dart';
 import 'package:hirome_rental_owner_web/widgets/app_bar_title.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_button.dart';
 
@@ -47,13 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItem(
             icon: const Icon(FluentIcons.bank),
             title: const Text('店舗管理'),
-            body: Container(),
+            body: const ShopScreen(),
           ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.beer_mug),
             title: const Text('食器管理'),
-            body: Container(),
+            body: const ProductScreen(),
           ),
           PaneItemSeparator(),
           PaneItem(
