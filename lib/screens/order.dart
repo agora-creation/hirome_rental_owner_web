@@ -1,15 +1,39 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/models/order.dart';
+import 'package:hirome_rental_owner_web/providers/order.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+  final OrderProvider orderProvider;
+
+  const OrderScreen({
+    required this.orderProvider,
+    super.key,
+  });
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  List<OrderModel> orders = [];
+
+  void _getOrders() async {
+    List<OrderModel> tmpOrders = await widget.orderProvider.selectList();
+    if (mounted) {
+      setState(() => orders = tmpOrders);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getOrders();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -55,11 +79,164 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 8),
+                CustomDataGrid(
+                  source: _OrderSource(orders: orders),
+                  columns: [
+                    GridColumn(
+                      columnName: 'createdAt',
+                      label: Container(
+                        padding: const EdgeInsets.all(4),
+                        alignment: Alignment.centerLeft,
+                        child: const Text('注文日時', softWrap: false),
+                      ),
+                    ),
+                    GridColumn(
+                      columnName: 'number',
+                      label: Container(
+                        padding: const EdgeInsets.all(4),
+                        alignment: Alignment.centerLeft,
+                        child: const Text('注文番号', softWrap: false),
+                      ),
+                    ),
+                    GridColumn(
+                      columnName: 'shopName',
+                      label: Container(
+                        padding: const EdgeInsets.all(4),
+                        alignment: Alignment.centerLeft,
+                        child: const Text('発注元店舗', softWrap: false),
+                      ),
+                    ),
+                    GridColumn(
+                      columnName: 'orderProducts',
+                      label: Container(
+                        padding: const EdgeInsets.all(4),
+                        alignment: Alignment.centerLeft,
+                        child: const Text('注文商品', softWrap: false),
+                      ),
+                    ),
+                    GridColumn(
+                      columnName: 'status',
+                      label: Container(
+                        padding: const EdgeInsets.all(4),
+                        alignment: Alignment.centerLeft,
+                        child: const Text('ステータス', softWrap: false),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _OrderSource extends DataGridSource {
+  final List<OrderModel> orders;
+
+  _OrderSource({required this.orders}) {
+    buildDataGridRows();
+  }
+
+  List<DataGridRow> dataGridRows = [];
+
+  void buildDataGridRows() {
+    dataGridRows = orders.map<DataGridRow>((order) {
+      return const DataGridRow(cells: [
+        DataGridCell(columnName: 'createdAt', value: ''),
+        DataGridCell(columnName: 'number', value: ''),
+        DataGridCell(columnName: 'shopName', value: ''),
+        DataGridCell(columnName: 'orderProducts', value: ''),
+        DataGridCell(columnName: 'status', value: ''),
+      ]);
+    }).toList();
+  }
+
+  @override
+  List<DataGridRow> get rows => dataGridRows;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    final int rowIndex = dataGridRows.indexOf(row);
+    Color backgroundColor = Colors.transparent;
+    if ((rowIndex % 2) == 0) {
+      backgroundColor = kWhiteColor;
+    }
+    List<Widget> cells = [];
+    cells.add(Container(
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.centerLeft,
+      child: Text('${row.getCells()[0].value}', softWrap: false),
+    ));
+    cells.add(Container(
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.centerLeft,
+      child: Text('${row.getCells()[1].value}', softWrap: false),
+    ));
+    cells.add(Container(
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.centerLeft,
+      child: Text('${row.getCells()[2].value}', softWrap: false),
+    ));
+    cells.add(Container(
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.centerLeft,
+      child: Text('${row.getCells()[3].value}', softWrap: false),
+    ));
+    cells.add(Container(
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.centerLeft,
+      child: Text('${row.getCells()[4].value}', softWrap: false),
+    ));
+    return DataGridRowAdapter(color: backgroundColor, cells: cells);
+  }
+
+  @override
+  Future<void> handleLoadMoreRows() async {
+    await Future<void>.delayed(const Duration(seconds: 5));
+    buildDataGridRows();
+    notifyListeners();
+  }
+
+  @override
+  Future<void> handleRefresh() async {
+    await Future<void>.delayed(const Duration(seconds: 5));
+    buildDataGridRows();
+    notifyListeners();
+  }
+
+  @override
+  Widget? buildTableSummaryCellWidget(
+    GridTableSummaryRow summaryRow,
+    GridSummaryColumn? summaryColumn,
+    RowColumnIndex rowColumnIndex,
+    String summaryValue,
+  ) {
+    Widget? widget;
+    Widget buildCell(
+      String value,
+      EdgeInsets padding,
+      Alignment alignment,
+    ) {
+      return Container(
+        padding: padding,
+        alignment: alignment,
+        child: Text(value, softWrap: false),
+      );
+    }
+
+    widget = buildCell(
+      summaryValue,
+      const EdgeInsets.all(4),
+      Alignment.centerLeft,
+    );
+    return widget;
+  }
+
+  void updateDataSource() {
+    notifyListeners();
   }
 }

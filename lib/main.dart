@@ -1,11 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/providers/auth.dart';
+import 'package:hirome_rental_owner_web/providers/order.dart';
+import 'package:hirome_rental_owner_web/screens/home.dart';
 import 'package:hirome_rental_owner_web/screens/splash.dart';
+import 'package:hirome_rental_owner_web/screens/title.dart';
+import 'package:provider/provider.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Firebase init
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyDoKtCTMcCCkBU7GFdQDjqIM-YUoRBLLwE',
+      appId: '1:449757426730:web:ae098c9966a5f0cad0bf53',
+      projectId: 'hirome-rental',
+      messagingSenderId: '449757426730',
+    ),
+  );
+  await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  if (FirebaseAuth.instance.currentUser == null) {
+    await Future.any([
+      FirebaseAuth.instance.userChanges().firstWhere((e) => e != null),
+      Future.delayed(const Duration(milliseconds: 3000)),
+    ]);
+  }
   runApp(const MyApp());
 }
 
@@ -14,19 +36,46 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FluentApp(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        FluentLocalizations.delegate,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: AuthProvider.initialize()),
+        ChangeNotifierProvider.value(value: OrderProvider()),
       ],
-      supportedLocales: const [Locale('ja')],
-      locale: const Locale('ja'),
-      title: '$kCompanyName $kSystemName - $kForName',
-      theme: customTheme(),
-      home: const SplashScreen(),
+      child: FluentApp(
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          FluentLocalizations.delegate,
+          SfGlobalLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('ja')],
+        locale: const Locale('ja'),
+        title: '$kCompanyName $kSystemName - $kForName',
+        theme: customTheme(),
+        home: const SplashController(),
+      ),
     );
+  }
+}
+
+class SplashController extends StatelessWidget {
+  const SplashController({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    switch (authProvider.status) {
+      case AuthStatus.uninitialized:
+        return const SplashScreen();
+      case AuthStatus.unauthenticated:
+      case AuthStatus.authenticating:
+        return const TitleScreen();
+      case AuthStatus.authenticated:
+        return const HomeScreen();
+      default:
+        return const TitleScreen();
+    }
   }
 }
