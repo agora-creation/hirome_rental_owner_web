@@ -5,6 +5,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/providers/auth.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
+import 'package:hirome_rental_owner_web/providers/product.dart';
+import 'package:hirome_rental_owner_web/providers/shop.dart';
 import 'package:hirome_rental_owner_web/screens/home.dart';
 import 'package:hirome_rental_owner_web/screens/splash.dart';
 import 'package:hirome_rental_owner_web/screens/title.dart';
@@ -15,10 +17,13 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: 'AIzaSyDoKtCTMcCCkBU7GFdQDjqIM-YUoRBLLwE',
-      appId: '1:449757426730:web:ae098c9966a5f0cad0bf53',
-      projectId: 'hirome-rental',
-      messagingSenderId: '449757426730',
+      apiKey: "AIzaSyDoKtCTMcCCkBU7GFdQDjqIM-YUoRBLLwE",
+      authDomain: "hirome-rental.firebaseapp.com",
+      projectId: "hirome-rental",
+      storageBucket: "hirome-rental.appspot.com",
+      messagingSenderId: "449757426730",
+      appId: "1:449757426730:web:ae098c9966a5f0cad0bf53",
+      measurementId: "G-VYHZTJWHN4",
     ),
   );
   await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
@@ -40,6 +45,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: AuthProvider.initialize()),
         ChangeNotifierProvider.value(value: OrderProvider()),
+        ChangeNotifierProvider.value(value: ProductProvider()),
+        ChangeNotifierProvider.value(value: ShopProvider()),
       ],
       child: FluentApp(
         debugShowCheckedModeBanner: false,

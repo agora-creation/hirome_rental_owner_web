@@ -38,4 +38,29 @@ class OrderModel {
     }
     return ret;
   }
+
+  String getProducts() {
+    String ret = '';
+    for (OrderProductModel product in orderProducts) {
+      if (ret != '') ret += ',';
+      ret += product.name;
+    }
+    return ret;
+  }
+
+  String getStatus() {
+    String ret = '';
+    switch (status) {
+      case 0:
+        ret = '配達待ち';
+        break;
+      case 1:
+        ret = '配達完了';
+        break;
+      case 9:
+        ret = 'キャンセル';
+        break;
+    }
+    return ret;
+  }
 }

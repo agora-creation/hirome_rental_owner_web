@@ -1,7 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -80,50 +82,33 @@ class _OrderScreenState extends State<OrderScreen> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                CustomDataGrid(
-                  source: _OrderSource(orders: orders),
-                  columns: [
-                    GridColumn(
-                      columnName: 'createdAt',
-                      label: Container(
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('注文日時', softWrap: false),
+                SizedBox(
+                  height: 450,
+                  child: CustomDataGrid(
+                    source: _OrderSource(orders: orders),
+                    columns: [
+                      GridColumn(
+                        columnName: 'createdAt',
+                        label: const CustomCell('注文日時'),
                       ),
-                    ),
-                    GridColumn(
-                      columnName: 'number',
-                      label: Container(
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('注文番号', softWrap: false),
+                      GridColumn(
+                        columnName: 'number',
+                        label: const CustomCell('注文番号'),
                       ),
-                    ),
-                    GridColumn(
-                      columnName: 'shopName',
-                      label: Container(
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('発注元店舗', softWrap: false),
+                      GridColumn(
+                        columnName: 'shopName',
+                        label: const CustomCell('発注元店舗'),
                       ),
-                    ),
-                    GridColumn(
-                      columnName: 'orderProducts',
-                      label: Container(
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('注文商品', softWrap: false),
+                      GridColumn(
+                        columnName: 'orderProducts',
+                        label: const CustomCell('注文商品'),
                       ),
-                    ),
-                    GridColumn(
-                      columnName: 'status',
-                      label: Container(
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('ステータス', softWrap: false),
+                      GridColumn(
+                        columnName: 'status',
+                        label: const CustomCell('ステータス'),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -145,12 +130,27 @@ class _OrderSource extends DataGridSource {
 
   void buildDataGridRows() {
     dataGridRows = orders.map<DataGridRow>((order) {
-      return const DataGridRow(cells: [
-        DataGridCell(columnName: 'createdAt', value: ''),
-        DataGridCell(columnName: 'number', value: ''),
-        DataGridCell(columnName: 'shopName', value: ''),
-        DataGridCell(columnName: 'orderProducts', value: ''),
-        DataGridCell(columnName: 'status', value: ''),
+      return DataGridRow(cells: [
+        DataGridCell(
+          columnName: 'createdAt',
+          value: dateText('yyyy/MM/dd HH:mm', order.createdAt),
+        ),
+        DataGridCell(
+          columnName: 'number',
+          value: order.number,
+        ),
+        DataGridCell(
+          columnName: 'shopName',
+          value: order.shopName,
+        ),
+        DataGridCell(
+          columnName: 'orderProducts',
+          value: order.getProducts(),
+        ),
+        DataGridCell(
+          columnName: 'status',
+          value: order.getStatus(),
+        ),
       ]);
     }).toList();
   }
@@ -166,31 +166,11 @@ class _OrderSource extends DataGridSource {
       backgroundColor = kWhiteColor;
     }
     List<Widget> cells = [];
-    cells.add(Container(
-      padding: const EdgeInsets.all(4),
-      alignment: Alignment.centerLeft,
-      child: Text('${row.getCells()[0].value}', softWrap: false),
-    ));
-    cells.add(Container(
-      padding: const EdgeInsets.all(4),
-      alignment: Alignment.centerLeft,
-      child: Text('${row.getCells()[1].value}', softWrap: false),
-    ));
-    cells.add(Container(
-      padding: const EdgeInsets.all(4),
-      alignment: Alignment.centerLeft,
-      child: Text('${row.getCells()[2].value}', softWrap: false),
-    ));
-    cells.add(Container(
-      padding: const EdgeInsets.all(4),
-      alignment: Alignment.centerLeft,
-      child: Text('${row.getCells()[3].value}', softWrap: false),
-    ));
-    cells.add(Container(
-      padding: const EdgeInsets.all(4),
-      alignment: Alignment.centerLeft,
-      child: Text('${row.getCells()[4].value}', softWrap: false),
-    ));
+    cells.add(CustomCell('${row.getCells()[0].value}'));
+    cells.add(CustomCell('${row.getCells()[1].value}'));
+    cells.add(CustomCell('${row.getCells()[2].value}'));
+    cells.add(CustomCell('${row.getCells()[3].value}'));
+    cells.add(CustomCell('${row.getCells()[4].value}'));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
 

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hirome_rental_owner_web/models/shop.dart';
 
 class ShopService {
   String collection = 'shop';
@@ -18,5 +19,19 @@ class ShopService {
 
   void delete(Map<String, dynamic> values) {
     firestore.collection(collection).doc(values['id']).delete();
+  }
+
+  Future<List<ShopModel>> selectList() async {
+    List<ShopModel> ret = [];
+    await firestore
+        .collection(collection)
+        .orderBy('createdAt', descending: true)
+        .get()
+        .then((value) {
+      for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
+        ret.add(ShopModel.fromSnapshot(map));
+      }
+    });
+    return ret;
   }
 }

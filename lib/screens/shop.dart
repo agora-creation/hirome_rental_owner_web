@@ -1,9 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/providers/shop.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
 
 class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key});
+  final ShopProvider shopProvider;
+
+  const ShopScreen({
+    required this.shopProvider,
+    super.key,
+  });
 
   @override
   State<ShopScreen> createState() => _ShopScreenState();

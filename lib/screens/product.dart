@@ -1,9 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key});
+  final ProductProvider productProvider;
+
+  const ProductScreen({
+    required this.productProvider,
+    super.key,
+  });
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();

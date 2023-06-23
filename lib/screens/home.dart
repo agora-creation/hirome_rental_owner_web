@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
+import 'package:hirome_rental_owner_web/providers/product.dart';
+import 'package:hirome_rental_owner_web/providers/shop.dart';
 import 'package:hirome_rental_owner_web/screens/order.dart';
 import 'package:hirome_rental_owner_web/screens/product.dart';
 import 'package:hirome_rental_owner_web/screens/shop.dart';
@@ -20,6 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final orderProvider = Provider.of<OrderProvider>(context);
+    final productProvider = Provider.of<ProductProvider>(context);
+    final shopProvider = Provider.of<ShopProvider>(context);
+
     return NavigationView(
       appBar: NavigationAppBar(
         automaticallyImplyLeading: false,
@@ -52,13 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItem(
             icon: const Icon(FluentIcons.bank),
             title: const Text('店舗管理'),
-            body: const ShopScreen(),
+            body: ShopScreen(shopProvider: shopProvider),
           ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.beer_mug),
             title: const Text('食器管理'),
-            body: const ProductScreen(),
+            body: ProductScreen(productProvider: productProvider),
           ),
           PaneItemSeparator(),
           PaneItem(

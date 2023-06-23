@@ -16,6 +16,7 @@ class _TitleScreenState extends State<TitleScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+
     return ScaffoldPage(
       content: GestureDetector(
         behavior: HitTestBehavior.opaque,
