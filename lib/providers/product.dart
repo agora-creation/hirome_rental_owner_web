@@ -12,4 +12,33 @@ class ProductProvider with ChangeNotifier {
     });
     return ret;
   }
+
+  Future<String?> create({
+    required String number,
+    required String name,
+    required int price,
+    required String unit,
+    required int priority,
+  }) async {
+    String? error;
+    try {
+      String id = productService.id();
+      productService.create({
+        'id': id,
+        'number': number,
+        'name': name,
+        'invoiceNumber': '',
+        'invoiceName': '',
+        'price': price,
+        'unit': unit,
+        'image': '',
+        'priority': priority,
+        'display': true,
+        'createdAt': DateTime.now(),
+      });
+    } catch (e) {
+      error = '登録に失敗しました';
+    }
+    return error;
+  }
 }

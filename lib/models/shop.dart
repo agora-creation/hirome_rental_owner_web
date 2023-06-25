@@ -30,10 +30,10 @@ class ShopModel {
     _createdAt = map['createdAt'].toDate() ?? DateTime.now();
   }
 
-  List<String> _convertFavorites(List<String> list) {
+  List<String> _convertFavorites(List list) {
     List<String> ret = [];
-    for (String id in list) {
-      ret.add(id);
+    for (dynamic id in list) {
+      ret.add('$id');
     }
     return ret;
   }
