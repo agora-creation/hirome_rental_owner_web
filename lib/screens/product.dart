@@ -2,8 +2,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/product.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
+import 'package:hirome_rental_owner_web/screens/product_source.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProductScreen extends StatefulWidget {
   final ProductProvider productProvider;
@@ -74,6 +78,51 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 450,
+                  child: CustomDataGrid(
+                    source: ProductSource(products: products),
+                    columns: [
+                      GridColumn(
+                        columnName: 'number',
+                        label: const CustomCell('食器番号'),
+                      ),
+                      GridColumn(
+                        columnName: 'name',
+                        label: const CustomCell('食器名'),
+                      ),
+                      GridColumn(
+                        columnName: 'invoiceNumber',
+                        label: const CustomCell('請求用食器番号'),
+                      ),
+                      GridColumn(
+                        columnName: 'invoiceName',
+                        label: const CustomCell('請求用食器名'),
+                      ),
+                      GridColumn(
+                        columnName: 'price',
+                        label: const CustomCell('単価'),
+                      ),
+                      GridColumn(
+                        columnName: 'unit',
+                        label: const CustomCell('単位'),
+                      ),
+                      GridColumn(
+                        columnName: 'image',
+                        label: const CustomCell('画像'),
+                      ),
+                      GridColumn(
+                        columnName: 'priority',
+                        label: const CustomCell('表示の優先順位'),
+                      ),
+                      GridColumn(
+                        columnName: 'display',
+                        label: const CustomCell('表示の有無'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
