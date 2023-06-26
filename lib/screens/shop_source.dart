@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/shop.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
@@ -179,6 +180,12 @@ class ModShopDialog extends StatefulWidget {
 
 class _ModShopDialogState extends State<ModShopDialog> {
   @override
+  void initState() {
+    super.initState();
+    widget.shopProvider.setController(widget.shop);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
@@ -191,7 +198,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
         children: [
           InfoLabel(
             label: '店舗番号',
-            child: const Text('1'),
+            child: Text(widget.shop.number),
           ),
           const SizedBox(height: 8),
           InfoLabel(
@@ -246,13 +253,35 @@ class _ModShopDialogState extends State<ModShopDialog> {
           labelText: '削除する',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
-          onPressed: () async {},
+          onPressed: () async {
+            String? error = await widget.shopProvider.delete(widget.shop);
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            widget.shopProvider.clearController();
+            widget.shopProvider.getData();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
         ),
         CustomButton(
           labelText: '保存する',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
-          onPressed: () async {},
+          onPressed: () async {
+            String? error = await widget.shopProvider.update(widget.shop);
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            widget.shopProvider.clearController();
+            widget.shopProvider.getData();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
         ),
       ],
     );

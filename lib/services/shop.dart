@@ -21,6 +21,20 @@ class ShopService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
+  Future<ShopModel?> select(String number) async {
+    ShopModel? ret;
+    await firestore
+        .collection(collection)
+        .where('number', isEqualTo: number)
+        .get()
+        .then((value) {
+      for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
+        ret = ShopModel.fromSnapshot(map);
+      }
+    });
+    return ret;
+  }
+
   Future<List<ShopModel>> selectList() async {
     List<ShopModel> ret = [];
     await firestore
