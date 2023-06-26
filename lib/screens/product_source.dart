@@ -67,15 +67,15 @@ class ProductSource extends DataGridSource {
       backgroundColor = kWhiteColor;
     }
     List<Widget> cells = [];
-    cells.add(CustomCell('${row.getCells()[0].value}'));
-    cells.add(CustomCell('${row.getCells()[1].value}'));
-    cells.add(CustomCell('${row.getCells()[2].value}'));
-    cells.add(CustomCell('${row.getCells()[3].value}'));
-    cells.add(CustomCell('${row.getCells()[4].value}'));
-    cells.add(CustomCell('${row.getCells()[5].value}'));
-    cells.add(CustomCell('${row.getCells()[6].value}'));
-    cells.add(CustomCell('${row.getCells()[7].value}'));
-    cells.add(CustomCell('${row.getCells()[8].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[0].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[1].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[2].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[3].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[4].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[5].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[6].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[7].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[8].value}'));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
 

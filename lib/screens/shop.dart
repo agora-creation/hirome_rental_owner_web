@@ -1,12 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
-import 'package:hirome_rental_owner_web/models/shop.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
 import 'package:hirome_rental_owner_web/screens/shop_source.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -22,19 +23,14 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  List<ShopModel> shops = [];
-
-  void _getShops() async {
-    List<ShopModel> tmpShops = await widget.shopProvider.selectList();
-    if (mounted) {
-      setState(() => shops = tmpShops);
-    }
+  void _init() async {
+    await widget.shopProvider.getData();
   }
 
   @override
   void initState() {
     super.initState();
-    _getShops();
+    _init();
   }
 
   @override
@@ -73,7 +69,6 @@ class _ShopScreenState extends State<ShopScreen> {
                         context: context,
                         builder: (context) => AddShopDialog(
                           shopProvider: widget.shopProvider,
-                          getShops: _getShops,
                         ),
                       ),
                     ),
@@ -83,27 +78,31 @@ class _ShopScreenState extends State<ShopScreen> {
                 SizedBox(
                   height: 450,
                   child: CustomDataGrid(
-                    source: ShopSource(shops: shops),
+                    source: ShopSource(
+                      context: context,
+                      shopProvider: widget.shopProvider,
+                      shops: widget.shopProvider.shops,
+                    ),
                     columns: [
                       GridColumn(
                         columnName: 'number',
-                        label: const CustomCell('店舗番号'),
+                        label: const CustomCell(label: '店舗番号'),
                       ),
                       GridColumn(
                         columnName: 'name',
-                        label: const CustomCell('店舗名'),
+                        label: const CustomCell(label: '店舗名'),
                       ),
                       GridColumn(
                         columnName: 'invoiceNumber',
-                        label: const CustomCell('請求用店舗番号'),
+                        label: const CustomCell(label: '請求用店舗番号'),
                       ),
                       GridColumn(
                         columnName: 'invoiceName',
-                        label: const CustomCell('請求用店舗名'),
+                        label: const CustomCell(label: '請求用店舗名'),
                       ),
                       GridColumn(
                         columnName: 'password',
-                        label: const CustomCell('パスワード'),
+                        label: const CustomCell(label: 'パスワード'),
                       ),
                     ],
                   ),
@@ -119,11 +118,9 @@ class _ShopScreenState extends State<ShopScreen> {
 
 class AddShopDialog extends StatefulWidget {
   final ShopProvider shopProvider;
-  final Function() getShops;
 
   const AddShopDialog({
     required this.shopProvider,
-    required this.getShops,
     super.key,
   });
 
@@ -132,12 +129,6 @@ class AddShopDialog extends StatefulWidget {
 }
 
 class _AddShopDialogState extends State<AddShopDialog> {
-  TextEditingController number = TextEditingController();
-  TextEditingController name = TextEditingController();
-  TextEditingController invoiceNumber = TextEditingController();
-  TextEditingController invoiceName = TextEditingController();
-  TextEditingController password = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
@@ -151,27 +142,52 @@ class _AddShopDialogState extends State<AddShopDialog> {
         children: [
           InfoLabel(
             label: '店舗番号',
-            child: TextBox(controller: number),
+            child: CustomTextBox(
+              controller: widget.shopProvider.number,
+              placeholder: '例) 1234',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(height: 8),
           InfoLabel(
             label: '店舗名',
-            child: TextBox(controller: name),
+            child: CustomTextBox(
+              controller: widget.shopProvider.name,
+              placeholder: '例) たこ焼き はっちゃん',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(height: 8),
           InfoLabel(
             label: '請求書用店舗番号',
-            child: TextBox(controller: invoiceNumber),
+            child: CustomTextBox(
+              controller: widget.shopProvider.invoiceNumber,
+              placeholder: '例) 0000000001234',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(height: 8),
           InfoLabel(
             label: '請求書用店舗名',
-            child: TextBox(controller: invoiceName),
+            child: CustomTextBox(
+              controller: widget.shopProvider.invoiceName,
+              placeholder: '例) 株式会社八ちゃん堂',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(height: 8),
           InfoLabel(
             label: 'パスワード',
-            child: TextBox(controller: password),
+            child: CustomTextBox(
+              controller: widget.shopProvider.password,
+              placeholder: '',
+              keyboardType: TextInputType.visiblePassword,
+              maxLines: 1,
+            ),
           ),
         ],
       ),
@@ -187,15 +203,14 @@ class _AddShopDialogState extends State<AddShopDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await widget.shopProvider.create(
-              number: number.text,
-              name: name.text,
-              invoiceNumber: invoiceNumber.text,
-              invoiceName: invoiceName.text,
-              password: password.text,
-            );
-            if (error != null) return;
-            widget.getShops;
+            String? error = await widget.shopProvider.create();
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            widget.shopProvider.clearController();
+            widget.shopProvider.getData();
             if (!mounted) return;
             Navigator.pop(context);
           },

@@ -87,39 +87,39 @@ class _ProductScreenState extends State<ProductScreen> {
                     columns: [
                       GridColumn(
                         columnName: 'number',
-                        label: const CustomCell('食器番号'),
+                        label: const CustomCell(label: '食器番号'),
                       ),
                       GridColumn(
                         columnName: 'name',
-                        label: const CustomCell('食器名'),
+                        label: const CustomCell(label: '食器名'),
                       ),
                       GridColumn(
                         columnName: 'invoiceNumber',
-                        label: const CustomCell('請求用食器番号'),
+                        label: const CustomCell(label: '請求用食器番号'),
                       ),
                       GridColumn(
                         columnName: 'invoiceName',
-                        label: const CustomCell('請求用食器名'),
+                        label: const CustomCell(label: '請求用食器名'),
                       ),
                       GridColumn(
                         columnName: 'price',
-                        label: const CustomCell('単価'),
+                        label: const CustomCell(label: '単価'),
                       ),
                       GridColumn(
                         columnName: 'unit',
-                        label: const CustomCell('単位'),
+                        label: const CustomCell(label: '単位'),
                       ),
                       GridColumn(
                         columnName: 'image',
-                        label: const CustomCell('画像'),
+                        label: const CustomCell(label: '画像'),
                       ),
                       GridColumn(
                         columnName: 'priority',
-                        label: const CustomCell('表示の優先順位'),
+                        label: const CustomCell(label: '表示の優先順位'),
                       ),
                       GridColumn(
                         columnName: 'display',
-                        label: const CustomCell('表示の有無'),
+                        label: const CustomCell(label: '表示の有無'),
                       ),
                     ],
                   ),

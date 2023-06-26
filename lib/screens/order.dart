@@ -89,23 +89,23 @@ class _OrderScreenState extends State<OrderScreen> {
                     columns: [
                       GridColumn(
                         columnName: 'createdAt',
-                        label: const CustomCell('注文日時'),
+                        label: const CustomCell(label: '注文日時'),
                       ),
                       GridColumn(
                         columnName: 'number',
-                        label: const CustomCell('注文番号'),
+                        label: const CustomCell(label: '注文番号'),
                       ),
                       GridColumn(
                         columnName: 'shopName',
-                        label: const CustomCell('発注元店舗'),
+                        label: const CustomCell(label: '発注元店舗'),
                       ),
                       GridColumn(
                         columnName: 'orderProducts',
-                        label: const CustomCell('注文商品'),
+                        label: const CustomCell(label: '注文商品'),
                       ),
                       GridColumn(
                         columnName: 'status',
-                        label: const CustomCell('ステータス'),
+                        label: const CustomCell(label: 'ステータス'),
                       ),
                     ],
                   ),

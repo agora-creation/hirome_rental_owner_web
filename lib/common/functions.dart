@@ -1,3 +1,4 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,4 +48,14 @@ String dateText(String format, DateTime? date) {
     ret = DateFormat(format, 'ja').format(date);
   }
   return ret;
+}
+
+void showMessage(BuildContext context, String msg, bool success) {
+  displayInfoBar(context, builder: (context, close) {
+    return InfoBar(
+      title: Text(msg),
+      severity:
+          success == true ? InfoBarSeverity.success : InfoBarSeverity.error,
+    );
+  });
 }

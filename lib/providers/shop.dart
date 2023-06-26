@@ -5,31 +5,40 @@ import 'package:hirome_rental_owner_web/services/shop.dart';
 class ShopProvider with ChangeNotifier {
   ShopService shopService = ShopService();
 
-  Future<List<ShopModel>> selectList() async {
-    List<ShopModel> ret = [];
-    await shopService.selectList().then((value) {
-      ret = value;
-    });
-    return ret;
+  TextEditingController number = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController invoiceNumber = TextEditingController();
+  TextEditingController invoiceName = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+  void clearController() {
+    number.clear();
+    name.clear();
+    invoiceNumber.clear();
+    invoiceName.clear();
+    password.clear();
   }
 
-  Future<String?> create({
-    required String number,
-    required String name,
-    required String invoiceNumber,
-    required String invoiceName,
-    required String password,
-  }) async {
+  List<ShopModel> shops = [];
+
+  Future getData() async {
+    shops = await shopService.selectList();
+    notifyListeners();
+  }
+
+  Future<String?> create() async {
     String? error;
+    if (number.text == '') return '店舗番号は必須です';
+    if (name.text == '') return '店舗名は必須です';
     try {
       String id = shopService.id();
       shopService.create({
         'id': id,
-        'number': number,
-        'name': name,
-        'invoiceNumber': invoiceNumber,
-        'invoiceName': invoiceName,
-        'password': password,
+        'number': number.text,
+        'name': name.text,
+        'invoiceNumber': invoiceNumber.text,
+        'invoiceName': invoiceName.text,
+        'password': password.text,
         'favorites': [],
         'createdAt': DateTime.now(),
       });

@@ -52,11 +52,11 @@ class OrderSource extends DataGridSource {
       backgroundColor = kWhiteColor;
     }
     List<Widget> cells = [];
-    cells.add(CustomCell('${row.getCells()[0].value}'));
-    cells.add(CustomCell('${row.getCells()[1].value}'));
-    cells.add(CustomCell('${row.getCells()[2].value}'));
-    cells.add(CustomCell('${row.getCells()[3].value}'));
-    cells.add(CustomCell('${row.getCells()[4].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[0].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[1].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[2].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[3].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[4].value}'));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
 

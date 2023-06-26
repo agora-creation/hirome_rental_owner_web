@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int selectedIndex = 0;
+  int selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.beer_mug),
             title: const Text('食器管理'),
             body: ProductScreen(productProvider: productProvider),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.analytics_view),
-            title: const Text('データ分析'),
-            body: Container(),
           ),
           PaneItemSeparator(),
         ],
