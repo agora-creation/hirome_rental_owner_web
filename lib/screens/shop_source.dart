@@ -12,11 +12,13 @@ class ShopSource extends DataGridSource {
   final BuildContext context;
   final ShopProvider shopProvider;
   final List<ShopModel> shops;
+  final Function() getShops;
 
   ShopSource({
     required this.context,
     required this.shopProvider,
     required this.shops,
+    required this.getShops,
   }) {
     buildDataGridRows();
   }
@@ -71,6 +73,7 @@ class ShopSource extends DataGridSource {
         builder: (context) => ModShopDialog(
           shopProvider: shopProvider,
           shop: shop,
+          getShops: getShops,
         ),
       ),
     ));
@@ -81,6 +84,7 @@ class ShopSource extends DataGridSource {
         builder: (context) => ModShopDialog(
           shopProvider: shopProvider,
           shop: shop,
+          getShops: getShops,
         ),
       ),
     ));
@@ -91,6 +95,7 @@ class ShopSource extends DataGridSource {
         builder: (context) => ModShopDialog(
           shopProvider: shopProvider,
           shop: shop,
+          getShops: getShops,
         ),
       ),
     ));
@@ -101,6 +106,7 @@ class ShopSource extends DataGridSource {
         builder: (context) => ModShopDialog(
           shopProvider: shopProvider,
           shop: shop,
+          getShops: getShops,
         ),
       ),
     ));
@@ -111,6 +117,7 @@ class ShopSource extends DataGridSource {
         builder: (context) => ModShopDialog(
           shopProvider: shopProvider,
           shop: shop,
+          getShops: getShops,
         ),
       ),
     ));
@@ -167,10 +174,12 @@ class ShopSource extends DataGridSource {
 class ModShopDialog extends StatefulWidget {
   final ShopProvider shopProvider;
   final ShopModel shop;
+  final Function() getShops;
 
   const ModShopDialog({
     required this.shopProvider,
     required this.shop,
+    required this.getShops,
     super.key,
   });
 
@@ -261,7 +270,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
               return;
             }
             widget.shopProvider.clearController();
-            widget.shopProvider.getData();
+            widget.getShops();
             if (!mounted) return;
             Navigator.pop(context);
           },
@@ -278,7 +287,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
               return;
             }
             widget.shopProvider.clearController();
-            widget.shopProvider.getData();
+            widget.getShops();
             if (!mounted) return;
             Navigator.pop(context);
           },

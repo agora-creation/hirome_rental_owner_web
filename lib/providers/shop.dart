@@ -16,7 +16,6 @@ class ShopProvider with ChangeNotifier {
     invoiceNumber.text = shop.invoiceNumber;
     invoiceName.text = shop.invoiceName;
     password.text = shop.password;
-    notifyListeners();
   }
 
   void clearController() {
@@ -25,14 +24,10 @@ class ShopProvider with ChangeNotifier {
     invoiceNumber.clear();
     invoiceName.clear();
     password.clear();
-    notifyListeners();
   }
 
-  List<ShopModel> shops = [];
-
-  Future getData() async {
-    shops = await shopService.selectList();
-    notifyListeners();
+  Future<List<ShopModel>> getList() async {
+    return await shopService.selectList();
   }
 
   Future<String?> create() async {

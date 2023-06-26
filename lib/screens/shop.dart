@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/models/shop.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
 import 'package:hirome_rental_owner_web/screens/shop_source.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
@@ -23,14 +24,19 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  void _init() async {
-    await widget.shopProvider.getData();
+  List<ShopModel> shops = [];
+
+  void _getShops() async {
+    List<ShopModel> tmpShops = await widget.shopProvider.getList();
+    if (mounted) {
+      setState(() => shops = tmpShops);
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _init();
+    _getShops();
   }
 
   @override
@@ -69,6 +75,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         context: context,
                         builder: (context) => AddShopDialog(
                           shopProvider: widget.shopProvider,
+                          getShops: _getShops,
                         ),
                       ),
                     ),
@@ -76,12 +83,13 @@ class _ShopScreenState extends State<ShopScreen> {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 450,
+                  height: 600,
                   child: CustomDataGrid(
                     source: ShopSource(
                       context: context,
                       shopProvider: widget.shopProvider,
-                      shops: widget.shopProvider.shops,
+                      shops: shops,
+                      getShops: _getShops,
                     ),
                     columns: [
                       GridColumn(
@@ -118,9 +126,11 @@ class _ShopScreenState extends State<ShopScreen> {
 
 class AddShopDialog extends StatefulWidget {
   final ShopProvider shopProvider;
+  final Function() getShops;
 
   const AddShopDialog({
     required this.shopProvider,
+    required this.getShops,
     super.key,
   });
 
@@ -129,6 +139,12 @@ class AddShopDialog extends StatefulWidget {
 }
 
 class _AddShopDialogState extends State<AddShopDialog> {
+  @override
+  void initState() {
+    super.initState();
+    widget.shopProvider.clearController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
@@ -210,7 +226,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
               return;
             }
             widget.shopProvider.clearController();
-            widget.shopProvider.getData();
+            widget.getShops();
             if (!mounted) return;
             Navigator.pop(context);
           },
