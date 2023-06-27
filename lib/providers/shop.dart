@@ -34,7 +34,7 @@ class ShopProvider with ChangeNotifier {
     String? error;
     if (number.text == '') return '店舗番号は必須です';
     if (name.text == '') return '店舗名は必須です';
-    if (await shopService.select(number.text) != null) {
+    if (await shopService.select(number: number.text) != null) {
       return '店舗番号が重複しています';
     }
     try {

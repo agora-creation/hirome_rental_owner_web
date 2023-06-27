@@ -21,11 +21,11 @@ class ShopService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
-  Future<ShopModel?> select(String number) async {
+  Future<ShopModel?> select({String? number}) async {
     ShopModel? ret;
     await firestore
         .collection(collection)
-        .where('number', isEqualTo: number)
+        .where('number', isEqualTo: number ?? 'error')
         .get()
         .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
@@ -35,13 +35,27 @@ class ShopService {
     return ret;
   }
 
-  Future<List<ShopModel>> selectList() async {
+  Future<List<ShopModel>> selectList({
+    String? number,
+    String? name,
+    String? invoiceNumber,
+    String? invoiceName,
+  }) async {
     List<ShopModel> ret = [];
-    await firestore
-        .collection(collection)
-        .orderBy('createdAt', descending: true)
-        .get()
-        .then((value) {
+    final query = firestore.collection(collection);
+    if (number != null) {
+      query.where('number', isEqualTo: number);
+    }
+    if (name != null) {
+      query.where('name', isEqualTo: name);
+    }
+    if (invoiceNumber != null) {
+      query.where('invoiceNumber', isEqualTo: invoiceNumber);
+    }
+    if (invoiceName != null) {
+      query.where('invoiceName', isEqualTo: invoiceName);
+    }
+    await query.orderBy('createdAt', descending: true).get().then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
         ret.add(ShopModel.fromSnapshot(map));
       }

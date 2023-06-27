@@ -41,3 +41,10 @@ FluentThemeData customTheme() {
     ),
   );
 }
+
+const SliverGridDelegate kSearchGrid =
+    SliverGridDelegateWithFixedCrossAxisCount(
+  childAspectRatio: 4 / 1,
+  crossAxisCount: 4,
+  crossAxisSpacing: 8,
+);

@@ -55,10 +55,56 @@ class _ShopScreenState extends State<ShopScreen> {
                   style: TextStyle(fontSize: 14),
                 ),
                 const SizedBox(height: 8),
-                const Expander(
-                  header: Text('検索条件 : なし'),
+                Expander(
+                  header: const Text('検索条件 : なし'),
                   content: Column(
-                    children: [],
+                    children: [
+                      GridView(
+                        shrinkWrap: true,
+                        gridDelegate: kSearchGrid,
+                        children: [
+                          InfoLabel(
+                            label: '店舗番号',
+                            child: const CustomTextBox(),
+                          ),
+                          InfoLabel(
+                            label: '店舗名',
+                            child: const CustomTextBox(),
+                          ),
+                          InfoLabel(
+                            label: '請求用店舗番号',
+                            child: const CustomTextBox(),
+                          ),
+                          InfoLabel(
+                            label: '請求用店舗名',
+                            child: const CustomTextBox(),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomIconTextButton(
+                            iconData: FluentIcons.clear,
+                            iconColor: kLightBlueColor,
+                            labelText: '検索リセット',
+                            labelColor: kLightBlueColor,
+                            backgroundColor: kWhiteColor,
+                            onPressed: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          CustomIconTextButton(
+                            iconData: FluentIcons.search,
+                            iconColor: kWhiteColor,
+                            labelText: '検索する',
+                            labelColor: kWhiteColor,
+                            backgroundColor: kLightBlueColor,
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 8),
