@@ -42,20 +42,14 @@ class ShopService {
     String? invoiceName,
   }) async {
     List<ShopModel> ret = [];
-    Query<Map<String, dynamic>> query = firestore.collection(collection);
-    if (number != null) {
-      query = query.where('number', isEqualTo: number);
-    }
-    if (name != null) {
-      query = query.where('name', isEqualTo: name);
-    }
-    if (invoiceNumber != null) {
-      query = query.where('invoiceNumber', isEqualTo: invoiceNumber);
-    }
-    if (invoiceName != null) {
-      query = query.where('invoiceName', isEqualTo: invoiceName);
-    }
-    await query.orderBy('createdAt', descending: true).get().then((value) {
+    await firestore
+        .collection(collection)
+        .where('number', isEqualTo: number)
+        .where('name', isEqualTo: name)
+        .where('invoiceNumber', isEqualTo: invoiceNumber)
+        .where('invoiceName', isEqualTo: invoiceName)
+        .get()
+        .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
         ret.add(ShopModel.fromSnapshot(map));
       }
