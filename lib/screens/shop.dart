@@ -25,9 +25,18 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen> {
   List<ShopModel> shops = [];
+  String? searchNumber;
+  String? searchName;
+  String? searchInvoiceNumber;
+  String? searchInvoiceName;
 
   void _getShops() async {
-    List<ShopModel> tmpShops = await widget.shopProvider.getList();
+    List<ShopModel> tmpShops = await widget.shopProvider.getList(
+      number: searchNumber,
+      name: searchName,
+      invoiceNumber: searchInvoiceNumber,
+      invoiceName: searchInvoiceName,
+    );
     if (mounted) {
       setState(() => shops = tmpShops);
     }
@@ -65,19 +74,43 @@ class _ShopScreenState extends State<ShopScreen> {
                         children: [
                           InfoLabel(
                             label: '店舗番号',
-                            child: const CustomTextBox(),
+                            child: CustomTextBox(
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                              onChanged: (value) {
+                                searchNumber = value;
+                              },
+                            ),
                           ),
                           InfoLabel(
                             label: '店舗名',
-                            child: const CustomTextBox(),
+                            child: CustomTextBox(
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                              onChanged: (value) {
+                                searchName = value;
+                              },
+                            ),
                           ),
                           InfoLabel(
                             label: '請求用店舗番号',
-                            child: const CustomTextBox(),
+                            child: CustomTextBox(
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                              onChanged: (value) {
+                                searchInvoiceNumber = value;
+                              },
+                            ),
                           ),
                           InfoLabel(
                             label: '請求用店舗名',
-                            child: const CustomTextBox(),
+                            child: CustomTextBox(
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                              onChanged: (value) {
+                                searchInvoiceName = value;
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -91,7 +124,12 @@ class _ShopScreenState extends State<ShopScreen> {
                             labelText: '検索リセット',
                             labelColor: kLightBlueColor,
                             backgroundColor: kWhiteColor,
-                            onPressed: () {},
+                            onPressed: () {
+                              searchNumber = null;
+                              searchName = null;
+                              searchInvoiceNumber = null;
+                              searchInvoiceName = null;
+                            },
                           ),
                           const SizedBox(width: 8),
                           CustomIconTextButton(
@@ -100,7 +138,9 @@ class _ShopScreenState extends State<ShopScreen> {
                             labelText: '検索する',
                             labelColor: kWhiteColor,
                             backgroundColor: kLightBlueColor,
-                            onPressed: () {},
+                            onPressed: () {
+                              _getShops();
+                            },
                           ),
                         ],
                       ),

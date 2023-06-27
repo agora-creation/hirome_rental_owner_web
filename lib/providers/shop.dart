@@ -26,8 +26,18 @@ class ShopProvider with ChangeNotifier {
     password.clear();
   }
 
-  Future<List<ShopModel>> getList() async {
-    return await shopService.selectList();
+  Future<List<ShopModel>> getList({
+    String? number,
+    String? name,
+    String? invoiceNumber,
+    String? invoiceName,
+  }) async {
+    return await shopService.selectList(
+      number: number,
+      name: name,
+      invoiceNumber: invoiceNumber,
+      invoiceName: invoiceName,
+    );
   }
 
   Future<String?> create() async {
