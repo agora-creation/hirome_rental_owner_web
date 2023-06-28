@@ -37,10 +37,6 @@ class ShopSource extends DataGridSource {
           value: shop.name,
         ),
         DataGridCell(
-          columnName: 'invoiceNumber',
-          value: shop.invoiceNumber,
-        ),
-        DataGridCell(
           columnName: 'invoiceName',
           value: shop.invoiceName,
         ),
@@ -101,17 +97,6 @@ class ShopSource extends DataGridSource {
     ));
     cells.add(CustomCell(
       label: '${row.getCells()[3].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModShopDialog(
-          shopProvider: shopProvider,
-          shop: shop,
-          getShops: getShops,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[4].value}',
       onTap: () => showDialog(
         context: context,
         builder: (context) => ModShopDialog(
@@ -215,16 +200,6 @@ class _ModShopDialogState extends State<ModShopDialog> {
             child: CustomTextBox(
               controller: widget.shopProvider.name,
               placeholder: '例) たこ焼き はっちゃん',
-              keyboardType: TextInputType.text,
-              maxLines: 1,
-            ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: '請求書用店舗番号',
-            child: CustomTextBox(
-              controller: widget.shopProvider.invoiceNumber,
-              placeholder: '例) 0000000001234',
               keyboardType: TextInputType.text,
               maxLines: 1,
             ),

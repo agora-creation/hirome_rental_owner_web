@@ -38,22 +38,17 @@ class ShopService {
   Future<List<ShopModel>> selectList({
     required String number,
     required String name,
-    required String invoiceNumber,
     required String invoiceName,
   }) async {
     List<ShopModel> ret = [];
     String? isEqualToNumber;
     String? isEqualToName;
-    String? isEqualToInvoiceNumber;
     String? isEqualToInvoiceName;
     if (number != '') {
       isEqualToNumber = number;
     }
     if (name != '') {
       isEqualToName = name;
-    }
-    if (invoiceNumber != '') {
-      isEqualToInvoiceNumber = invoiceNumber;
     }
     if (invoiceName != '') {
       isEqualToInvoiceName = invoiceName;
@@ -62,7 +57,6 @@ class ShopService {
         .collection(collection)
         .where('number', isEqualTo: isEqualToNumber)
         .where('name', isEqualTo: isEqualToName)
-        .where('invoiceNumber', isEqualTo: isEqualToInvoiceNumber)
         .where('invoiceName', isEqualTo: isEqualToInvoiceName)
         .get()
         .then((value) {

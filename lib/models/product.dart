@@ -5,7 +5,6 @@ class ProductModel {
   String _number = '';
   String _name = '';
   String _invoiceNumber = '';
-  String _invoiceName = '';
   int _price = 0;
   String _unit = '';
   String _image = '';
@@ -17,7 +16,6 @@ class ProductModel {
   String get number => _number;
   String get name => _name;
   String get invoiceNumber => _invoiceNumber;
-  String get invoiceName => _invoiceName;
   int get price => _price;
   String get unit => _unit;
   String get image => _image;
@@ -31,7 +29,6 @@ class ProductModel {
     _number = map['number'] ?? '';
     _name = map['name'] ?? '';
     _invoiceNumber = map['invoiceNumber'] ?? '';
-    _invoiceName = map['invoiceName'] ?? '';
     _price = map['price'] ?? 0;
     _unit = map['unit'] ?? '';
     _image = map['image'] ?? '';

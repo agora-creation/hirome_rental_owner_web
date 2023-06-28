@@ -4,7 +4,6 @@ class ShopModel {
   String _id = '';
   String _number = '';
   String _name = '';
-  String _invoiceNumber = '';
   String _invoiceName = '';
   String _password = '';
   List<String> favorites = [];
@@ -14,7 +13,6 @@ class ShopModel {
   String get id => _id;
   String get number => _number;
   String get name => _name;
-  String get invoiceNumber => _invoiceNumber;
   String get invoiceName => _invoiceName;
   String get password => _password;
   int get priority => _priority;
@@ -25,7 +23,6 @@ class ShopModel {
     _id = map['id'] ?? '';
     _number = map['number'] ?? '';
     _name = map['name'] ?? '';
-    _invoiceNumber = map['invoiceNumber'] ?? '';
     _invoiceName = map['invoiceName'] ?? '';
     _password = map['password'] ?? '';
     favorites = _convertFavorites(map['favorites']);

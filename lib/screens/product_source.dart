@@ -1,13 +1,22 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/product.dart';
+import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProductSource extends DataGridSource {
+  final BuildContext context;
+  final ProductProvider productProvider;
   final List<ProductModel> products;
+  final Function() getProducts;
 
-  ProductSource({required this.products}) {
+  ProductSource({
+    required this.context,
+    required this.productProvider,
+    required this.products,
+    required this.getProducts,
+  }) {
     buildDataGridRows();
   }
 
@@ -27,10 +36,6 @@ class ProductSource extends DataGridSource {
         DataGridCell(
           columnName: 'invoiceNumber',
           value: product.invoiceNumber,
-        ),
-        DataGridCell(
-          columnName: 'invoiceName',
-          value: product.invoiceName,
         ),
         DataGridCell(
           columnName: 'price',
@@ -75,7 +80,6 @@ class ProductSource extends DataGridSource {
     cells.add(CustomCell(label: '${row.getCells()[5].value}'));
     cells.add(CustomCell(label: '${row.getCells()[6].value}'));
     cells.add(CustomCell(label: '${row.getCells()[7].value}'));
-    cells.add(CustomCell(label: '${row.getCells()[8].value}'));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
 

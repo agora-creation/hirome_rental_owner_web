@@ -80,15 +80,6 @@ class _ShopScreenState extends State<ShopScreen> {
                             ),
                           ),
                           InfoLabel(
-                            label: '請求用店舗番号',
-                            child: CustomTextBox(
-                              controller:
-                                  widget.shopProvider.searchInvoiceNumber,
-                              keyboardType: TextInputType.text,
-                              maxLines: 1,
-                            ),
-                          ),
-                          InfoLabel(
                             label: '請求用店舗名',
                             child: CustomTextBox(
                               controller: widget.shopProvider.searchInvoiceName,
@@ -167,10 +158,6 @@ class _ShopScreenState extends State<ShopScreen> {
                         label: const CustomCell(label: '店舗名'),
                       ),
                       GridColumn(
-                        columnName: 'invoiceNumber',
-                        label: const CustomCell(label: '請求用店舗番号'),
-                      ),
-                      GridColumn(
                         columnName: 'invoiceName',
                         label: const CustomCell(label: '請求用店舗名'),
                       ),
@@ -237,16 +224,6 @@ class _AddShopDialogState extends State<AddShopDialog> {
             child: CustomTextBox(
               controller: widget.shopProvider.name,
               placeholder: '例) たこ焼き はっちゃん',
-              keyboardType: TextInputType.text,
-              maxLines: 1,
-            ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: '請求書用店舗番号',
-            child: CustomTextBox(
-              controller: widget.shopProvider.invoiceNumber,
-              placeholder: '例) 0000000001234',
               keyboardType: TextInputType.text,
               maxLines: 1,
             ),

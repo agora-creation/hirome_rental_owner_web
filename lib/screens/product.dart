@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/product.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
@@ -7,6 +8,7 @@ import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -53,10 +55,68 @@ class _ProductScreenState extends State<ProductScreen> {
                   style: TextStyle(fontSize: 14),
                 ),
                 const SizedBox(height: 8),
-                const Expander(
-                  header: Text('検索条件 : なし'),
+                Expander(
+                  header: Text('検索条件 : ${widget.productProvider.searchText}'),
                   content: Column(
-                    children: [],
+                    children: [
+                      GridView(
+                        shrinkWrap: true,
+                        gridDelegate: kSearchGrid,
+                        children: [
+                          InfoLabel(
+                            label: '食器番号',
+                            child: CustomTextBox(
+                              controller: widget.productProvider.searchNumber,
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                            ),
+                          ),
+                          InfoLabel(
+                            label: '食器名',
+                            child: CustomTextBox(
+                              controller: widget.productProvider.searchName,
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                            ),
+                          ),
+                          InfoLabel(
+                            label: '請求用食器番号',
+                            child: CustomTextBox(
+                              controller:
+                                  widget.productProvider.searchInvoiceNumber,
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomIconTextButton(
+                            iconData: FluentIcons.clear,
+                            iconColor: kLightBlueColor,
+                            labelText: '検索リセット',
+                            labelColor: kLightBlueColor,
+                            backgroundColor: kWhiteColor,
+                            onPressed: () {
+                              widget.productProvider.searchClear();
+                              _getProducts();
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          CustomIconTextButton(
+                            iconData: FluentIcons.search,
+                            iconColor: kWhiteColor,
+                            labelText: '検索する',
+                            labelColor: kWhiteColor,
+                            backgroundColor: kLightBlueColor,
+                            onPressed: () => _getProducts(),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -81,9 +141,14 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 450,
+                  height: 600,
                   child: CustomDataGrid(
-                    source: ProductSource(products: products),
+                    source: ProductSource(
+                      context: context,
+                      productProvider: widget.productProvider,
+                      products: products,
+                      getProducts: _getProducts,
+                    ),
                     columns: [
                       GridColumn(
                         columnName: 'number',
@@ -96,10 +161,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       GridColumn(
                         columnName: 'invoiceNumber',
                         label: const CustomCell(label: '請求用食器番号'),
-                      ),
-                      GridColumn(
-                        columnName: 'invoiceName',
-                        label: const CustomCell(label: '請求用食器名'),
                       ),
                       GridColumn(
                         columnName: 'price',
@@ -148,11 +209,11 @@ class AddProductDialog extends StatefulWidget {
 }
 
 class _AddProductDialogState extends State<AddProductDialog> {
-  TextEditingController number = TextEditingController();
-  TextEditingController name = TextEditingController();
-  TextEditingController price = TextEditingController();
-  TextEditingController unit = TextEditingController();
-  TextEditingController priority = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    widget.productProvider.clearController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,27 +228,62 @@ class _AddProductDialogState extends State<AddProductDialog> {
         children: [
           InfoLabel(
             label: '食器番号',
-            child: TextBox(controller: number),
+            child: CustomTextBox(
+              controller: widget.productProvider.number,
+              placeholder: '例) 1234',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(height: 8),
           InfoLabel(
             label: '食器名',
-            child: TextBox(controller: name),
+            child: CustomTextBox(
+              controller: widget.productProvider.name,
+              placeholder: '例) ジョッキ',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: '請求書用食器番号',
+            child: CustomTextBox(
+              controller: widget.productProvider.invoiceNumber,
+              placeholder: '例) 1234',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(height: 8),
           InfoLabel(
             label: '単価',
-            child: TextBox(controller: price),
+            child: CustomTextBox(
+              controller: widget.productProvider.price,
+              placeholder: '例) 20',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(height: 8),
           InfoLabel(
             label: '単位',
-            child: TextBox(controller: unit),
+            child: CustomTextBox(
+              controller: widget.productProvider.unit,
+              placeholder: '例) 枚',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(height: 8),
           InfoLabel(
             label: '表示の優先順位',
-            child: TextBox(controller: priority),
+            child: CustomTextBox(
+              controller: widget.productProvider.priority,
+              placeholder: '例) 0',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
           ),
         ],
       ),
@@ -203,15 +299,14 @@ class _AddProductDialogState extends State<AddProductDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await widget.productProvider.create(
-              number: number.text,
-              name: name.text,
-              price: int.parse(price.text),
-              unit: unit.text,
-              priority: int.parse(priority.text),
-            );
-            if (error != null) return;
-            widget.getProducts;
+            String? error = await widget.productProvider.create();
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            widget.productProvider.clearController();
+            widget.getProducts();
             if (!mounted) return;
             Navigator.pop(context);
           },
