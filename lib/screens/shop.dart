@@ -25,18 +25,9 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen> {
   List<ShopModel> shops = [];
-  String? searchNumber;
-  String? searchName;
-  String? searchInvoiceNumber;
-  String? searchInvoiceName;
 
   void _getShops() async {
-    List<ShopModel> tmpShops = await widget.shopProvider.getList(
-      number: searchNumber,
-      name: searchName,
-      invoiceNumber: searchInvoiceNumber,
-      invoiceName: searchInvoiceName,
-    );
+    List<ShopModel> tmpShops = await widget.shopProvider.getList();
     if (mounted) {
       setState(() => shops = tmpShops);
     }
@@ -65,7 +56,7 @@ class _ShopScreenState extends State<ShopScreen> {
                 ),
                 const SizedBox(height: 8),
                 Expander(
-                  header: const Text('検索条件 : なし'),
+                  header: Text('検索条件 : ${widget.shopProvider.searchText}'),
                   content: Column(
                     children: [
                       GridView(
@@ -75,41 +66,34 @@ class _ShopScreenState extends State<ShopScreen> {
                           InfoLabel(
                             label: '店舗番号',
                             child: CustomTextBox(
+                              controller: widget.shopProvider.searchNumber,
                               keyboardType: TextInputType.text,
                               maxLines: 1,
-                              onChanged: (value) {
-                                searchNumber = value;
-                              },
                             ),
                           ),
                           InfoLabel(
                             label: '店舗名',
                             child: CustomTextBox(
+                              controller: widget.shopProvider.searchName,
                               keyboardType: TextInputType.text,
                               maxLines: 1,
-                              onChanged: (value) {
-                                searchName = value;
-                              },
                             ),
                           ),
                           InfoLabel(
                             label: '請求用店舗番号',
                             child: CustomTextBox(
+                              controller:
+                                  widget.shopProvider.searchInvoiceNumber,
                               keyboardType: TextInputType.text,
                               maxLines: 1,
-                              onChanged: (value) {
-                                searchInvoiceNumber = value;
-                              },
                             ),
                           ),
                           InfoLabel(
                             label: '請求用店舗名',
                             child: CustomTextBox(
+                              controller: widget.shopProvider.searchInvoiceName,
                               keyboardType: TextInputType.text,
                               maxLines: 1,
-                              onChanged: (value) {
-                                searchInvoiceName = value;
-                              },
                             ),
                           ),
                         ],
@@ -125,10 +109,8 @@ class _ShopScreenState extends State<ShopScreen> {
                             labelColor: kLightBlueColor,
                             backgroundColor: kWhiteColor,
                             onPressed: () {
-                              searchNumber = null;
-                              searchName = null;
-                              searchInvoiceNumber = null;
-                              searchInvoiceName = null;
+                              widget.shopProvider.searchClear();
+                              _getShops();
                             },
                           ),
                           const SizedBox(width: 8),
@@ -138,9 +120,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             labelText: '検索する',
                             labelColor: kWhiteColor,
                             backgroundColor: kLightBlueColor,
-                            onPressed: () {
-                              _getShops();
-                            },
+                            onPressed: () => _getShops(),
                           ),
                         ],
                       ),

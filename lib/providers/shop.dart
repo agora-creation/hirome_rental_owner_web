@@ -26,17 +26,44 @@ class ShopProvider with ChangeNotifier {
     password.clear();
   }
 
-  Future<List<ShopModel>> getList({
-    String? number,
-    String? name,
-    String? invoiceNumber,
-    String? invoiceName,
-  }) async {
+  TextEditingController searchNumber = TextEditingController();
+  TextEditingController searchName = TextEditingController();
+  TextEditingController searchInvoiceNumber = TextEditingController();
+  TextEditingController searchInvoiceName = TextEditingController();
+  String searchText = 'なし';
+
+  void searchClear() {
+    searchText = 'なし';
+    searchNumber.clear();
+    searchName.clear();
+    searchInvoiceNumber.clear();
+    searchInvoiceName.clear();
+  }
+
+  Future<List<ShopModel>> getList() async {
+    if (searchNumber.text != '' ||
+        searchName.text != '' ||
+        searchInvoiceNumber.text != '' ||
+        searchInvoiceName.text != '') {
+      searchText = '';
+      if (searchNumber.text != '') {
+        searchText += '[店舗番号]${searchNumber.text} ';
+      }
+      if (searchName.text != '') {
+        searchText += '[店舗名]${searchName.text} ';
+      }
+      if (searchInvoiceNumber.text != '') {
+        searchText += '[請求用店舗番号]${searchInvoiceNumber.text} ';
+      }
+      if (searchInvoiceName.text != '') {
+        searchText += '[請求用店舗名]${searchInvoiceName.text} ';
+      }
+    }
     return await shopService.selectList(
-      number: number,
-      name: name,
-      invoiceNumber: invoiceNumber,
-      invoiceName: invoiceName,
+      number: searchNumber.text,
+      name: searchName.text,
+      invoiceNumber: searchInvoiceNumber.text,
+      invoiceName: searchInvoiceName.text,
     );
   }
 

@@ -36,18 +36,34 @@ class ShopService {
   }
 
   Future<List<ShopModel>> selectList({
-    String? number,
-    String? name,
-    String? invoiceNumber,
-    String? invoiceName,
+    required String number,
+    required String name,
+    required String invoiceNumber,
+    required String invoiceName,
   }) async {
     List<ShopModel> ret = [];
+    String? isEqualToNumber;
+    String? isEqualToName;
+    String? isEqualToInvoiceNumber;
+    String? isEqualToInvoiceName;
+    if (number != '') {
+      isEqualToNumber = number;
+    }
+    if (name != '') {
+      isEqualToName = name;
+    }
+    if (invoiceNumber != '') {
+      isEqualToInvoiceNumber = invoiceNumber;
+    }
+    if (invoiceName != '') {
+      isEqualToInvoiceName = invoiceName;
+    }
     await firestore
         .collection(collection)
-        .where('number', isEqualTo: number)
-        .where('name', isEqualTo: name)
-        .where('invoiceNumber', isEqualTo: invoiceNumber)
-        .where('invoiceName', isEqualTo: invoiceName)
+        .where('number', isEqualTo: isEqualToNumber)
+        .where('name', isEqualTo: isEqualToName)
+        .where('invoiceNumber', isEqualTo: isEqualToInvoiceNumber)
+        .where('invoiceName', isEqualTo: isEqualToInvoiceName)
         .get()
         .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
