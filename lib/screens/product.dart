@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
@@ -209,6 +212,8 @@ class AddProductDialog extends StatefulWidget {
 }
 
 class _AddProductDialogState extends State<AddProductDialog> {
+  PlatformFile? pickedImage;
+
   @override
   void initState() {
     super.initState();
@@ -280,11 +285,24 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '画像',
               child: GestureDetector(
-                onTap: () {},
-                child: Image.asset(
-                  'assets/images/no_image.png',
-                  fit: BoxFit.fitWidth,
-                ),
+                onTap: () async {
+                  final result = await FilePicker.platform.pickFiles(
+                    type: FileType.image,
+                  );
+                  if (result == null) return;
+                  setState(() {
+                    pickedImage = result.files.first;
+                  });
+                },
+                child: pickedImage == null
+                    ? Image.asset(
+                        'assets/images/no_image.png',
+                        fit: BoxFit.fitWidth,
+                      )
+                    : Image.memory(
+                        Uint8List.fromList(pickedImage!.bytes!),
+                        fit: BoxFit.fitWidth,
+                      ),
               ),
             ),
             const SizedBox(height: 8),
