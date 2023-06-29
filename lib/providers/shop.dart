@@ -9,6 +9,7 @@ class ShopProvider with ChangeNotifier {
   TextEditingController name = TextEditingController();
   TextEditingController invoiceName = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController priority = TextEditingController();
   TextEditingController searchNumber = TextEditingController();
   TextEditingController searchName = TextEditingController();
   TextEditingController searchInvoiceName = TextEditingController();
@@ -18,6 +19,7 @@ class ShopProvider with ChangeNotifier {
     name.text = shop.name;
     invoiceName.text = shop.invoiceName;
     password.text = shop.password;
+    priority.text = shop.priority.toString();
   }
 
   void clearController() {
@@ -25,6 +27,7 @@ class ShopProvider with ChangeNotifier {
     name.clear();
     invoiceName.clear();
     password.clear();
+    priority.clear();
   }
 
   void searchClear() {
@@ -72,6 +75,7 @@ class ShopProvider with ChangeNotifier {
         'invoiceName': invoiceName.text,
         'password': password.text,
         'favorites': [],
+        'priority': int.parse(priority.text),
         'createdAt': DateTime.now(),
       });
     } catch (e) {
@@ -89,6 +93,7 @@ class ShopProvider with ChangeNotifier {
         'name': name.text,
         'invoiceName': invoiceName.text,
         'password': password.text,
+        'priority': int.parse(priority.text),
       });
     } catch (e) {
       error = '保存に失敗しました';

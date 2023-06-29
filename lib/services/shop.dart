@@ -58,6 +58,7 @@ class ShopService {
         .where('number', isEqualTo: isEqualToNumber)
         .where('name', isEqualTo: isEqualToName)
         .where('invoiceName', isEqualTo: isEqualToInvoiceName)
+        .orderBy('priority', descending: false)
         .get()
         .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {

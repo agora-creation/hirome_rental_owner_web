@@ -44,6 +44,10 @@ class ShopSource extends DataGridSource {
           columnName: 'password',
           value: shop.password,
         ),
+        DataGridCell(
+          columnName: 'priority',
+          value: shop.priority,
+        ),
       ]);
     }).toList();
   }
@@ -97,6 +101,17 @@ class ShopSource extends DataGridSource {
     ));
     cells.add(CustomCell(
       label: '${row.getCells()[3].value}',
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => ModShopDialog(
+          shopProvider: shopProvider,
+          shop: shop,
+          getShops: getShops,
+        ),
+      ),
+    ));
+    cells.add(CustomCell(
+      label: '${row.getCells()[4].value}',
       onTap: () => showDialog(
         context: context,
         builder: (context) => ModShopDialog(
@@ -221,6 +236,16 @@ class _ModShopDialogState extends State<ModShopDialog> {
               controller: widget.shopProvider.password,
               placeholder: '',
               keyboardType: TextInputType.visiblePassword,
+              maxLines: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: '表示の優先順位',
+            child: CustomTextBox(
+              controller: widget.shopProvider.priority,
+              placeholder: '例) 0',
+              keyboardType: TextInputType.text,
               maxLines: 1,
             ),
           ),

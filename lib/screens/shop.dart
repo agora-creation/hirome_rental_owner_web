@@ -165,6 +165,10 @@ class _ShopScreenState extends State<ShopScreen> {
                         columnName: 'password',
                         label: const CustomCell(label: 'パスワード'),
                       ),
+                      GridColumn(
+                        columnName: 'priority',
+                        label: const CustomCell(label: '表示の優先順位'),
+                      ),
                     ],
                   ),
                 ),
@@ -245,6 +249,16 @@ class _AddShopDialogState extends State<AddShopDialog> {
               controller: widget.shopProvider.password,
               placeholder: '',
               keyboardType: TextInputType.visiblePassword,
+              maxLines: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: '表示の優先順位',
+            child: CustomTextBox(
+              controller: widget.shopProvider.priority,
+              placeholder: '例) 0',
+              keyboardType: TextInputType.text,
               maxLines: 1,
             ),
           ),
