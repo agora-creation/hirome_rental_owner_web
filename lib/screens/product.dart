@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
@@ -12,6 +12,7 @@ import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -212,8 +213,6 @@ class AddProductDialog extends StatefulWidget {
 }
 
 class _AddProductDialogState extends State<AddProductDialog> {
-  PlatformFile? pickedImage;
-
   @override
   void initState() {
     super.initState();
@@ -286,23 +285,18 @@ class _AddProductDialogState extends State<AddProductDialog> {
               label: '画像',
               child: GestureDetector(
                 onTap: () async {
-                  final result = await FilePicker.platform.pickFiles(
-                    type: FileType.image,
-                  );
-                  if (result == null) return;
-                  setState(() {
-                    pickedImage = result.files.first;
-                  });
+                  Uint8List? data = await ImagePickerWeb.getImageAsBytes();
+                  if (data != null) {
+                    var meta = SettableMetadata(contentType: 'image/*');
+                    FirebaseStorage.instance
+                        .ref('image/test')
+                        .putData(data, meta);
+                  }
                 },
-                child: pickedImage == null
-                    ? Image.asset(
-                        'assets/images/no_image.png',
-                        fit: BoxFit.fitWidth,
-                      )
-                    : Image.memory(
-                        Uint8List.fromList(pickedImage!.bytes!),
-                        fit: BoxFit.fitWidth,
-                      ),
+                child: Image.asset(
+                  'assets/images/no_image.png',
+                  fit: BoxFit.fitWidth,
+                ),
               ),
             ),
             const SizedBox(height: 8),

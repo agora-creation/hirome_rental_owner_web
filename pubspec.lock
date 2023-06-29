@@ -129,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
-  file_picker:
-    dependency: "direct main"
-    description:
-      name: file_picker
-      sha256: b1729fc96627dd44012d0a901558177418818d6bd428df59dcfeb594e5f66432
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.3.2"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -185,6 +177,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.0"
+  firebase_storage:
+    dependency: "direct main"
+    description:
+      name: firebase_storage
+      sha256: "195ae2b623ba054b9be3934c79bf6282831ca15a81cfd392841feea930e50253"
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.2.4"
+  firebase_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_storage_platform_interface
+      sha256: be0f4254cae3ccaefd5d1435b82c1fa3bda33187387b241c55b27d7516ea9b93
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.3"
+  firebase_storage_web:
+    dependency: transitive
+    description:
+      name: firebase_storage_web
+      sha256: f02c63c871deb36180b39a5fab1ee5b2677a01fa0fb642746ca62ae7f9d1a482
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.4"
   fluent_ui:
     dependency: "direct main"
     description:
@@ -211,14 +227,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_plugin_android_lifecycle:
-    dependency: transitive
-    description:
-      name: flutter_plugin_android_lifecycle
-      sha256: "950e77c2bbe1692bc0874fc7fb491b96a4dc340457f4ea1641443d0a6c1ea360"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.15"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -237,6 +245,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   http_parser:
     dependency: transitive
     description:
@@ -253,6 +269,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.17"
+  image_picker_web:
+    dependency: "direct main"
+    description:
+      name: image_picker_web
+      sha256: "1185be1cf3cf2ccd99be3f2fd451647147fe512f09db0aad894438ab95a984eb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0+1"
   intl:
     dependency: "direct main"
     description:

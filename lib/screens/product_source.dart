@@ -305,6 +305,28 @@ class _ModProductDialogState extends State<ModProductDialog> {
               maxLines: 1,
             ),
           ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: '表示の有無',
+            child: ComboBox<bool>(
+              value: widget.productProvider.display,
+              items: const [
+                ComboBoxItem(
+                  value: true,
+                  child: Text('表示'),
+                ),
+                ComboBoxItem(
+                  value: false,
+                  child: Text('非表示'),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  widget.productProvider.display = value ?? true;
+                });
+              },
+            ),
+          ),
         ],
       ),
       actions: [
