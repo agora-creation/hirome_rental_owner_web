@@ -5,6 +5,7 @@ import 'package:hirome_rental_owner_web/models/product.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_image_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -58,7 +59,7 @@ class ProductSource extends DataGridSource {
         ),
         DataGridCell(
           columnName: 'display',
-          value: product.display,
+          value: product.display ? '表示' : '非表示',
         ),
       ]);
     }).toList();
@@ -133,8 +134,8 @@ class ProductSource extends DataGridSource {
         ),
       ),
     ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[5].value}',
+    cells.add(CustomImageCell(
+      path: '${row.getCells()[5].value}',
       onTap: () => showDialog(
         context: context,
         builder: (context) => ModProductDialog(

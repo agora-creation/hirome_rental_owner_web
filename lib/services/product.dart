@@ -35,10 +35,29 @@ class ProductService {
     return ret;
   }
 
-  Future<List<ProductModel>> selectList() async {
+  Future<List<ProductModel>> selectList({
+    required String number,
+    required String name,
+    required String invoiceNumber,
+  }) async {
     List<ProductModel> ret = [];
+    String? isEqualToNumber;
+    String? isEqualToName;
+    String? isEqualToInvoiceNumber;
+    if (number != '') {
+      isEqualToNumber = number;
+    }
+    if (name != '') {
+      isEqualToName = name;
+    }
+    if (invoiceNumber != '') {
+      isEqualToInvoiceNumber = invoiceNumber;
+    }
     await firestore
         .collection(collection)
+        .where('number', isEqualTo: isEqualToNumber)
+        .where('name', isEqualTo: isEqualToName)
+        .where('invoiceNumber', isEqualTo: isEqualToInvoiceNumber)
         .orderBy('priority', descending: false)
         .get()
         .then((value) {

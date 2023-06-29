@@ -41,11 +41,25 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<List<ProductModel>> selectList() async {
-    List<ProductModel> ret = [];
-    await productService.selectList().then((value) {
-      ret = value;
-    });
-    return ret;
+    if (searchNumber.text != '' ||
+        searchName.text != '' ||
+        searchInvoiceNumber.text != '') {
+      searchText = '';
+      if (searchNumber.text != '') {
+        searchText += '[食器番号]${searchNumber.text} ';
+      }
+      if (searchName.text != '') {
+        searchText += '[食器名]${searchName.text} ';
+      }
+      if (searchInvoiceNumber.text != '') {
+        searchText += '[請求用食器番号]${searchInvoiceNumber.text} ';
+      }
+    }
+    return await productService.selectList(
+      number: searchNumber.text,
+      name: searchName.text,
+      invoiceNumber: searchInvoiceNumber.text,
+    );
   }
 
   Future<String?> create() async {
