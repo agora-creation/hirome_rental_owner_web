@@ -4,6 +4,8 @@ const kCompanyName = 'ひろめ市場';
 const kSystemName = '食器レンタルシステム';
 const kForName = '管理者専用';
 
+const kDefaultImageUrl = 'assets/images/default.png';
+
 const kBaseColor = Color(0xFF90A4AE);
 const kWhiteColor = Color(0xFFFFFFFF);
 const kBlackColor = Color(0xFF333333);

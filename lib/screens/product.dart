@@ -294,7 +294,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   }
                 },
                 child: Image.asset(
-                  'assets/images/no_image.png',
+                  'assets/images/default.png',
                   fit: BoxFit.fitWidth,
                 ),
               ),

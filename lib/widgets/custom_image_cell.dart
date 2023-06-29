@@ -18,7 +18,7 @@ class CustomImageCell extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         alignment: Alignment.centerLeft,
         child: Image.asset(
-          'assets/images/no_image.png',
+          'assets/images/default.png',
           fit: BoxFit.fitWidth,
         ),
       ),
