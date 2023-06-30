@@ -135,7 +135,7 @@ class ProductSource extends DataGridSource {
       ),
     ));
     cells.add(CustomImageCell(
-      path: '${row.getCells()[5].value}',
+      image: '${row.getCells()[5].value}',
       onTap: () => showDialog(
         context: context,
         builder: (context) => ModProductDialog(
@@ -259,7 +259,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
           InfoLabel(
             label: '食器名',
             child: CustomTextBox(
-              controller: widget.productProvider.name,
+              controller: widget.productProvider.inputName,
               placeholder: '例) ジョッキ',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -269,7 +269,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
           InfoLabel(
             label: '請求書用食器番号',
             child: CustomTextBox(
-              controller: widget.productProvider.invoiceNumber,
+              controller: widget.productProvider.inputInvoiceNumber,
               placeholder: '例) 1234',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -279,7 +279,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
           InfoLabel(
             label: '単価',
             child: CustomTextBox(
-              controller: widget.productProvider.price,
+              controller: widget.productProvider.inputPrice,
               placeholder: '例) 20',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -289,7 +289,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
           InfoLabel(
             label: '単位',
             child: CustomTextBox(
-              controller: widget.productProvider.unit,
+              controller: widget.productProvider.inputUnit,
               placeholder: '例) 枚',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -299,7 +299,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
           InfoLabel(
             label: '表示の優先順位',
             child: CustomTextBox(
-              controller: widget.productProvider.priority,
+              controller: widget.productProvider.inputPriority,
               placeholder: '例) 0',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -309,7 +309,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
           InfoLabel(
             label: '表示の有無',
             child: ComboBox<bool>(
-              value: widget.productProvider.display,
+              value: widget.productProvider.inputDisplay,
               items: const [
                 ComboBoxItem(
                   value: true,
@@ -322,7 +322,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
               ],
               onChanged: (value) {
                 setState(() {
-                  widget.productProvider.display = value ?? true;
+                  widget.productProvider.inputDisplay = value ?? true;
                 });
               },
             ),

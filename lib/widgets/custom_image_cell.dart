@@ -1,11 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/style.dart';
 
 class CustomImageCell extends StatelessWidget {
-  final String path;
+  final String image;
   final Function()? onTap;
 
   const CustomImageCell({
-    required this.path,
+    required this.image,
     this.onTap,
     super.key,
   });
@@ -17,10 +18,15 @@ class CustomImageCell extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         alignment: Alignment.centerLeft,
-        child: Image.asset(
-          'assets/images/default.png',
-          fit: BoxFit.fitWidth,
-        ),
+        child: image != ''
+            ? Image.network(
+                image,
+                fit: BoxFit.fitWidth,
+              )
+            : Image.asset(
+                kDefaultImageUrl,
+                fit: BoxFit.fitWidth,
+              ),
       ),
     );
   }

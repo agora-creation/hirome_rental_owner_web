@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
@@ -11,8 +11,8 @@ import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_input_image.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -213,6 +213,8 @@ class AddProductDialog extends StatefulWidget {
 }
 
 class _AddProductDialogState extends State<AddProductDialog> {
+  Uint8List? pickedImage;
+
   @override
   void initState() {
     super.initState();
@@ -234,7 +236,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '食器番号',
               child: CustomTextBox(
-                controller: widget.productProvider.number,
+                controller: widget.productProvider.inputNumber,
                 placeholder: '例) 1234',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -244,7 +246,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '食器名',
               child: CustomTextBox(
-                controller: widget.productProvider.name,
+                controller: widget.productProvider.inputName,
                 placeholder: '例) ジョッキ',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -254,7 +256,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '請求書用食器番号',
               child: CustomTextBox(
-                controller: widget.productProvider.invoiceNumber,
+                controller: widget.productProvider.inputInvoiceNumber,
                 placeholder: '例) 1234',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -264,7 +266,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '単価',
               child: CustomTextBox(
-                controller: widget.productProvider.price,
+                controller: widget.productProvider.inputPrice,
                 placeholder: '例) 20',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -274,7 +276,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '単位',
               child: CustomTextBox(
-                controller: widget.productProvider.unit,
+                controller: widget.productProvider.inputUnit,
                 placeholder: '例) 枚',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -283,27 +285,25 @@ class _AddProductDialogState extends State<AddProductDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: '画像',
-              child: GestureDetector(
+              child: CustomInputImage(
+                pickedImage: pickedImage,
                 onTap: () async {
-                  Uint8List? data = await ImagePickerWeb.getImageAsBytes();
-                  if (data != null) {
-                    var meta = SettableMetadata(contentType: 'image/*');
-                    FirebaseStorage.instance
-                        .ref('image/test')
-                        .putData(data, meta);
+                  final result = await FilePicker.platform.pickFiles(
+                    type: FileType.image,
+                  );
+                  if (result != null) {
+                    setState(() {
+                      pickedImage = result.files.first.bytes;
+                    });
                   }
                 },
-                child: Image.asset(
-                  'assets/images/default.png',
-                  fit: BoxFit.fitWidth,
-                ),
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: '表示の優先順位',
               child: CustomTextBox(
-                controller: widget.productProvider.priority,
+                controller: widget.productProvider.inputPriority,
                 placeholder: '例) 0',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -313,7 +313,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '表示の有無',
               child: ComboBox<bool>(
-                value: widget.productProvider.display,
+                value: widget.productProvider.inputDisplay,
                 items: const [
                   ComboBoxItem(
                     value: true,
@@ -326,7 +326,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 ],
                 onChanged: (value) {
                   setState(() {
-                    widget.productProvider.display = value ?? true;
+                    widget.productProvider.inputDisplay = value ?? true;
                   });
                 },
               ),
@@ -346,7 +346,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await widget.productProvider.create();
+            String? error = await widget.productProvider.create(pickedImage);
             if (error != null) {
               if (!mounted) return;
               showMessage(context, error, false);
