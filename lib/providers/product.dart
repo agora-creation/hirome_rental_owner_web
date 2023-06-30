@@ -115,7 +115,10 @@ class ProductProvider with ChangeNotifier {
     return error;
   }
 
-  Future<String?> update(ProductModel product, Uint8List? imageBytes) async {
+  Future<String?> update(
+    ProductModel product,
+    Uint8List? imageBytes,
+  ) async {
     String? error;
     if (inputName.text == '') return '食器名は必須です';
     int price = 0;
@@ -144,13 +147,14 @@ class ProductProvider with ChangeNotifier {
         'name': inputName.text,
         'invoiceNumber': inputInvoiceNumber.text,
         'price': price,
-        'unit': inputUnit,
+        'unit': inputUnit.text,
         'image': image,
         'priority': priority,
         'display': inputDisplay,
       });
     } catch (e) {
       error = '保存に失敗しました';
+      print(e.toString());
     }
     return error;
   }
