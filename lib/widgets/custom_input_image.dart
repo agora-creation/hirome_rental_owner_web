@@ -4,11 +4,13 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 
 class CustomInputImage extends StatelessWidget {
-  final Uint8List? pickedImage;
+  final String? url;
+  final Uint8List? picked;
   final Function()? onTap;
 
   const CustomInputImage({
-    this.pickedImage,
+    this.url,
+    this.picked,
     this.onTap,
     super.key,
   });
@@ -17,15 +19,20 @@ class CustomInputImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: pickedImage != null
+      child: picked != null
           ? Image.memory(
-              pickedImage!,
+              picked!,
               fit: BoxFit.fitWidth,
             )
-          : Image.asset(
-              kDefaultImageUrl,
-              fit: BoxFit.fitWidth,
-            ),
+          : url != null && url != ''
+              ? Image.network(
+                  url!,
+                  fit: BoxFit.fitWidth,
+                )
+              : Image.asset(
+                  kDefaultImageUrl,
+                  fit: BoxFit.fitWidth,
+                ),
     );
   }
 }

@@ -115,7 +115,7 @@ class ProductProvider with ChangeNotifier {
     return error;
   }
 
-  Future<String?> update(ProductModel product) async {
+  Future<String?> update(ProductModel product, Uint8List? imageBytes) async {
     String? error;
     if (inputName.text == '') return '食器名は必須です';
     int price = 0;
@@ -127,7 +127,18 @@ class ProductProvider with ChangeNotifier {
       priority = int.parse(inputPriority.text);
     }
     try {
-      String image = '';
+      String image = product.image;
+      if (imageBytes != null) {
+        storage.UploadTask uploadTask;
+        storage.Reference ref = storage.FirebaseStorage.instance
+            .ref()
+            .child('product')
+            .child('/${inputNumber.text}.jpeg');
+        final metadata = storage.SettableMetadata(contentType: 'image/jpeg');
+        uploadTask = ref.putData(imageBytes, metadata);
+        await uploadTask.whenComplete(() => null);
+        image = await ref.getDownloadURL();
+      }
       productService.update({
         'id': product.id,
         'name': inputName.text,

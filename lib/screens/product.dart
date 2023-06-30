@@ -286,7 +286,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '画像',
               child: CustomInputImage(
-                pickedImage: pickedImage,
+                picked: pickedImage,
                 onTap: () async {
                   final result = await FilePicker.platform.pickFiles(
                     type: FileType.image,

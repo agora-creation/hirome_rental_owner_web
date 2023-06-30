@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
@@ -6,6 +9,7 @@ import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_image_cell.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_input_image.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -234,6 +238,8 @@ class ModProductDialog extends StatefulWidget {
 }
 
 class _ModProductDialogState extends State<ModProductDialog> {
+  Uint8List? pickedImage;
+
   @override
   void initState() {
     super.initState();
@@ -247,87 +253,107 @@ class _ModProductDialogState extends State<ModProductDialog> {
         '食器 - 編集',
         style: TextStyle(fontSize: 18),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InfoLabel(
-            label: '食器番号',
-            child: Text(widget.product.number),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: '食器名',
-            child: CustomTextBox(
-              controller: widget.productProvider.inputName,
-              placeholder: '例) ジョッキ',
-              keyboardType: TextInputType.text,
-              maxLines: 1,
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InfoLabel(
+              label: '食器番号',
+              child: Text(widget.product.number),
             ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: '請求書用食器番号',
-            child: CustomTextBox(
-              controller: widget.productProvider.inputInvoiceNumber,
-              placeholder: '例) 1234',
-              keyboardType: TextInputType.text,
-              maxLines: 1,
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '食器名',
+              child: CustomTextBox(
+                controller: widget.productProvider.inputName,
+                placeholder: '例) ジョッキ',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: '単価',
-            child: CustomTextBox(
-              controller: widget.productProvider.inputPrice,
-              placeholder: '例) 20',
-              keyboardType: TextInputType.text,
-              maxLines: 1,
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '請求書用食器番号',
+              child: CustomTextBox(
+                controller: widget.productProvider.inputInvoiceNumber,
+                placeholder: '例) 1234',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: '単位',
-            child: CustomTextBox(
-              controller: widget.productProvider.inputUnit,
-              placeholder: '例) 枚',
-              keyboardType: TextInputType.text,
-              maxLines: 1,
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '単価',
+              child: CustomTextBox(
+                controller: widget.productProvider.inputPrice,
+                placeholder: '例) 20',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: '表示の優先順位',
-            child: CustomTextBox(
-              controller: widget.productProvider.inputPriority,
-              placeholder: '例) 0',
-              keyboardType: TextInputType.text,
-              maxLines: 1,
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '単位',
+              child: CustomTextBox(
+                controller: widget.productProvider.inputUnit,
+                placeholder: '例) 枚',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: '表示の有無',
-            child: ComboBox<bool>(
-              value: widget.productProvider.inputDisplay,
-              items: const [
-                ComboBoxItem(
-                  value: true,
-                  child: Text('表示'),
-                ),
-                ComboBoxItem(
-                  value: false,
-                  child: Text('非表示'),
-                ),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  widget.productProvider.inputDisplay = value ?? true;
-                });
-              },
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '画像',
+              child: CustomInputImage(
+                url: widget.product.image,
+                picked: pickedImage,
+                onTap: () async {
+                  final result = await FilePicker.platform.pickFiles(
+                    type: FileType.image,
+                  );
+                  if (result != null) {
+                    setState(() {
+                      pickedImage = result.files.first.bytes;
+                    });
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '表示の優先順位',
+              child: CustomTextBox(
+                controller: widget.productProvider.inputPriority,
+                placeholder: '例) 0',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '表示の有無',
+              child: ComboBox<bool>(
+                value: widget.productProvider.inputDisplay,
+                items: const [
+                  ComboBoxItem(
+                    value: true,
+                    child: Text('表示'),
+                  ),
+                  ComboBoxItem(
+                    value: false,
+                    child: Text('非表示'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    widget.productProvider.inputDisplay = value ?? true;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       actions: [
         CustomButton(
@@ -358,7 +384,10 @@ class _ModProductDialogState extends State<ModProductDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await widget.productProvider.update(widget.product);
+            String? error = await widget.productProvider.update(
+              widget.product,
+              pickedImage,
+            );
             if (error != null) {
               if (!mounted) return;
               showMessage(context, error, false);
