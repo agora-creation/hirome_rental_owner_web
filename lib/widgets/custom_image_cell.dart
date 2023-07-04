@@ -22,6 +22,13 @@ class CustomImageCell extends StatelessWidget {
             ? Image.network(
                 image,
                 fit: BoxFit.fitWidth,
+                loadingBuilder: (context, child, loading) {
+                  if (loading == null) return child;
+                  return Image.asset(
+                    kDefaultImageUrl,
+                    fit: BoxFit.fitWidth,
+                  );
+                },
               )
             : Image.asset(
                 kDefaultImageUrl,
