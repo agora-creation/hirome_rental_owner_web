@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/functions.dart';
 
 enum AuthStatus {
   authenticated,
@@ -14,6 +15,14 @@ class AuthProvider with ChangeNotifier {
   FirebaseAuth? auth;
   User? _authUser;
 
+  TextEditingController loginId = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+  void clearController() {
+    loginId.clear();
+    password.clear();
+  }
+
   AuthProvider.initialize() : auth = FirebaseAuth.instance {
     auth?.authStateChanges().listen(_onStateChanged);
   }
@@ -23,13 +32,18 @@ class AuthProvider with ChangeNotifier {
     try {
       _status = AuthStatus.authenticating;
       notifyListeners();
-      await auth?.signInAnonymously().then((value) {
-        print(value.user?.uid);
+      await auth?.signInAnonymously().then((value) async {
+        if (loginId.text == 'owner' && password.text == 'hirome0101') {
+          await setPrefsString('loginId', 'owner');
+        } else {
+          await auth?.signOut();
+          error = 'ログインに失敗しました';
+        }
       });
     } catch (e) {
       _status = AuthStatus.unauthenticated;
       notifyListeners();
-      error = '管理画面の起動に失敗しました';
+      error = 'ログインに失敗しました';
     }
     return error;
   }
@@ -37,6 +51,7 @@ class AuthProvider with ChangeNotifier {
   Future signOut() async {
     await auth?.signOut();
     _status = AuthStatus.unauthenticated;
+    await removePrefs('loginId');
     notifyListeners();
     return Future.delayed(Duration.zero);
   }
@@ -46,7 +61,12 @@ class AuthProvider with ChangeNotifier {
       _status = AuthStatus.unauthenticated;
     } else {
       _authUser = authUser;
-      _status = AuthStatus.authenticated;
+      String? tmpLoginId = await getPrefsString('loginId');
+      if (tmpLoginId == null) {
+        _status = AuthStatus.unauthenticated;
+      } else {
+        _status = AuthStatus.authenticated;
+      }
     }
     notifyListeners();
   }

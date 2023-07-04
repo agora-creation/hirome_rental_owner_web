@@ -1,11 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/providers/auth.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
 import 'package:hirome_rental_owner_web/screens/order.dart';
 import 'package:hirome_rental_owner_web/screens/product.dart';
 import 'package:hirome_rental_owner_web/screens/shop.dart';
+import 'package:hirome_rental_owner_web/screens/title.dart';
 import 'package:hirome_rental_owner_web/widgets/app_bar_title.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_button.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     final orderProvider = Provider.of<OrderProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
     final shopProvider = Provider.of<ShopProvider>(context);
@@ -35,7 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
             alignment: Alignment.centerRight,
             child: CustomIconButton(
               iconData: FluentIcons.settings,
-              onPressed: () {},
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => SignOutDialog(authProvider: authProvider),
+              ),
             ),
           ),
         ),
@@ -68,6 +76,61 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
         ],
       ),
+    );
+  }
+}
+
+class SignOutDialog extends StatefulWidget {
+  final AuthProvider authProvider;
+
+  const SignOutDialog({
+    required this.authProvider,
+    super.key,
+  });
+
+  @override
+  State<SignOutDialog> createState() => _SignOutDialogState();
+}
+
+class _SignOutDialogState extends State<SignOutDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        'システム情報',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('最終更新日: 2023/07/04 15:49'),
+          Text('ログインID: owner'),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          labelText: '閉じる',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          labelText: 'ログアウト',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            await widget.authProvider.signOut();
+            if (!mounted) return;
+            Navigator.pushReplacement(
+              context,
+              FluentPageRoute(
+                builder: (context) => const TitleScreen(),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }
