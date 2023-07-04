@@ -9,7 +9,7 @@ import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
 import 'package:hirome_rental_owner_web/screens/home.dart';
 import 'package:hirome_rental_owner_web/screens/splash.dart';
-import 'package:hirome_rental_owner_web/screens/title.dart';
+import 'package:hirome_rental_owner_web/screens/login.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
@@ -78,11 +78,11 @@ class SplashController extends StatelessWidget {
         return const SplashScreen();
       case AuthStatus.unauthenticated:
       case AuthStatus.authenticating:
-        return const TitleScreen();
+        return const LoginScreen();
       case AuthStatus.authenticated:
         return const HomeScreen();
       default:
-        return const TitleScreen();
+        return const LoginScreen();
     }
   }
 }

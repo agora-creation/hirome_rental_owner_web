@@ -21,11 +21,14 @@ class CustomBigButton extends StatelessWidget {
       child: FilledButton(
         onPressed: onPressed,
         style: ButtonStyle(backgroundColor: ButtonState.all(backgroundColor)),
-        child: Text(
-          labelText,
-          style: TextStyle(
-            color: labelColor,
-            fontSize: 16,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            labelText,
+            style: TextStyle(
+              color: labelColor,
+              fontSize: 16,
+            ),
           ),
         ),
       ),

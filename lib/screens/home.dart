@@ -7,7 +7,7 @@ import 'package:hirome_rental_owner_web/providers/shop.dart';
 import 'package:hirome_rental_owner_web/screens/order.dart';
 import 'package:hirome_rental_owner_web/screens/product.dart';
 import 'package:hirome_rental_owner_web/screens/shop.dart';
-import 'package:hirome_rental_owner_web/screens/title.dart';
+import 'package:hirome_rental_owner_web/screens/login.dart';
 import 'package:hirome_rental_owner_web/widgets/app_bar_title.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_button.dart';
@@ -125,7 +125,7 @@ class _SignOutDialogState extends State<SignOutDialog> {
             Navigator.pushReplacement(
               context,
               FluentPageRoute(
-                builder: (context) => const TitleScreen(),
+                builder: (context) => const LoginScreen(),
               ),
             );
           },
