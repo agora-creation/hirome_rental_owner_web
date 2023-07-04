@@ -136,7 +136,7 @@ class ProductProvider with ChangeNotifier {
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
             .child('product')
-            .child('/${inputNumber.text}.jpeg');
+            .child('/${product.number}.jpeg');
         final metadata = storage.SettableMetadata(contentType: 'image/jpeg');
         uploadTask = ref.putData(imageBytes, metadata);
         await uploadTask.whenComplete(() => null);
