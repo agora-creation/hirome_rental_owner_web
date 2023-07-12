@@ -48,6 +48,10 @@ class ShopSource extends DataGridSource {
           columnName: 'priority',
           value: shop.priority,
         ),
+        DataGridCell(
+          columnName: 'authority',
+          value: shop.authorityText(),
+        ),
       ]);
     }).toList();
   }
@@ -112,6 +116,17 @@ class ShopSource extends DataGridSource {
     ));
     cells.add(CustomCell(
       label: '${row.getCells()[4].value}',
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => ModShopDialog(
+          shopProvider: shopProvider,
+          shop: shop,
+          getShops: getShops,
+        ),
+      ),
+    ));
+    cells.add(CustomCell(
+      label: '${row.getCells()[5].value}',
       onTap: () => showDialog(
         context: context,
         builder: (context) => ModShopDialog(
@@ -198,7 +213,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
-        '店舗 - 編集',
+        '店舗アカウント - 編集',
         style: TextStyle(fontSize: 18),
       ),
       content: Column(
@@ -213,7 +228,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
           InfoLabel(
             label: '店舗名',
             child: CustomTextBox(
-              controller: widget.shopProvider.name,
+              controller: widget.shopProvider.inputName,
               placeholder: '例) たこ焼き はっちゃん',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -223,7 +238,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
           InfoLabel(
             label: '請求書用店舗名',
             child: CustomTextBox(
-              controller: widget.shopProvider.invoiceName,
+              controller: widget.shopProvider.inputInvoiceName,
               placeholder: '例) 株式会社八ちゃん堂',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -233,7 +248,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
           InfoLabel(
             label: 'パスワード',
             child: CustomTextBox(
-              controller: widget.shopProvider.password,
+              controller: widget.shopProvider.inputPassword,
               placeholder: '',
               keyboardType: TextInputType.visiblePassword,
               maxLines: 1,
@@ -241,12 +256,34 @@ class _ModShopDialogState extends State<ModShopDialog> {
           ),
           const SizedBox(height: 8),
           InfoLabel(
-            label: '表示の優先順位',
+            label: '表示順',
             child: CustomTextBox(
-              controller: widget.shopProvider.priority,
+              controller: widget.shopProvider.inputPriority,
               placeholder: '例) 0',
               keyboardType: TextInputType.text,
               maxLines: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: '権限',
+            child: ComboBox<int>(
+              value: widget.shopProvider.inputAuthority,
+              items: const [
+                ComboBoxItem(
+                  value: 0,
+                  child: Text('一般'),
+                ),
+                ComboBoxItem(
+                  value: 1,
+                  child: Text('インフォメーション'),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  widget.shopProvider.inputAuthority = value ?? 0;
+                });
+              },
             ),
           ),
         ],

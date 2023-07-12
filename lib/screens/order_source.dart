@@ -2,13 +2,18 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class OrderSource extends DataGridSource {
+  final BuildContext context;
   final List<OrderModel> orders;
 
-  OrderSource({required this.orders}) {
+  OrderSource({
+    required this.context,
+    required this.orders,
+  }) {
     buildDataGridRows();
   }
 
@@ -31,11 +36,11 @@ class OrderSource extends DataGridSource {
         ),
         DataGridCell(
           columnName: 'orderProducts',
-          value: order.getProducts(),
+          value: order.cartText(),
         ),
         DataGridCell(
           columnName: 'status',
-          value: order.getStatus(),
+          value: order.statusText(),
         ),
       ]);
     }).toList();
@@ -52,11 +57,44 @@ class OrderSource extends DataGridSource {
       backgroundColor = kWhiteColor;
     }
     List<Widget> cells = [];
-    cells.add(CustomCell(label: '${row.getCells()[0].value}'));
-    cells.add(CustomCell(label: '${row.getCells()[1].value}'));
-    cells.add(CustomCell(label: '${row.getCells()[2].value}'));
-    cells.add(CustomCell(label: '${row.getCells()[3].value}'));
-    cells.add(CustomCell(label: '${row.getCells()[4].value}'));
+    OrderModel order = orders.singleWhere(
+      (e) => e.number == '${row.getCells()[1].value}',
+    );
+    cells.add(CustomCell(
+      label: '${row.getCells()[0].value}',
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => OrderDetailsDialog(order: order),
+      ),
+    ));
+    cells.add(CustomCell(
+      label: '${row.getCells()[1].value}',
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => OrderDetailsDialog(order: order),
+      ),
+    ));
+    cells.add(CustomCell(
+      label: '${row.getCells()[2].value}',
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => OrderDetailsDialog(order: order),
+      ),
+    ));
+    cells.add(CustomCell(
+      label: '${row.getCells()[3].value}',
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => OrderDetailsDialog(order: order),
+      ),
+    ));
+    cells.add(CustomCell(
+      label: '${row.getCells()[4].value}',
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => OrderDetailsDialog(order: order),
+      ),
+    ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
 
@@ -104,5 +142,48 @@ class OrderSource extends DataGridSource {
 
   void updateDataSource() {
     notifyListeners();
+  }
+}
+
+class OrderDetailsDialog extends StatefulWidget {
+  final OrderModel order;
+
+  const OrderDetailsDialog({
+    required this.order,
+    super.key,
+  });
+
+  @override
+  State<OrderDetailsDialog> createState() => _OrderDetailsDialogState();
+}
+
+class _OrderDetailsDialogState extends State<OrderDetailsDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        '注文 - 詳細',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                '注文日時 : ${dateText('yyyy/MM/dd HH:mm', widget.order.createdAt)}'),
+            Text('注文番号 : ${widget.order.number}'),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          labelText: '閉じる',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
+    );
   }
 }

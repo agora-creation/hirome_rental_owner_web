@@ -13,8 +13,8 @@ class ProductProvider with ChangeNotifier {
   TextEditingController inputInvoiceNumber = TextEditingController();
   TextEditingController inputPrice = TextEditingController();
   TextEditingController inputUnit = TextEditingController();
+  int inputCategory = 0;
   TextEditingController inputPriority = TextEditingController();
-  bool inputDisplay = true;
   TextEditingController searchNumber = TextEditingController();
   TextEditingController searchName = TextEditingController();
   TextEditingController searchInvoiceNumber = TextEditingController();
@@ -25,8 +25,8 @@ class ProductProvider with ChangeNotifier {
     inputInvoiceNumber.text = product.invoiceNumber;
     inputPrice.text = product.price.toString();
     inputUnit.text = product.unit;
+    inputCategory = product.category;
     inputPriority.text = product.priority.toString();
-    inputDisplay = product.display;
   }
 
   void clearController() {
@@ -35,8 +35,8 @@ class ProductProvider with ChangeNotifier {
     inputInvoiceNumber.clear();
     inputPrice.clear();
     inputUnit.clear();
+    inputCategory = 0;
     inputPriority.clear();
-    inputDisplay = true;
   }
 
   void searchClear() {
@@ -105,8 +105,8 @@ class ProductProvider with ChangeNotifier {
         'price': price,
         'unit': inputUnit.text,
         'image': image,
+        'category': inputCategory,
         'priority': priority,
-        'display': inputDisplay,
         'createdAt': DateTime.now(),
       });
     } catch (e) {
@@ -149,12 +149,11 @@ class ProductProvider with ChangeNotifier {
         'price': price,
         'unit': inputUnit.text,
         'image': image,
+        'category': inputCategory,
         'priority': priority,
-        'display': inputDisplay,
       });
     } catch (e) {
       error = '保存に失敗しました';
-      print(e.toString());
     }
     return error;
   }

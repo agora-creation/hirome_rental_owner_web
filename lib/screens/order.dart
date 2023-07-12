@@ -48,7 +48,7 @@ class _OrderScreenState extends State<OrderScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  '店舗が注文したデータを一覧で表示します。検索で絞り込んだり、帳票の出力を行うことができます。',
+                  '各店舗が注文したデータを一覧で表示します。検索で絞り込んだり、帳票の出力を行うことができます。',
                   style: TextStyle(fontSize: 14),
                 ),
                 const SizedBox(height: 8),
@@ -85,7 +85,10 @@ class _OrderScreenState extends State<OrderScreen> {
                 SizedBox(
                   height: 450,
                   child: CustomDataGrid(
-                    source: OrderSource(orders: orders),
+                    source: OrderSource(
+                      context: context,
+                      orders: orders,
+                    ),
                     columns: [
                       GridColumn(
                         columnName: 'createdAt',

@@ -8,6 +8,7 @@ class ShopModel {
   String _password = '';
   List<String> favorites = [];
   int _priority = 0;
+  int _authority = 0;
   DateTime _createdAt = DateTime.now();
 
   String get id => _id;
@@ -16,6 +17,7 @@ class ShopModel {
   String get invoiceName => _invoiceName;
   String get password => _password;
   int get priority => _priority;
+  int get authority => _authority;
   DateTime get createdAt => _createdAt;
 
   ShopModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -27,6 +29,7 @@ class ShopModel {
     _password = map['password'] ?? '';
     favorites = _convertFavorites(map['favorites']);
     _priority = map['priority'] ?? 0;
+    _authority = map['authority'] ?? 0;
     _createdAt = map['createdAt'].toDate() ?? DateTime.now();
   }
 
@@ -34,6 +37,19 @@ class ShopModel {
     List<String> ret = [];
     for (dynamic id in list) {
       ret.add('$id');
+    }
+    return ret;
+  }
+
+  String authorityText() {
+    String ret = '';
+    switch (authority) {
+      case 0:
+        ret = '一般';
+        break;
+      case 1:
+        ret = 'インフォメーション';
+        break;
     }
     return ret;
   }

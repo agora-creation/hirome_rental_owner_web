@@ -167,7 +167,11 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                       GridColumn(
                         columnName: 'priority',
-                        label: const CustomCell(label: '表示の優先順位'),
+                        label: const CustomCell(label: '表示順'),
+                      ),
+                      GridColumn(
+                        columnName: 'authority',
+                        label: const CustomCell(label: '権限'),
                       ),
                     ],
                   ),
@@ -206,7 +210,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
-        '店舗 - 新規登録',
+        '店舗アカウント - 新規登録',
         style: TextStyle(fontSize: 18),
       ),
       content: Column(
@@ -216,7 +220,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: '店舗番号',
             child: CustomTextBox(
-              controller: widget.shopProvider.number,
+              controller: widget.shopProvider.inputNumber,
               placeholder: '例) 1234',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -226,7 +230,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: '店舗名',
             child: CustomTextBox(
-              controller: widget.shopProvider.name,
+              controller: widget.shopProvider.inputName,
               placeholder: '例) たこ焼き はっちゃん',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -236,7 +240,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: '請求書用店舗名',
             child: CustomTextBox(
-              controller: widget.shopProvider.invoiceName,
+              controller: widget.shopProvider.inputInvoiceName,
               placeholder: '例) 株式会社八ちゃん堂',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -246,7 +250,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: 'パスワード',
             child: CustomTextBox(
-              controller: widget.shopProvider.password,
+              controller: widget.shopProvider.inputPassword,
               placeholder: '',
               keyboardType: TextInputType.visiblePassword,
               maxLines: 1,
@@ -254,12 +258,34 @@ class _AddShopDialogState extends State<AddShopDialog> {
           ),
           const SizedBox(height: 8),
           InfoLabel(
-            label: '表示の優先順位',
+            label: '表示順',
             child: CustomTextBox(
-              controller: widget.shopProvider.priority,
+              controller: widget.shopProvider.inputPriority,
               placeholder: '例) 0',
               keyboardType: TextInputType.text,
               maxLines: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: '権限',
+            child: ComboBox<int>(
+              value: widget.shopProvider.inputAuthority,
+              items: const [
+                ComboBoxItem(
+                  value: 0,
+                  child: Text('一般'),
+                ),
+                ComboBoxItem(
+                  value: 1,
+                  child: Text('インフォメーション'),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  widget.shopProvider.inputAuthority = value ?? 0;
+                });
+              },
             ),
           ),
         ],

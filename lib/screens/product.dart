@@ -55,7 +55,7 @@ class _ProductScreenState extends State<ProductScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  '店舗が注文するための食器データを一覧で表示します。検索で絞り込んだり、登録・編集・削除することができます。',
+                  '各店舗が注文するための商品データを一覧で表示します。検索で絞り込んだり、登録・編集・削除することができます。',
                   style: TextStyle(fontSize: 14),
                 ),
                 const SizedBox(height: 8),
@@ -68,7 +68,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         gridDelegate: kSearchGrid,
                         children: [
                           InfoLabel(
-                            label: '食器番号',
+                            label: '商品番号',
                             child: CustomTextBox(
                               controller: widget.productProvider.searchNumber,
                               keyboardType: TextInputType.text,
@@ -76,7 +76,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             ),
                           ),
                           InfoLabel(
-                            label: '食器名',
+                            label: '商品名',
                             child: CustomTextBox(
                               controller: widget.productProvider.searchName,
                               keyboardType: TextInputType.text,
@@ -84,7 +84,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             ),
                           ),
                           InfoLabel(
-                            label: '請求用食器番号',
+                            label: '請求用商品番号',
                             child: CustomTextBox(
                               controller:
                                   widget.productProvider.searchInvoiceNumber,
@@ -156,15 +156,15 @@ class _ProductScreenState extends State<ProductScreen> {
                     columns: [
                       GridColumn(
                         columnName: 'number',
-                        label: const CustomCell(label: '食器番号'),
+                        label: const CustomCell(label: '商品番号'),
                       ),
                       GridColumn(
                         columnName: 'name',
-                        label: const CustomCell(label: '食器名'),
+                        label: const CustomCell(label: '商品名'),
                       ),
                       GridColumn(
                         columnName: 'invoiceNumber',
-                        label: const CustomCell(label: '請求用食器番号'),
+                        label: const CustomCell(label: '請求用商品番号'),
                       ),
                       GridColumn(
                         columnName: 'price',
@@ -179,12 +179,12 @@ class _ProductScreenState extends State<ProductScreen> {
                         label: const CustomCell(label: '画像'),
                       ),
                       GridColumn(
-                        columnName: 'priority',
-                        label: const CustomCell(label: '表示の優先順位'),
+                        columnName: 'category',
+                        label: const CustomCell(label: 'カテゴリ'),
                       ),
                       GridColumn(
-                        columnName: 'display',
-                        label: const CustomCell(label: '表示の有無'),
+                        columnName: 'priority',
+                        label: const CustomCell(label: '表示順'),
                       ),
                     ],
                   ),
@@ -225,7 +225,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
-        '食器 - 新規登録',
+        '商品 - 新規登録',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -234,7 +234,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InfoLabel(
-              label: '食器番号',
+              label: '商品番号',
               child: CustomTextBox(
                 controller: widget.productProvider.inputNumber,
                 placeholder: '例) 1234',
@@ -244,7 +244,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             ),
             const SizedBox(height: 8),
             InfoLabel(
-              label: '食器名',
+              label: '商品名',
               child: CustomTextBox(
                 controller: widget.productProvider.inputName,
                 placeholder: '例) ジョッキ',
@@ -254,7 +254,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             ),
             const SizedBox(height: 8),
             InfoLabel(
-              label: '請求書用食器番号',
+              label: '請求書用商品番号',
               child: CustomTextBox(
                 controller: widget.productProvider.inputInvoiceNumber,
                 placeholder: '例) 1234',
@@ -301,34 +301,38 @@ class _AddProductDialogState extends State<AddProductDialog> {
             ),
             const SizedBox(height: 8),
             InfoLabel(
-              label: '表示の優先順位',
+              label: 'カテゴリ',
+              child: ComboBox<int>(
+                value: widget.productProvider.inputCategory,
+                items: const [
+                  ComboBoxItem(
+                    value: 0,
+                    child: Text('食器'),
+                  ),
+                  ComboBoxItem(
+                    value: 1,
+                    child: Text('雑品'),
+                  ),
+                  ComboBoxItem(
+                    value: 9,
+                    child: Text('洗浄'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    widget.productProvider.inputCategory = value ?? 0;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '表示順',
               child: CustomTextBox(
                 controller: widget.productProvider.inputPriority,
                 placeholder: '例) 0',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '表示の有無',
-              child: ComboBox<bool>(
-                value: widget.productProvider.inputDisplay,
-                items: const [
-                  ComboBoxItem(
-                    value: true,
-                    child: Text('表示'),
-                  ),
-                  ComboBoxItem(
-                    value: false,
-                    child: Text('非表示'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    widget.productProvider.inputDisplay = value ?? true;
-                  });
-                },
               ),
             ),
           ],

@@ -4,10 +4,10 @@ import 'package:hirome_rental_owner_web/providers/auth.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
+import 'package:hirome_rental_owner_web/screens/login.dart';
 import 'package:hirome_rental_owner_web/screens/order.dart';
 import 'package:hirome_rental_owner_web/screens/product.dart';
 import 'package:hirome_rental_owner_web/screens/shop.dart';
-import 'package:hirome_rental_owner_web/screens/login.dart';
 import 'package:hirome_rental_owner_web/widgets/app_bar_title.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_button.dart';
@@ -64,13 +64,13 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.bank),
-            title: const Text('店舗管理'),
+            title: const Text('店舗アカウント管理'),
             body: ShopScreen(shopProvider: shopProvider),
           ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.beer_mug),
-            title: const Text('食器管理'),
+            title: const Text('商品管理'),
             body: ProductScreen(productProvider: productProvider),
           ),
           PaneItemSeparator(),
