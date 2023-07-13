@@ -35,13 +35,10 @@ class OrderProvider with ChangeNotifier {
   }
 
   Future<List<OrderModel>> selectList() async {
+    searchText =
+        '[注文日]${dateText('yyyy-MM-dd', searchStart)} ～ ${dateText('yyyy-MM-dd', searchEnd)} ';
     if (searchShop != null) {
-      searchText = '';
-      searchText +=
-          '[注文日]${dateText('yyyy-MM-dd', searchStart)} ～ ${dateText('yyyy-MM-dd', searchEnd)} ';
-      if (searchShop != null) {
-        searchText += '[発注元店舗]$searchShop ';
-      }
+      searchText += '[発注元店舗]$searchShop ';
     }
     return await orderService.selectList(
       shopName: searchShop,
