@@ -70,26 +70,61 @@ class _ProductScreenState extends State<ProductScreen> {
                           InfoLabel(
                             label: '商品番号',
                             child: CustomTextBox(
-                              controller: widget.productProvider.searchNumber,
+                              controller: TextEditingController(
+                                text: widget.productProvider.searchNumber,
+                              ),
                               keyboardType: TextInputType.text,
                               maxLines: 1,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value != '') {
+                                    widget.productProvider.searchNumber = value;
+                                  } else {
+                                    widget.productProvider.searchNumber = null;
+                                  }
+                                });
+                              },
                             ),
                           ),
                           InfoLabel(
                             label: '商品名',
                             child: CustomTextBox(
-                              controller: widget.productProvider.searchName,
+                              controller: TextEditingController(
+                                text: widget.productProvider.searchName,
+                              ),
                               keyboardType: TextInputType.text,
                               maxLines: 1,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value != '') {
+                                    widget.productProvider.searchName = value;
+                                  } else {
+                                    widget.productProvider.searchName = null;
+                                  }
+                                });
+                              },
                             ),
                           ),
                           InfoLabel(
                             label: '請求用商品番号',
                             child: CustomTextBox(
-                              controller:
-                                  widget.productProvider.searchInvoiceNumber,
+                              controller: TextEditingController(
+                                text:
+                                    widget.productProvider.searchInvoiceNumber,
+                              ),
                               keyboardType: TextInputType.text,
                               maxLines: 1,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value != '') {
+                                    widget.productProvider.searchInvoiceNumber =
+                                        value;
+                                  } else {
+                                    widget.productProvider.searchInvoiceNumber =
+                                        null;
+                                  }
+                                });
+                              },
                             ),
                           ),
                           InfoLabel(
@@ -249,7 +284,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '商品番号',
               child: CustomTextBox(
-                controller: widget.productProvider.inputNumber,
+                controller: widget.productProvider.number,
                 placeholder: '例) 1234',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -259,7 +294,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '商品名',
               child: CustomTextBox(
-                controller: widget.productProvider.inputName,
+                controller: widget.productProvider.name,
                 placeholder: '例) ジョッキ',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -269,7 +304,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '請求書用商品番号',
               child: CustomTextBox(
-                controller: widget.productProvider.inputInvoiceNumber,
+                controller: widget.productProvider.invoiceNumber,
                 placeholder: '例) 1234',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -279,7 +314,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '単価',
               child: CustomTextBox(
-                controller: widget.productProvider.inputPrice,
+                controller: widget.productProvider.price,
                 placeholder: '例) 20',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -289,7 +324,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '単位',
               child: CustomTextBox(
-                controller: widget.productProvider.inputUnit,
+                controller: widget.productProvider.unit,
                 placeholder: '例) 枚',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -316,11 +351,11 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: 'カテゴリ',
               child: ComboBox<int>(
-                value: widget.productProvider.inputCategory,
+                value: widget.productProvider.category,
                 items: kCategoryComboItems,
                 onChanged: (value) {
                   setState(() {
-                    widget.productProvider.inputCategory = value ?? 0;
+                    widget.productProvider.category = value ?? 0;
                   });
                 },
               ),
@@ -329,7 +364,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             InfoLabel(
               label: '表示順',
               child: CustomTextBox(
-                controller: widget.productProvider.inputPriority,
+                controller: widget.productProvider.priority,
                 placeholder: '例) 0',
                 keyboardType: TextInputType.text,
                 maxLines: 1,

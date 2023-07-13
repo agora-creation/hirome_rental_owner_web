@@ -21,7 +21,7 @@ class ProductService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
-  Future<ProductModel?> select({String? number}) async {
+  Future<ProductModel?> select(String? number) async {
     ProductModel? ret;
     await firestore
         .collection(collection)
@@ -36,34 +36,18 @@ class ProductService {
   }
 
   Future<List<ProductModel>> selectList({
-    required String number,
-    required String name,
-    required String invoiceNumber,
-    required int? category,
+    String? number,
+    String? name,
+    String? invoiceNumber,
+    int? category,
   }) async {
     List<ProductModel> ret = [];
-    String? isEqualToNumber;
-    String? isEqualToName;
-    String? isEqualToInvoiceNumber;
-    int? isEqualToCategory;
-    if (number != '') {
-      isEqualToNumber = number;
-    }
-    if (name != '') {
-      isEqualToName = name;
-    }
-    if (invoiceNumber != '') {
-      isEqualToInvoiceNumber = invoiceNumber;
-    }
-    if (category != null) {
-      isEqualToCategory = category;
-    }
     await firestore
         .collection(collection)
-        .where('number', isEqualTo: isEqualToNumber)
-        .where('name', isEqualTo: isEqualToName)
-        .where('invoiceNumber', isEqualTo: isEqualToInvoiceNumber)
-        .where('category', isEqualTo: isEqualToCategory)
+        .where('number', isEqualTo: number)
+        .where('name', isEqualTo: name)
+        .where('invoiceNumber', isEqualTo: invoiceNumber)
+        .where('category', isEqualTo: category)
         .orderBy('priority', descending: false)
         .get()
         .then((value) {

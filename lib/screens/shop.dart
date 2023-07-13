@@ -27,7 +27,7 @@ class _ShopScreenState extends State<ShopScreen> {
   List<ShopModel> shops = [];
 
   void _getShops() async {
-    List<ShopModel> tmpShops = await widget.shopProvider.getList();
+    List<ShopModel> tmpShops = await widget.shopProvider.selectList();
     if (mounted) {
       setState(() => shops = tmpShops);
     }
@@ -66,25 +66,60 @@ class _ShopScreenState extends State<ShopScreen> {
                           InfoLabel(
                             label: '店舗番号',
                             child: CustomTextBox(
-                              controller: widget.shopProvider.searchNumber,
+                              controller: TextEditingController(
+                                text: widget.shopProvider.searchNumber,
+                              ),
                               keyboardType: TextInputType.text,
                               maxLines: 1,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value != '') {
+                                    widget.shopProvider.searchNumber = value;
+                                  } else {
+                                    widget.shopProvider.searchNumber = null;
+                                  }
+                                });
+                              },
                             ),
                           ),
                           InfoLabel(
                             label: '店舗名',
                             child: CustomTextBox(
-                              controller: widget.shopProvider.searchName,
+                              controller: TextEditingController(
+                                text: widget.shopProvider.searchName,
+                              ),
                               keyboardType: TextInputType.text,
                               maxLines: 1,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value != '') {
+                                    widget.shopProvider.searchName = value;
+                                  } else {
+                                    widget.shopProvider.searchName = null;
+                                  }
+                                });
+                              },
                             ),
                           ),
                           InfoLabel(
                             label: '請求用店舗名',
                             child: CustomTextBox(
-                              controller: widget.shopProvider.searchInvoiceName,
+                              controller: TextEditingController(
+                                text: widget.shopProvider.searchInvoiceName,
+                              ),
                               keyboardType: TextInputType.text,
                               maxLines: 1,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value != '') {
+                                    widget.shopProvider.searchInvoiceName =
+                                        value;
+                                  } else {
+                                    widget.shopProvider.searchInvoiceName =
+                                        null;
+                                  }
+                                });
+                              },
                             ),
                           ),
                           InfoLabel(
@@ -233,7 +268,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: '店舗番号',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputNumber,
+              controller: widget.shopProvider.number,
               placeholder: '例) 1234',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -243,7 +278,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: '店舗名',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputName,
+              controller: widget.shopProvider.name,
               placeholder: '例) たこ焼き はっちゃん',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -253,7 +288,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: '請求書用店舗名',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputInvoiceName,
+              controller: widget.shopProvider.invoiceName,
               placeholder: '例) 株式会社八ちゃん堂',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -263,7 +298,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: 'パスワード',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputPassword,
+              controller: widget.shopProvider.password,
               placeholder: '',
               keyboardType: TextInputType.visiblePassword,
               maxLines: 1,
@@ -273,7 +308,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: '表示順',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputPriority,
+              controller: widget.shopProvider.priority,
               placeholder: '例) 0',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -283,11 +318,11 @@ class _AddShopDialogState extends State<AddShopDialog> {
           InfoLabel(
             label: '権限',
             child: ComboBox<int>(
-              value: widget.shopProvider.inputAuthority,
+              value: widget.shopProvider.authority,
               items: kAuthorityComboItems,
               onChanged: (value) {
                 setState(() {
-                  widget.shopProvider.inputAuthority = value ?? 0;
+                  widget.shopProvider.authority = value ?? 0;
                 });
               },
             ),

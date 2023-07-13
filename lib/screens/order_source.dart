@@ -40,10 +40,6 @@ class OrderSource extends DataGridSource {
           columnName: 'carts',
           value: order.cartsText(),
         ),
-        DataGridCell(
-          columnName: 'status',
-          value: order.statusText(),
-        ),
       ]);
     }).toList();
   }
@@ -85,13 +81,6 @@ class OrderSource extends DataGridSource {
     ));
     cells.add(CustomCell(
       label: '${row.getCells()[3].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => OrderDetailsDialog(order: order),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[4].value}',
       onTap: () => showDialog(
         context: context,
         builder: (context) => OrderDetailsDialog(order: order),
@@ -176,7 +165,6 @@ class _OrderDetailsDialogState extends State<OrderDetailsDialog> {
           ),
           Text('注文番号 : ${widget.order.number}'),
           Text('発注元店舗 : ${widget.order.shopName}'),
-          Text('ステータス : ${widget.order.statusText()}'),
           const SizedBox(height: 8),
           const Text('注文商品 : '),
           SizedBox(

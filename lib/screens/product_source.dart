@@ -266,7 +266,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
             InfoLabel(
               label: '商品名',
               child: CustomTextBox(
-                controller: widget.productProvider.inputName,
+                controller: widget.productProvider.name,
                 placeholder: '例) ジョッキ',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -276,7 +276,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
             InfoLabel(
               label: '請求書用商品番号',
               child: CustomTextBox(
-                controller: widget.productProvider.inputInvoiceNumber,
+                controller: widget.productProvider.invoiceNumber,
                 placeholder: '例) 1234',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -286,7 +286,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
             InfoLabel(
               label: '単価',
               child: CustomTextBox(
-                controller: widget.productProvider.inputPrice,
+                controller: widget.productProvider.price,
                 placeholder: '例) 20',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -296,7 +296,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
             InfoLabel(
               label: '単位',
               child: CustomTextBox(
-                controller: widget.productProvider.inputUnit,
+                controller: widget.productProvider.unit,
                 placeholder: '例) 枚',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
@@ -324,11 +324,11 @@ class _ModProductDialogState extends State<ModProductDialog> {
             InfoLabel(
               label: 'カテゴリ',
               child: ComboBox<int>(
-                value: widget.productProvider.inputCategory,
+                value: widget.productProvider.category,
                 items: kCategoryComboItems,
                 onChanged: (value) {
                   setState(() {
-                    widget.productProvider.inputCategory = value ?? 0;
+                    widget.productProvider.category = value ?? 0;
                   });
                 },
               ),
@@ -337,7 +337,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
             InfoLabel(
               label: '表示順',
               child: CustomTextBox(
-                controller: widget.productProvider.inputPriority,
+                controller: widget.productProvider.priority,
                 placeholder: '例) 0',
                 keyboardType: TextInputType.text,
                 maxLines: 1,

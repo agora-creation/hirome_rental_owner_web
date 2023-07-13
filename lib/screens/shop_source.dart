@@ -228,7 +228,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
           InfoLabel(
             label: '店舗名',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputName,
+              controller: widget.shopProvider.name,
               placeholder: '例) たこ焼き はっちゃん',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -238,7 +238,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
           InfoLabel(
             label: '請求書用店舗名',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputInvoiceName,
+              controller: widget.shopProvider.invoiceName,
               placeholder: '例) 株式会社八ちゃん堂',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -248,7 +248,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
           InfoLabel(
             label: 'パスワード',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputPassword,
+              controller: widget.shopProvider.password,
               placeholder: '',
               keyboardType: TextInputType.visiblePassword,
               maxLines: 1,
@@ -258,7 +258,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
           InfoLabel(
             label: '表示順',
             child: CustomTextBox(
-              controller: widget.shopProvider.inputPriority,
+              controller: widget.shopProvider.priority,
               placeholder: '例) 0',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -268,11 +268,11 @@ class _ModShopDialogState extends State<ModShopDialog> {
           InfoLabel(
             label: '権限',
             child: ComboBox<int>(
-              value: widget.shopProvider.inputAuthority,
+              value: widget.shopProvider.authority,
               items: kAuthorityComboItems,
               onChanged: (value) {
                 setState(() {
-                  widget.shopProvider.inputAuthority = value ?? 0;
+                  widget.shopProvider.authority = value ?? 0;
                 });
               },
             ),

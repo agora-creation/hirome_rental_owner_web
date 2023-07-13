@@ -2,6 +2,7 @@
 //0=受注待ち,1=受注完了,9=キャンセル
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/models/cart.dart';
 
 class OrderModel {
@@ -74,3 +75,18 @@ class OrderModel {
     return ret;
   }
 }
+
+List<ComboBoxItem<int>> kStatusComboItems = const [
+  ComboBoxItem(
+    value: 0,
+    child: Text('受注待ち'),
+  ),
+  ComboBoxItem(
+    value: 1,
+    child: Text('受注完了'),
+  ),
+  ComboBoxItem(
+    value: 9,
+    child: Text('キャンセル'),
+  ),
+];

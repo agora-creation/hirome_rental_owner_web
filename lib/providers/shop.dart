@@ -5,91 +5,89 @@ import 'package:hirome_rental_owner_web/services/shop.dart';
 class ShopProvider with ChangeNotifier {
   ShopService shopService = ShopService();
 
-  TextEditingController inputNumber = TextEditingController();
-  TextEditingController inputName = TextEditingController();
-  TextEditingController inputInvoiceName = TextEditingController();
-  TextEditingController inputPassword = TextEditingController();
-  TextEditingController inputPriority = TextEditingController();
-  int inputAuthority = 0;
-  TextEditingController searchNumber = TextEditingController();
-  TextEditingController searchName = TextEditingController();
-  TextEditingController searchInvoiceName = TextEditingController();
+  TextEditingController number = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController invoiceName = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController priority = TextEditingController();
+  int authority = 0;
+  String? searchNumber;
+  String? searchName;
+  String? searchInvoiceName;
   int? searchAuthority;
   String searchText = 'なし';
 
   void setController(ShopModel shop) {
-    inputName.text = shop.name;
-    inputInvoiceName.text = shop.invoiceName;
-    inputPassword.text = shop.password;
-    inputPriority.text = shop.priority.toString();
-    inputAuthority = shop.authority;
+    name.text = shop.name;
+    invoiceName.text = shop.invoiceName;
+    password.text = shop.password;
+    priority.text = shop.priority.toString();
+    authority = shop.authority;
   }
 
   void clearController() {
-    inputNumber.clear();
-    inputName.clear();
-    inputInvoiceName.clear();
-    inputPassword.clear();
-    inputPriority.clear();
-    inputAuthority = 0;
+    number.clear();
+    name.clear();
+    invoiceName.clear();
+    password.clear();
+    priority.clear();
+    authority = 0;
   }
 
   void searchClear() {
     searchText = 'なし';
-    searchNumber.clear();
-    searchName.clear();
-    searchInvoiceName.clear();
+    searchNumber = null;
+    searchName = null;
+    searchInvoiceName = null;
     searchAuthority = null;
   }
 
-  Future<List<ShopModel>> getList() async {
-    if (searchNumber.text != '' ||
-        searchName.text != '' ||
-        searchInvoiceName.text != '') {
+  Future<List<ShopModel>> selectList() async {
+    if (searchNumber != null ||
+        searchName != null ||
+        searchInvoiceName != null ||
+        searchAuthority != null) {
       searchText = '';
-      if (searchNumber.text != '') {
-        searchText += '[店舗番号]${searchNumber.text} ';
+      if (searchNumber != null) {
+        searchText += '[店舗番号]$searchNumber ';
       }
-      if (searchName.text != '') {
-        searchText += '[店舗名]${searchName.text} ';
+      if (searchName != null) {
+        searchText += '[店舗名]$searchName ';
       }
-      if (searchInvoiceName.text != '') {
-        searchText += '[請求用店舗名]${searchInvoiceName.text} ';
+      if (searchInvoiceName != null) {
+        searchText += '[請求用店舗名]$searchInvoiceName ';
       }
       if (searchAuthority != null) {
         searchText += '[権限]${authorityIntToString(searchAuthority)}';
       }
     }
     return await shopService.selectList(
-      number: searchNumber.text,
-      name: searchName.text,
-      invoiceName: searchInvoiceName.text,
+      number: searchNumber,
+      name: searchName,
+      invoiceName: searchInvoiceName,
       authority: searchAuthority,
     );
   }
 
   Future<String?> create() async {
     String? error;
-    if (inputNumber.text == '') return '店舗番号は必須です';
-    if (inputName.text == '') return '店舗名は必須です';
-    if (await shopService.select(number: inputNumber.text) != null) {
+    if (number.text == '') return '店舗番号は必須です';
+    if (name.text == '') return '店舗名は必須です';
+    if (await shopService.select(number.text) != null) {
       return '店舗番号が重複しています';
     }
-    int priority = 0;
-    if (inputPriority.text != '') {
-      priority = int.parse(inputPriority.text);
-    }
+
     try {
       String id = shopService.id();
       shopService.create({
         'id': id,
-        'number': inputNumber.text,
-        'name': inputName.text,
-        'invoiceName': inputInvoiceName.text,
-        'password': inputPassword.text,
+        'number': number.text,
+        'name': name.text,
+        'invoiceName': invoiceName.text,
+        'password': password.text,
         'favorites': [],
-        'priority': priority,
-        'authority': inputAuthority,
+        'priority': int.parse(priority.text),
+        'authority': authority,
         'createdAt': DateTime.now(),
       });
     } catch (e) {
@@ -100,19 +98,15 @@ class ShopProvider with ChangeNotifier {
 
   Future<String?> update(ShopModel shop) async {
     String? error;
-    if (inputName.text == '') return '店舗名は必須です';
-    int priority = 0;
-    if (inputPriority.text != '') {
-      priority = int.parse(inputPriority.text);
-    }
+    if (name.text == '') return '店舗名は必須です';
     try {
       shopService.update({
         'id': shop.id,
-        'name': inputName.text,
-        'invoiceName': inputInvoiceName.text,
-        'password': inputPassword.text,
-        'priority': priority,
-        'authority': inputAuthority,
+        'name': name.text,
+        'invoiceName': invoiceName.text,
+        'password': password.text,
+        'priority': int.parse(priority.text),
+        'authority': authority,
       });
     } catch (e) {
       error = '保存に失敗しました';

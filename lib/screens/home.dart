@@ -11,6 +11,7 @@ import 'package:hirome_rental_owner_web/screens/shop.dart';
 import 'package:hirome_rental_owner_web/widgets/app_bar_title.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_button.dart';
+import 'package:hirome_rental_owner_web/widgets/shop_login_list.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,7 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 CustomIconButton(
                   iconData: FluentIcons.authenticator_app,
-                  onPressed: () {},
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => const ShopLoginDialog(),
+                  ),
                 ),
                 const SizedBox(width: 4),
                 CustomIconButton(
@@ -88,6 +92,44 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
         ],
       ),
+    );
+  }
+}
+
+class ShopLoginDialog extends StatefulWidget {
+  const ShopLoginDialog({super.key});
+
+  @override
+  State<ShopLoginDialog> createState() => _ShopLoginDialogState();
+}
+
+class _ShopLoginDialogState extends State<ShopLoginDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        '店舗アカウントログイン - 承認',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('店舗アカウントのログインがありました\n不明なログインは「却下」を選択してください'),
+          SizedBox(height: 8),
+          ShopLoginList(),
+          ShopLoginList(),
+          ShopLoginList(),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          labelText: '閉じる',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
     );
   }
 }

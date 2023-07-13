@@ -67,11 +67,11 @@ class _OrderScreenState extends State<OrderScreen> {
                           ),
                           InfoLabel(
                             label: '発注元店舗',
-                            child: const CustomTextBox(),
-                          ),
-                          InfoLabel(
-                            label: 'ステータス',
-                            child: const CustomTextBox(),
+                            child: ComboBox<String>(
+                              value: null,
+                              items: [],
+                              onChanged: (value) {},
+                            ),
                           ),
                         ],
                       ),
@@ -148,10 +148,6 @@ class _OrderScreenState extends State<OrderScreen> {
                       GridColumn(
                         columnName: 'carts',
                         label: const CustomCell(label: '注文商品'),
-                      ),
-                      GridColumn(
-                        columnName: 'status',
-                        label: const CustomCell(label: 'ステータス'),
                       ),
                     ],
                   ),

@@ -8,86 +8,79 @@ import 'package:hirome_rental_owner_web/services/product.dart';
 class ProductProvider with ChangeNotifier {
   ProductService productService = ProductService();
 
-  TextEditingController inputNumber = TextEditingController();
-  TextEditingController inputName = TextEditingController();
-  TextEditingController inputInvoiceNumber = TextEditingController();
-  TextEditingController inputPrice = TextEditingController();
-  TextEditingController inputUnit = TextEditingController();
-  int inputCategory = 0;
-  TextEditingController inputPriority = TextEditingController();
-  TextEditingController searchNumber = TextEditingController();
-  TextEditingController searchName = TextEditingController();
-  TextEditingController searchInvoiceNumber = TextEditingController();
+  TextEditingController number = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController invoiceNumber = TextEditingController();
+  TextEditingController price = TextEditingController();
+  TextEditingController unit = TextEditingController();
+  int category = 0;
+  TextEditingController priority = TextEditingController();
+  String? searchNumber;
+  String? searchName;
+  String? searchInvoiceNumber;
   int? searchCategory;
   String searchText = 'なし';
 
   void setController(ProductModel product) {
-    inputName.text = product.name;
-    inputInvoiceNumber.text = product.invoiceNumber;
-    inputPrice.text = product.price.toString();
-    inputUnit.text = product.unit;
-    inputCategory = product.category;
-    inputPriority.text = product.priority.toString();
+    name.text = product.name;
+    invoiceNumber.text = product.invoiceNumber;
+    price.text = product.price.toString();
+    unit.text = product.unit;
+    category = product.category;
+    priority.text = product.priority.toString();
   }
 
   void clearController() {
-    inputNumber.clear();
-    inputName.clear();
-    inputInvoiceNumber.clear();
-    inputPrice.clear();
-    inputUnit.clear();
-    inputCategory = 0;
-    inputPriority.clear();
+    number.clear();
+    name.clear();
+    invoiceNumber.clear();
+    price.clear();
+    unit.clear();
+    category = 0;
+    priority.clear();
   }
 
   void searchClear() {
     searchText = 'なし';
-    searchNumber.clear();
-    searchName.clear();
-    searchInvoiceNumber.clear();
+    searchNumber = null;
+    searchName = null;
+    searchInvoiceNumber = null;
     searchCategory = null;
   }
 
   Future<List<ProductModel>> selectList() async {
-    if (searchNumber.text != '' ||
-        searchName.text != '' ||
-        searchInvoiceNumber.text != '') {
+    if (searchNumber != null ||
+        searchName != null ||
+        searchInvoiceNumber != null ||
+        searchCategory != null) {
       searchText = '';
-      if (searchNumber.text != '') {
-        searchText += '[商品番号]${searchNumber.text} ';
+      if (searchNumber != null) {
+        searchText += '[商品番号]$searchNumber ';
       }
-      if (searchName.text != '') {
-        searchText += '[商品名]${searchName.text} ';
+      if (searchName != null) {
+        searchText += '[商品名]$searchName ';
       }
-      if (searchInvoiceNumber.text != '') {
-        searchText += '[請求用商品番号]${searchInvoiceNumber.text} ';
+      if (searchInvoiceNumber != null) {
+        searchText += '[請求用商品番号]$searchInvoiceNumber ';
       }
       if (searchCategory != null) {
         searchText += '[カテゴリ]${categoryIntToString(searchCategory)}';
       }
     }
     return await productService.selectList(
-      number: searchNumber.text,
-      name: searchName.text,
-      invoiceNumber: searchInvoiceNumber.text,
+      number: searchNumber,
+      name: searchName,
+      invoiceNumber: searchInvoiceNumber,
       category: searchCategory,
     );
   }
 
   Future<String?> create(Uint8List? imageBytes) async {
     String? error;
-    if (inputNumber.text == '') return '食器番号は必須です';
-    if (inputName.text == '') return '食器名は必須です';
-    if (await productService.select(number: inputNumber.text) != null) {
-      return '食器番号が重複しています';
-    }
-    int price = 0;
-    if (inputPrice.text != '') {
-      price = int.parse(inputPrice.text);
-    }
-    int priority = 0;
-    if (inputPriority.text != '') {
-      priority = int.parse(inputPriority.text);
+    if (number.text == '') return '商品番号は必須です';
+    if (name.text == '') return '商品名は必須です';
+    if (await productService.select(number.text) != null) {
+      return '商品番号が重複しています';
     }
     try {
       String image = '';
@@ -96,7 +89,7 @@ class ProductProvider with ChangeNotifier {
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
             .child('product')
-            .child('/${inputNumber.text}.jpeg');
+            .child('/${number.text}.jpeg');
         final metadata = storage.SettableMetadata(contentType: 'image/jpeg');
         uploadTask = ref.putData(imageBytes, metadata);
         await uploadTask.whenComplete(() => null);
@@ -105,14 +98,14 @@ class ProductProvider with ChangeNotifier {
       String id = productService.id();
       productService.create({
         'id': id,
-        'number': inputNumber.text,
-        'name': inputName.text,
-        'invoiceNumber': inputInvoiceNumber.text,
-        'price': price,
-        'unit': inputUnit.text,
+        'number': number.text,
+        'name': name.text,
+        'invoiceNumber': invoiceNumber.text,
+        'price': int.parse(price.text),
+        'unit': unit.text,
         'image': image,
-        'category': inputCategory,
-        'priority': priority,
+        'category': category,
+        'priority': int.parse(priority.text),
         'createdAt': DateTime.now(),
       });
     } catch (e) {
@@ -126,15 +119,7 @@ class ProductProvider with ChangeNotifier {
     Uint8List? imageBytes,
   ) async {
     String? error;
-    if (inputName.text == '') return '食器名は必須です';
-    int price = 0;
-    if (inputPrice.text != '') {
-      price = int.parse(inputPrice.text);
-    }
-    int priority = 0;
-    if (inputPriority.text != '') {
-      priority = int.parse(inputPriority.text);
-    }
+    if (name.text == '') return '商品名は必須です';
     try {
       String image = product.image;
       if (imageBytes != null) {
@@ -150,13 +135,13 @@ class ProductProvider with ChangeNotifier {
       }
       productService.update({
         'id': product.id,
-        'name': inputName.text,
-        'invoiceNumber': inputInvoiceNumber.text,
-        'price': price,
-        'unit': inputUnit.text,
+        'name': name.text,
+        'invoiceNumber': invoiceNumber.text,
+        'price': int.parse(price.text),
+        'unit': unit.text,
         'image': image,
-        'category': inputCategory,
-        'priority': priority,
+        'category': category,
+        'priority': int.parse(priority.text),
       });
     } catch (e) {
       error = '保存に失敗しました';

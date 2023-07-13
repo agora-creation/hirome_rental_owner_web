@@ -25,6 +25,7 @@ class OrderService {
     List<OrderModel> ret = [];
     await firestore
         .collection(collection)
+        .where('status', isEqualTo: 1)
         .orderBy('createdAt', descending: true)
         .get()
         .then((value) {
