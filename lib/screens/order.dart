@@ -1,12 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
+import 'package:hirome_rental_owner_web/models/shop.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/screens/order_source.dart';
+import 'package:hirome_rental_owner_web/services/shop.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_data_range_box.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
-import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -22,7 +25,9 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  ShopService shopService = ShopService();
   List<OrderModel> orders = [];
+  List<ShopModel> shops = [];
 
   void _getOrders() async {
     List<OrderModel> tmpOrders = await widget.orderProvider.selectList();
@@ -31,10 +36,18 @@ class _OrderScreenState extends State<OrderScreen> {
     }
   }
 
+  void _getShops() async {
+    List<ShopModel> tmpShops = await shopService.selectList();
+    if (mounted) {
+      setState(() => shops = tmpShops);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _getOrders();
+    _getShops();
   }
 
   @override
@@ -54,7 +67,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 const SizedBox(height: 8),
                 Expander(
-                  header: const Text('検索条件 : なし'),
+                  header: Text('検索条件 : ${widget.orderProvider.searchText}'),
                   content: Column(
                     children: [
                       GridView(
@@ -62,15 +75,45 @@ class _OrderScreenState extends State<OrderScreen> {
                         gridDelegate: kSearchGrid,
                         children: [
                           InfoLabel(
-                            label: '注文期間',
-                            child: const CustomTextBox(),
+                            label: '注文日',
+                            child: CustomDateRangeBox(
+                              startValue: widget.orderProvider.searchStart,
+                              endValue: widget.orderProvider.searchEnd,
+                              onTap: () async {
+                                var selected = await showDataRangePickerDialog(
+                                  context,
+                                  widget.orderProvider.searchStart,
+                                  widget.orderProvider.searchEnd,
+                                );
+                                if (selected != null &&
+                                    selected.first != null &&
+                                    selected.last != null) {
+                                  setState(() {
+                                    widget.orderProvider.searchStart =
+                                        selected.first!;
+                                    widget.orderProvider.searchEnd =
+                                        selected.last!;
+                                  });
+                                }
+                              },
+                            ),
                           ),
                           InfoLabel(
                             label: '発注元店舗',
                             child: ComboBox<String>(
-                              value: null,
-                              items: [],
-                              onChanged: (value) {},
+                              value: widget.orderProvider.searchShop,
+                              items: shops.map((shop) {
+                                return ComboBoxItem(
+                                  value: shop.name,
+                                  child: Text(shop.name),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  widget.orderProvider.searchShop = value;
+                                });
+                              },
+                              isExpanded: true,
                             ),
                           ),
                         ],
@@ -85,7 +128,10 @@ class _OrderScreenState extends State<OrderScreen> {
                             labelText: '検索リセット',
                             labelColor: kLightBlueColor,
                             backgroundColor: kWhiteColor,
-                            onPressed: () {},
+                            onPressed: () {
+                              widget.orderProvider.searchClear();
+                              _getOrders();
+                            },
                           ),
                           const SizedBox(width: 8),
                           CustomIconTextButton(
@@ -94,7 +140,7 @@ class _OrderScreenState extends State<OrderScreen> {
                             labelText: '検索する',
                             labelColor: kWhiteColor,
                             backgroundColor: kLightBlueColor,
-                            onPressed: () {},
+                            onPressed: () => _getOrders(),
                           ),
                         ],
                       ),
