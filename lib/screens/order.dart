@@ -6,6 +6,7 @@ import 'package:hirome_rental_owner_web/screens/order_source.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -52,10 +53,52 @@ class _OrderScreenState extends State<OrderScreen> {
                   style: TextStyle(fontSize: 14),
                 ),
                 const SizedBox(height: 8),
-                const Expander(
-                  header: Text('検索条件 : なし'),
+                Expander(
+                  header: const Text('検索条件 : なし'),
                   content: Column(
-                    children: [],
+                    children: [
+                      GridView(
+                        shrinkWrap: true,
+                        gridDelegate: kSearchGrid,
+                        children: [
+                          InfoLabel(
+                            label: '注文期間',
+                            child: const CustomTextBox(),
+                          ),
+                          InfoLabel(
+                            label: '発注元店舗',
+                            child: const CustomTextBox(),
+                          ),
+                          InfoLabel(
+                            label: 'ステータス',
+                            child: const CustomTextBox(),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomIconTextButton(
+                            iconData: FluentIcons.clear,
+                            iconColor: kLightBlueColor,
+                            labelText: '検索リセット',
+                            labelColor: kLightBlueColor,
+                            backgroundColor: kWhiteColor,
+                            onPressed: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          CustomIconTextButton(
+                            iconData: FluentIcons.search,
+                            iconColor: kWhiteColor,
+                            labelText: '検索する',
+                            labelColor: kWhiteColor,
+                            backgroundColor: kLightBlueColor,
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -83,7 +126,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 450,
+                  height: 600,
                   child: CustomDataGrid(
                     source: OrderSource(
                       context: context,
@@ -103,7 +146,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         label: const CustomCell(label: '発注元店舗'),
                       ),
                       GridColumn(
-                        columnName: 'orderProducts',
+                        columnName: 'carts',
                         label: const CustomCell(label: '注文商品'),
                       ),
                       GridColumn(

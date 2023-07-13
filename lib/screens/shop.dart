@@ -87,6 +87,19 @@ class _ShopScreenState extends State<ShopScreen> {
                               maxLines: 1,
                             ),
                           ),
+                          InfoLabel(
+                            label: '権限',
+                            child: ComboBox<int>(
+                              value: widget.shopProvider.searchAuthority,
+                              items: kAuthorityComboItems,
+                              onChanged: (value) {
+                                setState(() {
+                                  widget.shopProvider.searchAuthority = value;
+                                });
+                              },
+                              isExpanded: true,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -271,16 +284,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
             label: '権限',
             child: ComboBox<int>(
               value: widget.shopProvider.inputAuthority,
-              items: const [
-                ComboBoxItem(
-                  value: 0,
-                  child: Text('一般'),
-                ),
-                ComboBoxItem(
-                  value: 1,
-                  child: Text('インフォメーション'),
-                ),
-              ],
+              items: kAuthorityComboItems,
               onChanged: (value) {
                 setState(() {
                   widget.shopProvider.inputAuthority = value ?? 0;

@@ -39,11 +39,13 @@ class ShopService {
     required String number,
     required String name,
     required String invoiceName,
+    required int? authority,
   }) async {
     List<ShopModel> ret = [];
     String? isEqualToNumber;
     String? isEqualToName;
     String? isEqualToInvoiceName;
+    int? isEqualToAuthority;
     if (number != '') {
       isEqualToNumber = number;
     }
@@ -53,11 +55,15 @@ class ShopService {
     if (invoiceName != '') {
       isEqualToInvoiceName = invoiceName;
     }
+    if (authority != null) {
+      isEqualToAuthority = authority;
+    }
     await firestore
         .collection(collection)
         .where('number', isEqualTo: isEqualToNumber)
         .where('name', isEqualTo: isEqualToName)
         .where('invoiceName', isEqualTo: isEqualToInvoiceName)
+        .where('authority', isEqualTo: isEqualToAuthority)
         .orderBy('priority', descending: false)
         .get()
         .then((value) {

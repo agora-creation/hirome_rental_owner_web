@@ -48,7 +48,7 @@ class OrderModel {
     return ret;
   }
 
-  String cartText() {
+  String cartsText() {
     String ret = '${carts.first.name}...他';
     int totalQuantity = 0;
     for (CartModel cart in carts) {

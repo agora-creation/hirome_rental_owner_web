@@ -38,12 +38,24 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Align(
             alignment: Alignment.centerRight,
-            child: CustomIconButton(
-              iconData: FluentIcons.settings,
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => SignOutDialog(authProvider: authProvider),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomIconButton(
+                  iconData: FluentIcons.authenticator_app,
+                  onPressed: () {},
+                ),
+                const SizedBox(width: 4),
+                CustomIconButton(
+                  iconData: FluentIcons.settings,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => SignOutDialog(
+                      authProvider: authProvider,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

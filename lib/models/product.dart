@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class ProductModel {
   String _id = '';
@@ -53,3 +54,34 @@ class ProductModel {
     return ret;
   }
 }
+
+String categoryIntToString(int? value) {
+  String ret = '';
+  switch (value) {
+    case 0:
+      ret = '食器';
+      break;
+    case 1:
+      ret = '雑品';
+      break;
+    case 9:
+      ret = '洗浄';
+      break;
+  }
+  return ret;
+}
+
+List<ComboBoxItem<int>> kCategoryComboItems = const [
+  ComboBoxItem(
+    value: 0,
+    child: Text('食器'),
+  ),
+  ComboBoxItem(
+    value: 1,
+    child: Text('雑品'),
+  ),
+  ComboBoxItem(
+    value: 9,
+    child: Text('洗浄'),
+  ),
+];

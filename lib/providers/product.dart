@@ -18,6 +18,7 @@ class ProductProvider with ChangeNotifier {
   TextEditingController searchNumber = TextEditingController();
   TextEditingController searchName = TextEditingController();
   TextEditingController searchInvoiceNumber = TextEditingController();
+  int? searchCategory;
   String searchText = 'なし';
 
   void setController(ProductModel product) {
@@ -44,6 +45,7 @@ class ProductProvider with ChangeNotifier {
     searchNumber.clear();
     searchName.clear();
     searchInvoiceNumber.clear();
+    searchCategory = null;
   }
 
   Future<List<ProductModel>> selectList() async {
@@ -52,19 +54,23 @@ class ProductProvider with ChangeNotifier {
         searchInvoiceNumber.text != '') {
       searchText = '';
       if (searchNumber.text != '') {
-        searchText += '[食器番号]${searchNumber.text} ';
+        searchText += '[商品番号]${searchNumber.text} ';
       }
       if (searchName.text != '') {
-        searchText += '[食器名]${searchName.text} ';
+        searchText += '[商品名]${searchName.text} ';
       }
       if (searchInvoiceNumber.text != '') {
-        searchText += '[請求用食器番号]${searchInvoiceNumber.text} ';
+        searchText += '[請求用商品番号]${searchInvoiceNumber.text} ';
+      }
+      if (searchCategory != null) {
+        searchText += '[カテゴリ]${categoryIntToString(searchCategory)}';
       }
     }
     return await productService.selectList(
       number: searchNumber.text,
       name: searchName.text,
       invoiceNumber: searchInvoiceNumber.text,
+      category: searchCategory,
     );
   }
 

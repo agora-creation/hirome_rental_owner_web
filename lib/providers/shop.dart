@@ -14,6 +14,7 @@ class ShopProvider with ChangeNotifier {
   TextEditingController searchNumber = TextEditingController();
   TextEditingController searchName = TextEditingController();
   TextEditingController searchInvoiceName = TextEditingController();
+  int? searchAuthority;
   String searchText = 'なし';
 
   void setController(ShopModel shop) {
@@ -38,6 +39,7 @@ class ShopProvider with ChangeNotifier {
     searchNumber.clear();
     searchName.clear();
     searchInvoiceName.clear();
+    searchAuthority = null;
   }
 
   Future<List<ShopModel>> getList() async {
@@ -54,11 +56,15 @@ class ShopProvider with ChangeNotifier {
       if (searchInvoiceName.text != '') {
         searchText += '[請求用店舗名]${searchInvoiceName.text} ';
       }
+      if (searchAuthority != null) {
+        searchText += '[権限]${authorityIntToString(searchAuthority)}';
+      }
     }
     return await shopService.selectList(
       number: searchNumber.text,
       name: searchName.text,
       invoiceName: searchInvoiceName.text,
+      authority: searchAuthority,
     );
   }
 

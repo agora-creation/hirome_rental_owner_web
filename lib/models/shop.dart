@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class ShopModel {
   String _id = '';
@@ -54,3 +55,27 @@ class ShopModel {
     return ret;
   }
 }
+
+String authorityIntToString(int? value) {
+  String ret = '';
+  switch (value) {
+    case 0:
+      ret = '一般';
+      break;
+    case 1:
+      ret = 'インフォメーション';
+      break;
+  }
+  return ret;
+}
+
+List<ComboBoxItem<int>> kAuthorityComboItems = const [
+  ComboBoxItem(
+    value: 0,
+    child: Text('一般'),
+  ),
+  ComboBoxItem(
+    value: 1,
+    child: Text('インフォメーション'),
+  ),
+];

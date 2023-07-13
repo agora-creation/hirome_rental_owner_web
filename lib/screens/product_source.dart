@@ -325,20 +325,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
               label: 'カテゴリ',
               child: ComboBox<int>(
                 value: widget.productProvider.inputCategory,
-                items: const [
-                  ComboBoxItem(
-                    value: 0,
-                    child: Text('食器'),
-                  ),
-                  ComboBoxItem(
-                    value: 1,
-                    child: Text('雑品'),
-                  ),
-                  ComboBoxItem(
-                    value: 9,
-                    child: Text('洗浄'),
-                  ),
-                ],
+                items: kCategoryComboItems,
                 onChanged: (value) {
                   setState(() {
                     widget.productProvider.inputCategory = value ?? 0;

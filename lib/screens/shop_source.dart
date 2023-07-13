@@ -269,16 +269,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
             label: '権限',
             child: ComboBox<int>(
               value: widget.shopProvider.inputAuthority,
-              items: const [
-                ComboBoxItem(
-                  value: 0,
-                  child: Text('一般'),
-                ),
-                ComboBoxItem(
-                  value: 1,
-                  child: Text('インフォメーション'),
-                ),
-              ],
+              items: kAuthorityComboItems,
               onChanged: (value) {
                 setState(() {
                   widget.shopProvider.inputAuthority = value ?? 0;

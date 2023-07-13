@@ -1,7 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/models/cart.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
+import 'package:hirome_rental_owner_web/widgets/cart_list.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -35,8 +37,8 @@ class OrderSource extends DataGridSource {
           value: order.shopName,
         ),
         DataGridCell(
-          columnName: 'orderProducts',
-          value: order.cartText(),
+          columnName: 'carts',
+          value: order.cartsText(),
         ),
         DataGridCell(
           columnName: 'status',
@@ -165,16 +167,30 @@ class _OrderDetailsDialogState extends State<OrderDetailsDialog> {
         '注文 - 詳細',
         style: TextStyle(fontSize: 18),
       ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                '注文日時 : ${dateText('yyyy/MM/dd HH:mm', widget.order.createdAt)}'),
-            Text('注文番号 : ${widget.order.number}'),
-          ],
-        ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '注文日時 : ${dateText('yyyy/MM/dd HH:mm', widget.order.createdAt)}',
+          ),
+          Text('注文番号 : ${widget.order.number}'),
+          Text('発注元店舗 : ${widget.order.shopName}'),
+          Text('ステータス : ${widget.order.statusText()}'),
+          const SizedBox(height: 8),
+          const Text('注文商品 : '),
+          SizedBox(
+            height: 250,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.order.carts.length,
+              itemBuilder: (context, index) {
+                CartModel cart = widget.order.carts[index];
+                return CartList(cart: cart);
+              },
+            ),
+          ),
+        ],
       ),
       actions: [
         CustomButton(
