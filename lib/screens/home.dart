@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/models/shop_login.dart';
 import 'package:hirome_rental_owner_web/providers/auth.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
@@ -8,6 +10,7 @@ import 'package:hirome_rental_owner_web/screens/login.dart';
 import 'package:hirome_rental_owner_web/screens/order.dart';
 import 'package:hirome_rental_owner_web/screens/product.dart';
 import 'package:hirome_rental_owner_web/screens/shop.dart';
+import 'package:hirome_rental_owner_web/services/shop_login.dart';
 import 'package:hirome_rental_owner_web/widgets/app_bar_title.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_button.dart';
@@ -104,6 +107,8 @@ class ShopLoginDialog extends StatefulWidget {
 }
 
 class _ShopLoginDialogState extends State<ShopLoginDialog> {
+  ShopLoginService shopLoginService = ShopLoginService();
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
@@ -111,15 +116,34 @@ class _ShopLoginDialogState extends State<ShopLoginDialog> {
         '店舗アカウントログイン - 承認',
         style: TextStyle(fontSize: 18),
       ),
-      content: const Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('店舗アカウントのログインがありました\n不明なログインは「却下」を選択してください'),
-          SizedBox(height: 8),
-          ShopLoginList(),
-          ShopLoginList(),
-          ShopLoginList(),
+          const Text('店舗アカウントのログインがありました\n不明なログインは「却下」をクリックしてください'),
+          const SizedBox(height: 8),
+          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: shopLoginService.streamList(),
+            builder: (context, snapshot) {
+              List<ShopLoginModel> shopLogins = [];
+              if (snapshot.hasData) {
+                for (DocumentSnapshot<Map<String, dynamic>> doc
+                    in snapshot.data!.docs) {
+                  shopLogins.add(ShopLoginModel.fromSnapshot(doc));
+                }
+              }
+              return SizedBox(
+                height: 250,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: shopLogins.length,
+                  itemBuilder: (context, index) {
+                    return const ShopLoginList();
+                  },
+                ),
+              );
+            },
+          ),
         ],
       ),
       actions: [

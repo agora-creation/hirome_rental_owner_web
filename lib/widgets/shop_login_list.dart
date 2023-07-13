@@ -1,9 +1,19 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/models/shop_login.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 
 class ShopLoginList extends StatelessWidget {
-  const ShopLoginList({super.key});
+  final ShopLoginModel shopLogin;
+  final Function()? trueOnPressed;
+  final Function()? falseOnPressed;
+
+  const ShopLoginList({
+    required this.shopLogin,
+    required this.trueOnPressed,
+    required this.falseOnPressed,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -11,4 +11,12 @@ class ShopLoginService {
   void delete(Map<String, dynamic> values) {
     firestore.collection(collection).doc(values['id']).delete();
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>>? streamList() {
+    return FirebaseFirestore.instance
+        .collection(collection)
+        .where('accept', isEqualTo: false)
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
 }
