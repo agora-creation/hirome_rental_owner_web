@@ -7,9 +7,10 @@ import 'package:hirome_rental_owner_web/providers/auth.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
+import 'package:hirome_rental_owner_web/providers/shop_login.dart';
 import 'package:hirome_rental_owner_web/screens/home.dart';
-import 'package:hirome_rental_owner_web/screens/splash.dart';
 import 'package:hirome_rental_owner_web/screens/login.dart';
+import 'package:hirome_rental_owner_web/screens/splash.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: OrderProvider()),
         ChangeNotifierProvider.value(value: ProductProvider()),
         ChangeNotifierProvider.value(value: ShopProvider()),
+        ChangeNotifierProvider.value(value: ShopLoginProvider()),
       ],
       child: FluentApp(
         debugShowCheckedModeBanner: false,

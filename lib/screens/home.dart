@@ -6,15 +6,16 @@ import 'package:hirome_rental_owner_web/providers/auth.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
+import 'package:hirome_rental_owner_web/providers/shop_login.dart';
 import 'package:hirome_rental_owner_web/screens/login.dart';
 import 'package:hirome_rental_owner_web/screens/order.dart';
 import 'package:hirome_rental_owner_web/screens/product.dart';
 import 'package:hirome_rental_owner_web/screens/shop.dart';
+import 'package:hirome_rental_owner_web/screens/shop_login.dart';
 import 'package:hirome_rental_owner_web/services/shop_login.dart';
 import 'package:hirome_rental_owner_web/widgets/app_bar_title.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_button.dart';
-import 'package:hirome_rental_owner_web/widgets/shop_login_list.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  ShopLoginService shopLoginService = ShopLoginService();
   int selectedIndex = 0;
 
   @override
@@ -33,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final orderProvider = Provider.of<OrderProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
     final shopProvider = Provider.of<ShopProvider>(context);
+    final shopLoginProvider = Provider.of<ShopLoginProvider>(context);
 
     return NavigationView(
       appBar: NavigationAppBar(
@@ -42,27 +45,14 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Align(
             alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomIconButton(
-                  iconData: FluentIcons.authenticator_app,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => const ShopLoginDialog(),
-                  ),
+            child: CustomIconButton(
+              iconData: FluentIcons.settings,
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => SignOutDialog(
+                  authProvider: authProvider,
                 ),
-                const SizedBox(width: 4),
-                CustomIconButton(
-                  iconData: FluentIcons.settings,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => SignOutDialog(
-                      authProvider: authProvider,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -88,6 +78,28 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           PaneItemSeparator(),
           PaneItem(
+            icon: const Icon(FluentIcons.account_activity),
+            title: const Text('店舗アカウントログイン'),
+            body: ShopLoginScreen(shopLoginProvider: shopLoginProvider),
+            infoBadge: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: shopLoginService.streamList(),
+              builder: (context, snapshot) {
+                List<ShopLoginModel> shopLogins = [];
+                if (snapshot.hasData) {
+                  for (DocumentSnapshot<Map<String, dynamic>> doc
+                      in snapshot.data!.docs) {
+                    shopLogins.add(ShopLoginModel.fromSnapshot(doc));
+                  }
+                }
+                return InfoBadge(
+                  source: Text('${shopLogins.length}'),
+                  color: kRedColor,
+                );
+              },
+            ),
+          ),
+          PaneItemSeparator(),
+          PaneItem(
             icon: const Icon(FluentIcons.beer_mug),
             title: const Text('商品管理'),
             body: ProductScreen(productProvider: productProvider),
@@ -95,65 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
         ],
       ),
-    );
-  }
-}
-
-class ShopLoginDialog extends StatefulWidget {
-  const ShopLoginDialog({super.key});
-
-  @override
-  State<ShopLoginDialog> createState() => _ShopLoginDialogState();
-}
-
-class _ShopLoginDialogState extends State<ShopLoginDialog> {
-  ShopLoginService shopLoginService = ShopLoginService();
-
-  @override
-  Widget build(BuildContext context) {
-    return ContentDialog(
-      title: const Text(
-        '店舗アカウントログイン - 承認',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('店舗アカウントのログインがありました\n不明なログインは「却下」をクリックしてください'),
-          const SizedBox(height: 8),
-          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: shopLoginService.streamList(),
-            builder: (context, snapshot) {
-              List<ShopLoginModel> shopLogins = [];
-              if (snapshot.hasData) {
-                for (DocumentSnapshot<Map<String, dynamic>> doc
-                    in snapshot.data!.docs) {
-                  shopLogins.add(ShopLoginModel.fromSnapshot(doc));
-                }
-              }
-              return SizedBox(
-                height: 250,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: shopLogins.length,
-                  itemBuilder: (context, index) {
-                    return const ShopLoginList();
-                  },
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      actions: [
-        CustomButton(
-          labelText: '閉じる',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
     );
   }
 }
