@@ -91,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     shopLogins.add(ShopLoginModel.fromSnapshot(doc));
                   }
                 }
+                if (shopLogins.isEmpty) return Container();
                 return InfoBadge(
                   source: Text('${shopLogins.length}'),
                   color: kRedColor,
