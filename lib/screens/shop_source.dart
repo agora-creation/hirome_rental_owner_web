@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/models/product.dart';
 import 'package:hirome_rental_owner_web/models/shop.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
+import 'package:hirome_rental_owner_web/services/product.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_text_box.dart';
+import 'package:hirome_rental_owner_web/widgets/product_checkbox.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ShopSource extends DataGridSource {
@@ -70,71 +74,42 @@ class ShopSource extends DataGridSource {
     ShopModel shop = shops.singleWhere(
       (e) => e.number == '${row.getCells()[0].value}',
     );
-    cells.add(CustomCell(
-      label: '${row.getCells()[0].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModShopDialog(
-          shopProvider: shopProvider,
-          shop: shop,
-          getShops: getShops,
+    cells.add(CustomCell(label: '${row.getCells()[0].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[1].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[2].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[3].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[4].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[5].value}'));
+    cells.add(Row(
+      children: [
+        CustomButton(
+          labelText: '編集',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => ModShopDialog(
+              shopProvider: shopProvider,
+              shop: shop,
+              getShops: getShops,
+            ),
+          ),
         ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[1].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModShopDialog(
-          shopProvider: shopProvider,
-          shop: shop,
-          getShops: getShops,
+        const SizedBox(width: 4),
+        CustomButton(
+          labelText: '注文商品設定',
+          labelColor: kWhiteColor,
+          backgroundColor: kOrangeColor,
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => FavoritesDialog(
+              shopProvider: shopProvider,
+              shop: shop,
+              getShops: getShops,
+            ),
+          ),
         ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[2].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModShopDialog(
-          shopProvider: shopProvider,
-          shop: shop,
-          getShops: getShops,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[3].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModShopDialog(
-          shopProvider: shopProvider,
-          shop: shop,
-          getShops: getShops,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[4].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModShopDialog(
-          shopProvider: shopProvider,
-          shop: shop,
-          getShops: getShops,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[5].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModShopDialog(
-          shopProvider: shopProvider,
-          shop: shop,
-          getShops: getShops,
-        ),
-      ),
+      ],
     ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
@@ -315,6 +290,124 @@ class _ModShopDialogState extends State<ModShopDialog> {
               return;
             }
             widget.shopProvider.clearController();
+            widget.getShops();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class FavoritesDialog extends StatefulWidget {
+  final ShopProvider shopProvider;
+  final ShopModel shop;
+  final Function() getShops;
+
+  const FavoritesDialog({
+    required this.shopProvider,
+    required this.shop,
+    required this.getShops,
+    super.key,
+  });
+
+  @override
+  State<FavoritesDialog> createState() => _FavoritesDialogState();
+}
+
+class _FavoritesDialogState extends State<FavoritesDialog> {
+  ProductService productService = ProductService();
+  List<String> favorites = [];
+
+  void _init() {
+    setState(() {
+      favorites = widget.shop.favorites;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        '店舗アカウント - 注文商品設定',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('チェックをいれた商品が注文可能になります'),
+          const SizedBox(height: 8),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: productService.streamList(),
+              builder: (context, snapshot) {
+                List<ProductModel> products = [];
+                if (snapshot.hasData) {
+                  for (DocumentSnapshot<Map<String, dynamic>> doc
+                      in snapshot.data!.docs) {
+                    products.add(ProductModel.fromSnapshot(doc));
+                  }
+                }
+                if (products.isEmpty) {
+                  return const Center(
+                    child: Text('商品がありません'),
+                  );
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    ProductModel product = products[index];
+                    var contain = favorites.where((e) => e == product.number);
+                    return ProductCheckbox(
+                      product: product,
+                      value: contain.isNotEmpty,
+                      onChanged: (value) {
+                        setState(() {
+                          if (contain.isEmpty) {
+                            favorites.add(product.number);
+                          } else {
+                            favorites.remove(product.number);
+                          }
+                        });
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          labelText: '保存する',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () async {
+            String? error = await widget.shopProvider.updateFavorites(
+              widget.shop,
+              favorites,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
             widget.getShops();
             if (!mounted) return;
             Navigator.pop(context);

@@ -195,6 +195,10 @@ class _OrderScreenState extends State<OrderScreen> {
                         columnName: 'carts',
                         label: const CustomCell(label: '注文商品'),
                       ),
+                      GridColumn(
+                        columnName: 'details',
+                        label: const CustomCell(label: '詳細'),
+                      ),
                     ],
                   ),
                 ),

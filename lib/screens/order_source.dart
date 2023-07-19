@@ -58,33 +58,22 @@ class OrderSource extends DataGridSource {
     OrderModel order = orders.singleWhere(
       (e) => e.number == '${row.getCells()[1].value}',
     );
-    cells.add(CustomCell(
-      label: '${row.getCells()[0].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => OrderDetailsDialog(order: order),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[1].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => OrderDetailsDialog(order: order),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[2].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => OrderDetailsDialog(order: order),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[3].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => OrderDetailsDialog(order: order),
-      ),
+    cells.add(CustomCell(label: '${row.getCells()[0].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[1].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[2].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[3].value}'));
+    cells.add(Row(
+      children: [
+        CustomButton(
+          labelText: '詳細',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => OrderDetailsDialog(order: order),
+          ),
+        ),
+      ],
     ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }

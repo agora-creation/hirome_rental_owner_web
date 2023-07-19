@@ -5,6 +5,7 @@ class CustomTextBox extends StatelessWidget {
   final String? placeholder;
   final TextInputType? keyboardType;
   final int? maxLines;
+  final bool? obscureText;
   final Function(String)? onChanged;
 
   const CustomTextBox({
@@ -12,6 +13,7 @@ class CustomTextBox extends StatelessWidget {
     this.placeholder,
     this.keyboardType,
     this.maxLines,
+    this.obscureText,
     this.onChanged,
     Key? key,
   }) : super(key: key);
@@ -24,6 +26,7 @@ class CustomTextBox extends StatelessWidget {
       keyboardType: keyboardType,
       expands: false,
       maxLines: maxLines,
+      obscureText: obscureText ?? false,
       onChanged: onChanged,
     );
   }

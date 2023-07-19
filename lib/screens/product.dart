@@ -234,6 +234,10 @@ class _ProductScreenState extends State<ProductScreen> {
                         columnName: 'priority',
                         label: const CustomCell(label: '表示順'),
                       ),
+                      GridColumn(
+                        columnName: 'edit',
+                        label: const CustomCell(label: '操作'),
+                      ),
                     ],
                   ),
                 ),

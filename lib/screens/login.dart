@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           placeholder: '',
                           keyboardType: TextInputType.visiblePassword,
                           maxLines: 1,
+                          obscureText: true,
                         ),
                       ),
                       const SizedBox(height: 24),

@@ -221,6 +221,10 @@ class _ShopScreenState extends State<ShopScreen> {
                         columnName: 'authority',
                         label: const CustomCell(label: '権限'),
                       ),
+                      GridColumn(
+                        columnName: 'edit_favorites',
+                        label: const CustomCell(label: '操作'),
+                      ),
                     ],
                   ),
                 ),

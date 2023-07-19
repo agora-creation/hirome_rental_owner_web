@@ -114,6 +114,22 @@ class ShopProvider with ChangeNotifier {
     return error;
   }
 
+  Future<String?> updateFavorites(
+    ShopModel shop,
+    List<String> favorites,
+  ) async {
+    String? error;
+    try {
+      shopService.update({
+        'id': shop.id,
+        'favorites': favorites,
+      });
+    } catch (e) {
+      error = 'お気に入り設定に失敗しました';
+    }
+    return error;
+  }
+
   Future<String?> delete(ShopModel shop) async {
     String? error;
     try {

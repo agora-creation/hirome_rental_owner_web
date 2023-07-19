@@ -83,93 +83,30 @@ class ProductSource extends DataGridSource {
     ProductModel product = products.singleWhere(
       (e) => e.number == '${row.getCells()[0].value}',
     );
-    cells.add(CustomCell(
-      label: '${row.getCells()[0].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModProductDialog(
-          productProvider: productProvider,
-          product: product,
-          getProducts: getProducts,
+    cells.add(CustomCell(label: '${row.getCells()[0].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[1].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[2].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[3].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[4].value}'));
+    cells.add(CustomImageCell(image: '${row.getCells()[5].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[6].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[7].value}'));
+    cells.add(Row(
+      children: [
+        CustomButton(
+          labelText: '編集',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => ModProductDialog(
+              productProvider: productProvider,
+              product: product,
+              getProducts: getProducts,
+            ),
+          ),
         ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[1].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModProductDialog(
-          productProvider: productProvider,
-          product: product,
-          getProducts: getProducts,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[2].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModProductDialog(
-          productProvider: productProvider,
-          product: product,
-          getProducts: getProducts,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[3].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModProductDialog(
-          productProvider: productProvider,
-          product: product,
-          getProducts: getProducts,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[4].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModProductDialog(
-          productProvider: productProvider,
-          product: product,
-          getProducts: getProducts,
-        ),
-      ),
-    ));
-    cells.add(CustomImageCell(
-      image: '${row.getCells()[5].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModProductDialog(
-          productProvider: productProvider,
-          product: product,
-          getProducts: getProducts,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[6].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModProductDialog(
-          productProvider: productProvider,
-          product: product,
-          getProducts: getProducts,
-        ),
-      ),
-    ));
-    cells.add(CustomCell(
-      label: '${row.getCells()[7].value}',
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => ModProductDialog(
-          productProvider: productProvider,
-          product: product,
-          getProducts: getProducts,
-        ),
-      ),
+      ],
     ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
