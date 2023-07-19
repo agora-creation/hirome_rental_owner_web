@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/shop_login.dart';
 import 'package:hirome_rental_owner_web/providers/auth.dart';
@@ -154,6 +155,7 @@ class _SignOutDialogState extends State<SignOutDialog> {
           onPressed: () async {
             await widget.authProvider.signOut();
             if (!mounted) return;
+            showMessage(context, 'ログアウトしました', true);
             Navigator.pushReplacement(
               context,
               FluentPageRoute(
