@@ -354,6 +354,7 @@ class _AddShopDialogState extends State<AddShopDialog> {
             widget.shopProvider.clearController();
             widget.getShops();
             if (!mounted) return;
+            showMessage(context, '店舗アカウントを登録しました', true);
             Navigator.pop(context);
           },
         ),

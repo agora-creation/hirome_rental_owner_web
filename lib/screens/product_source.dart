@@ -304,6 +304,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
             widget.productProvider.clearController();
             widget.getProducts();
             if (!mounted) return;
+            showMessage(context, '商品を削除しました', true);
             Navigator.pop(context);
           },
         ),
@@ -324,6 +325,7 @@ class _ModProductDialogState extends State<ModProductDialog> {
             widget.productProvider.clearController();
             widget.getProducts();
             if (!mounted) return;
+            showMessage(context, '商品情報を保存しました', true);
             Navigator.pop(context);
           },
         ),

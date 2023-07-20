@@ -398,6 +398,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
             widget.productProvider.clearController();
             widget.getProducts();
             if (!mounted) return;
+            showMessage(context, '商品を登録しました', true);
             Navigator.pop(context);
           },
         ),

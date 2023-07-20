@@ -275,6 +275,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
             widget.shopProvider.clearController();
             widget.getShops();
             if (!mounted) return;
+            showMessage(context, '店舗アカウントを削除しました', true);
             Navigator.pop(context);
           },
         ),
@@ -292,6 +293,7 @@ class _ModShopDialogState extends State<ModShopDialog> {
             widget.shopProvider.clearController();
             widget.getShops();
             if (!mounted) return;
+            showMessage(context, '店舗アカウント情報を保存しました', true);
             Navigator.pop(context);
           },
         ),
@@ -410,6 +412,7 @@ class _FavoritesDialogState extends State<FavoritesDialog> {
             }
             widget.getShops();
             if (!mounted) return;
+            showMessage(context, '注文商品設定を保存しました', true);
             Navigator.pop(context);
           },
         ),

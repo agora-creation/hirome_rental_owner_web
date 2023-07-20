@@ -203,6 +203,7 @@ class _ShopLoginDetailsDialogState extends State<ShopLoginDetailsDialog> {
                     return;
                   }
                   if (!mounted) return;
+                  showMessage(context, '承認しました', true);
                   Navigator.pop(context);
                 },
               )
@@ -219,6 +220,7 @@ class _ShopLoginDetailsDialogState extends State<ShopLoginDetailsDialog> {
                     return;
                   }
                   if (!mounted) return;
+                  showMessage(context, '却下しました', true);
                   Navigator.pop(context);
                 },
               ),
