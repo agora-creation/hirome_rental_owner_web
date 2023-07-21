@@ -166,7 +166,9 @@ class _OrderScreenState extends State<OrderScreen> {
                       labelText: 'CSVダウンロード',
                       labelColor: kWhiteColor,
                       backgroundColor: kGreenColor,
-                      onPressed: () {},
+                      onPressed: () async {
+                        await widget.orderProvider.csvDownload();
+                      },
                     ),
                   ],
                 ),
