@@ -22,7 +22,7 @@ class _AnimationBackgroundState extends State<AnimationBackground>
     imageWidth = deviceHeight * aspectRatio;
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 50),
     )..repeat();
     rectAnimation = RelativeRectTween(
       begin: RelativeRect.fromLTRB(imageWidth, 0, 0, 0),
