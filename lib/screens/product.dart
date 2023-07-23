@@ -7,6 +7,7 @@ import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/product.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/screens/product_source.dart';
+import 'package:hirome_rental_owner_web/widgets/animation_background.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
@@ -45,207 +46,218 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Card(
+    return Stack(
+      children: [
+        const AnimationBackground(),
+        SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  '各店舗が注文するための商品データを一覧で表示します。検索で絞り込んだり、登録・編集・削除することができます。',
-                  style: TextStyle(fontSize: 14),
-                ),
-                const SizedBox(height: 8),
-                Expander(
-                  header: Text('検索条件 : ${widget.productProvider.searchText}'),
-                  content: Column(
-                    children: [
-                      GridView(
-                        shrinkWrap: true,
-                        gridDelegate: kSearchGrid,
-                        children: [
-                          InfoLabel(
-                            label: '商品番号',
-                            child: CustomTextBox(
-                              controller: TextEditingController(
-                                text: widget.productProvider.searchNumber,
-                              ),
-                              keyboardType: TextInputType.text,
-                              maxLines: 1,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value != '') {
-                                    widget.productProvider.searchNumber = value;
-                                  } else {
-                                    widget.productProvider.searchNumber = null;
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          InfoLabel(
-                            label: '商品名',
-                            child: CustomTextBox(
-                              controller: TextEditingController(
-                                text: widget.productProvider.searchName,
-                              ),
-                              keyboardType: TextInputType.text,
-                              maxLines: 1,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value != '') {
-                                    widget.productProvider.searchName = value;
-                                  } else {
-                                    widget.productProvider.searchName = null;
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          InfoLabel(
-                            label: '請求用商品番号',
-                            child: CustomTextBox(
-                              controller: TextEditingController(
-                                text:
-                                    widget.productProvider.searchInvoiceNumber,
-                              ),
-                              keyboardType: TextInputType.text,
-                              maxLines: 1,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value != '') {
-                                    widget.productProvider.searchInvoiceNumber =
-                                        value;
-                                  } else {
-                                    widget.productProvider.searchInvoiceNumber =
-                                        null;
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          InfoLabel(
-                            label: 'カテゴリ',
-                            child: ComboBox<int>(
-                              value: widget.productProvider.searchCategory,
-                              items: kCategoryComboItems,
-                              onChanged: (value) {
-                                setState(() {
-                                  widget.productProvider.searchCategory = value;
-                                });
-                              },
-                              isExpanded: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomIconTextButton(
-                            iconData: FluentIcons.clear,
-                            iconColor: kLightBlueColor,
-                            labelText: '検索リセット',
-                            labelColor: kLightBlueColor,
-                            backgroundColor: kWhiteColor,
-                            onPressed: () {
-                              widget.productProvider.searchClear();
-                              _getProducts();
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          CustomIconTextButton(
-                            iconData: FluentIcons.search,
-                            iconColor: kWhiteColor,
-                            labelText: '検索する',
-                            labelColor: kWhiteColor,
-                            backgroundColor: kLightBlueColor,
-                            onPressed: () => _getProducts(),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+            padding: const EdgeInsets.all(16),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomIconTextButton(
-                      iconData: FluentIcons.add,
-                      iconColor: kWhiteColor,
-                      labelText: '新規登録',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kBlueColor,
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) => AddProductDialog(
+                    const Text(
+                      '各店舗が注文するための商品データを一覧で表示します。検索で絞り込んだり、登録・編集・削除することができます。',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    const SizedBox(height: 8),
+                    Expander(
+                      header:
+                          Text('検索条件 : ${widget.productProvider.searchText}'),
+                      content: Column(
+                        children: [
+                          GridView(
+                            shrinkWrap: true,
+                            gridDelegate: kSearchGrid,
+                            children: [
+                              InfoLabel(
+                                label: '商品番号',
+                                child: CustomTextBox(
+                                  controller: TextEditingController(
+                                    text: widget.productProvider.searchNumber,
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value != '') {
+                                        widget.productProvider.searchNumber =
+                                            value;
+                                      } else {
+                                        widget.productProvider.searchNumber =
+                                            null;
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                              InfoLabel(
+                                label: '商品名',
+                                child: CustomTextBox(
+                                  controller: TextEditingController(
+                                    text: widget.productProvider.searchName,
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value != '') {
+                                        widget.productProvider.searchName =
+                                            value;
+                                      } else {
+                                        widget.productProvider.searchName =
+                                            null;
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                              InfoLabel(
+                                label: '請求用商品番号',
+                                child: CustomTextBox(
+                                  controller: TextEditingController(
+                                    text: widget
+                                        .productProvider.searchInvoiceNumber,
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value != '') {
+                                        widget.productProvider
+                                            .searchInvoiceNumber = value;
+                                      } else {
+                                        widget.productProvider
+                                            .searchInvoiceNumber = null;
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                              InfoLabel(
+                                label: 'カテゴリ',
+                                child: ComboBox<int>(
+                                  value: widget.productProvider.searchCategory,
+                                  items: kCategoryComboItems,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      widget.productProvider.searchCategory =
+                                          value;
+                                    });
+                                  },
+                                  isExpanded: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomIconTextButton(
+                                iconData: FluentIcons.clear,
+                                iconColor: kLightBlueColor,
+                                labelText: '検索リセット',
+                                labelColor: kLightBlueColor,
+                                backgroundColor: kWhiteColor,
+                                onPressed: () {
+                                  widget.productProvider.searchClear();
+                                  _getProducts();
+                                },
+                              ),
+                              const SizedBox(width: 8),
+                              CustomIconTextButton(
+                                iconData: FluentIcons.search,
+                                iconColor: kWhiteColor,
+                                labelText: '検索する',
+                                labelColor: kWhiteColor,
+                                backgroundColor: kLightBlueColor,
+                                onPressed: () => _getProducts(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CustomIconTextButton(
+                          iconData: FluentIcons.add,
+                          iconColor: kWhiteColor,
+                          labelText: '新規登録',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kBlueColor,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => AddProductDialog(
+                              productProvider: widget.productProvider,
+                              getProducts: _getProducts,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      height: 600,
+                      child: CustomDataGrid(
+                        source: ProductSource(
+                          context: context,
                           productProvider: widget.productProvider,
+                          products: products,
                           getProducts: _getProducts,
                         ),
+                        columns: [
+                          GridColumn(
+                            columnName: 'number',
+                            label: const CustomCell(label: '商品番号'),
+                          ),
+                          GridColumn(
+                            columnName: 'name',
+                            label: const CustomCell(label: '商品名'),
+                          ),
+                          GridColumn(
+                            columnName: 'invoiceNumber',
+                            label: const CustomCell(label: '請求用商品番号'),
+                          ),
+                          GridColumn(
+                            columnName: 'price',
+                            label: const CustomCell(label: '単価'),
+                          ),
+                          GridColumn(
+                            columnName: 'unit',
+                            label: const CustomCell(label: '単位'),
+                          ),
+                          GridColumn(
+                            columnName: 'image',
+                            label: const CustomCell(label: '画像'),
+                          ),
+                          GridColumn(
+                            columnName: 'category',
+                            label: const CustomCell(label: 'カテゴリ'),
+                          ),
+                          GridColumn(
+                            columnName: 'priority',
+                            label: const CustomCell(label: '表示順'),
+                          ),
+                          GridColumn(
+                            columnName: 'edit',
+                            label: const CustomCell(label: '操作'),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  height: 600,
-                  child: CustomDataGrid(
-                    source: ProductSource(
-                      context: context,
-                      productProvider: widget.productProvider,
-                      products: products,
-                      getProducts: _getProducts,
-                    ),
-                    columns: [
-                      GridColumn(
-                        columnName: 'number',
-                        label: const CustomCell(label: '商品番号'),
-                      ),
-                      GridColumn(
-                        columnName: 'name',
-                        label: const CustomCell(label: '商品名'),
-                      ),
-                      GridColumn(
-                        columnName: 'invoiceNumber',
-                        label: const CustomCell(label: '請求用商品番号'),
-                      ),
-                      GridColumn(
-                        columnName: 'price',
-                        label: const CustomCell(label: '単価'),
-                      ),
-                      GridColumn(
-                        columnName: 'unit',
-                        label: const CustomCell(label: '単位'),
-                      ),
-                      GridColumn(
-                        columnName: 'image',
-                        label: const CustomCell(label: '画像'),
-                      ),
-                      GridColumn(
-                        columnName: 'category',
-                        label: const CustomCell(label: 'カテゴリ'),
-                      ),
-                      GridColumn(
-                        columnName: 'priority',
-                        label: const CustomCell(label: '表示順'),
-                      ),
-                      GridColumn(
-                        columnName: 'edit',
-                        label: const CustomCell(label: '操作'),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
