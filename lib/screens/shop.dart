@@ -216,10 +216,6 @@ class _ShopScreenState extends State<ShopScreen> {
                             label: const CustomCell(label: '請求用店舗名'),
                           ),
                           GridColumn(
-                            columnName: 'password',
-                            label: const CustomCell(label: 'パスワード'),
-                          ),
-                          GridColumn(
                             columnName: 'priority',
                             label: const CustomCell(label: '表示順'),
                           ),
@@ -303,16 +299,6 @@ class _AddShopDialogState extends State<AddShopDialog> {
               controller: widget.shopProvider.invoiceName,
               placeholder: '例) 株式会社八ちゃん堂',
               keyboardType: TextInputType.text,
-              maxLines: 1,
-            ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: 'パスワード',
-            child: CustomTextBox(
-              controller: widget.shopProvider.password,
-              placeholder: '',
-              keyboardType: TextInputType.visiblePassword,
               maxLines: 1,
             ),
           ),

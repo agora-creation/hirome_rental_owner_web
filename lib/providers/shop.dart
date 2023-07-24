@@ -8,7 +8,6 @@ class ShopProvider with ChangeNotifier {
   TextEditingController number = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController invoiceName = TextEditingController();
-  TextEditingController password = TextEditingController();
   TextEditingController priority = TextEditingController();
   int authority = 0;
   String? searchNumber;
@@ -20,7 +19,6 @@ class ShopProvider with ChangeNotifier {
   void setController(ShopModel shop) {
     name.text = shop.name;
     invoiceName.text = shop.invoiceName;
-    password.text = shop.password;
     priority.text = shop.priority.toString();
     authority = shop.authority;
   }
@@ -29,7 +27,6 @@ class ShopProvider with ChangeNotifier {
     number.clear();
     name.clear();
     invoiceName.clear();
-    password.clear();
     priority.clear();
     authority = 0;
   }
@@ -84,7 +81,6 @@ class ShopProvider with ChangeNotifier {
         'number': number.text,
         'name': name.text,
         'invoiceName': invoiceName.text,
-        'password': password.text,
         'favorites': [],
         'priority': int.parse(priority.text),
         'authority': authority,
@@ -104,7 +100,6 @@ class ShopProvider with ChangeNotifier {
         'id': shop.id,
         'name': name.text,
         'invoiceName': invoiceName.text,
-        'password': password.text,
         'priority': int.parse(priority.text),
         'authority': authority,
       });
