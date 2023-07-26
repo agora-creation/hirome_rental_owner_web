@@ -4,6 +4,7 @@ import 'package:csv/csv.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
+import 'package:hirome_rental_owner_web/models/cart.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
 import 'package:hirome_rental_owner_web/services/order.dart';
 
@@ -109,7 +110,75 @@ class OrderProvider with ChangeNotifier {
       '単位区分',
       'ロットNo',
     ];
+    List<OrderModel> orders = await orderService.selectList(
+      shopName: searchShop,
+      searchStart: searchStart,
+      searchEnd: searchEnd,
+    );
     List<List<String>> rows = [];
+    for (OrderModel order in orders) {
+      List<String> row = [];
+      for (CartModel cart in order.carts) {
+        row.add('0');
+        row.add(dateText('yyyyMMdd', order.createdAt));
+        row.add(dateText('yyyyMMdd', order.createdAt));
+        row.add(order.number);
+        row.add(order.shopNumber);
+        row.add(order.shopName);
+        row.add('');
+        row.add('');
+        row.add('0');
+        row.add('0');
+        row.add('0');
+        row.add('');
+        row.add('');
+        row.add('');
+        row.add(cart.number);
+        row.add('0');
+        row.add(cart.name);
+        row.add('0');
+        row.add('0');
+        row.add('1');
+        row.add('0');
+        row.add('${cart.deliveryQuantity}');
+        row.add('');
+        row.add('${cart.price}');
+        int totalPrice = cart.price * cart.deliveryQuantity;
+        row.add('$totalPrice');
+        row.add('0');
+        row.add('0');
+        row.add('$totalPrice');
+        double tax = totalPrice * 0.1;
+        row.add('${tax.round()}');
+        row.add('0');
+        row.add('2');
+        row.add('0');
+        row.add('');
+        row.add('${cart.price}');
+        row.add('0');
+        row.add('${cart.price}');
+        row.add('$totalPrice');
+        row.add('');
+        row.add('');
+        row.add('');
+        row.add('0');
+        row.add('0');
+        row.add('0');
+        row.add('0');
+        row.add('0');
+        row.add('0');
+        row.add('0');
+        row.add('10');
+        row.add('0');
+        row.add('');
+        row.add('');
+        row.add('0');
+        row.add('');
+        row.add('0');
+        row.add('');
+      }
+      rows.add(row);
+    }
     String csv = const ListToCsvConverter().convert(
       [header, ...rows],
     );
