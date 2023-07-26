@@ -1,7 +1,6 @@
-import 'dart:convert';
+import 'dart:html';
 
 import 'package:csv/csv.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/models/cart.dart';
@@ -186,18 +185,8 @@ class OrderProvider with ChangeNotifier {
     String csvText = bom + csv;
     csvText = csvText.replaceAll('[', '');
     csvText = csvText.replaceAll(']', '');
-    String? path = await getSavePath(
-      acceptedTypeGroups: [
-        const XTypeGroup(
-          label: 'csv',
-          extensions: ['csv'],
-        )
-      ],
-      suggestedName: fileName,
-    );
-    if (path == null) return;
-    final data = const Utf8Encoder().convert(csvText);
-    final file = XFile.fromData(data, mimeType: 'text/plain');
-    await file.saveTo(path);
+    AnchorElement(href: 'data:text/plain;charset=utf-8,$csvText')
+      ..setAttribute('download', fileName)
+      ..click();
   }
 }
