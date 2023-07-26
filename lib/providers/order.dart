@@ -116,8 +116,8 @@ class OrderProvider with ChangeNotifier {
     );
     List<List<String>> rows = [];
     for (OrderModel order in orders) {
-      List<String> row = [];
       for (CartModel cart in order.carts) {
+        List<String> row = [];
         row.add('0');
         row.add(dateText('yyyyMMdd', order.createdAt));
         row.add(dateText('yyyyMMdd', order.createdAt));
@@ -175,8 +175,8 @@ class OrderProvider with ChangeNotifier {
         row.add('');
         row.add('0');
         row.add('');
+        rows.add(row);
       }
-      rows.add(row);
     }
     String csv = const ListToCsvConverter().convert(
       [header, ...rows],
