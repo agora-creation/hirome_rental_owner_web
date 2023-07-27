@@ -53,7 +53,7 @@ class OrderProvider with ChangeNotifier {
 
   Future pdfDownload() async {}
 
-  Future csvDownload() async {
+  Future csvDownload(DateTime month) async {
     final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.csv';
     List<String> header = [
       '注文日時',
@@ -69,10 +69,13 @@ class OrderProvider with ChangeNotifier {
       '合計金額',
       'ステータス',
     ];
+    DateTime monthStart = DateTime(month.year, month.month, 1);
+    DateTime monthEnd = DateTime(month.year, month.month + 1, 1).add(
+      const Duration(days: -1),
+    );
     List<OrderModel> orders = await orderService.selectList(
-      shopName: searchShop,
-      searchStart: searchStart,
-      searchEnd: searchEnd,
+      searchStart: monthStart,
+      searchEnd: monthEnd,
     );
     List<List<String>> rows = [];
     for (OrderModel order in orders) {
@@ -106,7 +109,7 @@ class OrderProvider with ChangeNotifier {
       ..click();
   }
 
-  Future shokonCsvDownload() async {
+  Future shokonCsvDownload(DateTime month) async {
     final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.csv';
     List<String> header = [
       '伝区',
@@ -165,10 +168,13 @@ class OrderProvider with ChangeNotifier {
       '単位区分',
       'ロットNo',
     ];
+    DateTime monthStart = DateTime(month.year, month.month, 1);
+    DateTime monthEnd = DateTime(month.year, month.month + 1, 1).add(
+      const Duration(days: -1),
+    );
     List<OrderModel> orders = await orderService.selectList(
-      shopName: searchShop,
-      searchStart: searchStart,
-      searchEnd: searchEnd,
+      searchStart: monthStart,
+      searchEnd: monthEnd,
     );
     List<List<String>> rows = [];
     for (OrderModel order in orders) {

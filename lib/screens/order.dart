@@ -13,6 +13,7 @@ import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_range_box.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_month_box.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -261,6 +262,8 @@ class PdfDialog extends StatefulWidget {
 }
 
 class _PdfDialogState extends State<PdfDialog> {
+  DateTime selectedMonth = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
@@ -275,8 +278,18 @@ class _PdfDialogState extends State<PdfDialog> {
           const Text('PDFファイルをダウンロードします。対象の年月と対象の店舗を選択してください。'),
           const SizedBox(height: 8),
           CustomMonthBox(
-            value: DateTime.now(),
-            onTap: () {},
+            value: selectedMonth,
+            onTap: () async {
+              var selected = await showMonthPicker(
+                context: context,
+                initialDate: selectedMonth,
+              );
+              if (selected != null) {
+                setState(() {
+                  selectedMonth = selected;
+                });
+              }
+            },
           ),
         ],
       ),
@@ -313,6 +326,8 @@ class CsvDialog extends StatefulWidget {
 }
 
 class _CsvDialogState extends State<CsvDialog> {
+  DateTime selectedMonth = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
@@ -327,8 +342,18 @@ class _CsvDialogState extends State<CsvDialog> {
           const Text('CSVファイルをダウンロードします。対象の年月を選択してください。'),
           const SizedBox(height: 8),
           CustomMonthBox(
-            value: DateTime.now(),
-            onTap: () {},
+            value: selectedMonth,
+            onTap: () async {
+              var selected = await showMonthPicker(
+                context: context,
+                initialDate: selectedMonth,
+              );
+              if (selected != null) {
+                setState(() {
+                  selectedMonth = selected;
+                });
+              }
+            },
           ),
         ],
       ),
@@ -344,7 +369,7 @@ class _CsvDialogState extends State<CsvDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kGreenColor,
           onPressed: () async {
-            await widget.orderProvider.csvDownload();
+            await widget.orderProvider.csvDownload(selectedMonth);
           },
         ),
       ],
@@ -365,6 +390,8 @@ class ShokonCsvDialog extends StatefulWidget {
 }
 
 class _ShokonCsvDialogState extends State<ShokonCsvDialog> {
+  DateTime selectedMonth = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
@@ -379,8 +406,18 @@ class _ShokonCsvDialogState extends State<ShokonCsvDialog> {
           const Text('商魂ソフトへ取り込むためのCSVファイルをダウンロードします。対象の年月を選択してください。'),
           const SizedBox(height: 8),
           CustomMonthBox(
-            value: DateTime.now(),
-            onTap: () {},
+            value: selectedMonth,
+            onTap: () async {
+              var selected = await showMonthPicker(
+                context: context,
+                initialDate: selectedMonth,
+              );
+              if (selected != null) {
+                setState(() {
+                  selectedMonth = selected;
+                });
+              }
+            },
           ),
         ],
       ),
@@ -396,7 +433,7 @@ class _ShokonCsvDialogState extends State<ShokonCsvDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kGreenColor,
           onPressed: () async {
-            await widget.orderProvider.shokonCsvDownload();
+            await widget.orderProvider.shokonCsvDownload(selectedMonth);
           },
         ),
       ],
