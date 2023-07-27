@@ -6,6 +6,8 @@ const kForName = '管理者専用';
 
 const kDefaultImageUrl = 'assets/images/default.png';
 
+const kPdfFontUrl = 'assets/fonts/GenShinGothic-Regular.ttf';
+
 const kBaseColor = Color(0xFF90A4AE);
 const kWhiteColor = Color(0xFFFFFFFF);
 const kBlackColor = Color(0xFF333333);

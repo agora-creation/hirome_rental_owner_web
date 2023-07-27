@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
+import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -58,66 +59,62 @@ class ShopModel {
 
   Future manualDownload() async {
     final pdf = pw.Document();
-    final font = await rootBundle.load(
-      'assets/fonts/GenShinGothic-Regular.ttf',
-    );
+    final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
     final titleStyle = pw.TextStyle(font: ttf, fontSize: 18);
-    final bodyStyle = pw.TextStyle(font: ttf, fontSize: 14);
-    final urlStyle = pw.TextStyle(font: ttf, fontSize: 12);
+    final bodyStyle = pw.TextStyle(font: ttf, fontSize: 12);
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.all(40),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Center(
-            child: pw.Text('$name - 初期設定マニュアル', style: titleStyle),
+            child: pw.Text(
+              '$name - 初期設定マニュアル',
+              style: titleStyle,
+            ),
           ),
-          pw.SizedBox(height: 40),
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                '① スマホから注文したい場合は、以下のURLからアプリをダウンロードしてください。',
-                style: bodyStyle,
-              ),
-              pw.Text(
-                '[iOS]\nhttps://apps.apple.com/jp/app/',
-                style: urlStyle,
-              ),
-              pw.Text(
-                '[Android]\nhttps://play.google.com/store/apps/details?id=com.agoracreation.hatarakujikan_tablet',
-                style: urlStyle,
-              ),
-              pw.SizedBox(height: 16),
-              pw.Text(
-                '② PCやタブレット端末から注文したい場合は、以下のURLへアクセスしてください。',
-                style: bodyStyle,
-              ),
-              pw.Text(
-                'https://hirome-rental-shop.web.app/',
-                style: urlStyle,
-              ),
-              pw.SizedBox(height: 16),
-              pw.Text(
-                '③ 以下の店舗番号を入力してログインしてください。\nログイン申請が管理者宛に送信されます。',
-                style: bodyStyle,
-              ),
-              pw.Text(
-                '[店舗番号] $number',
-                style: urlStyle,
-              ),
-              pw.SizedBox(height: 16),
-              pw.Text(
-                '④ ログイン申請が承認されると、注文が可能な画面になります。',
-                style: bodyStyle,
-              ),
-            ],
+          pw.SizedBox(height: 24),
+          pw.Text(
+            'スマホから注文したい場合は、以下のURLからアプリをダウンロードしてください。',
+            style: bodyStyle,
+          ),
+          pw.Text(
+            '[iOS]',
+            style: bodyStyle,
+          ),
+          pw.Text(
+            '[Android]',
+            style: bodyStyle,
+          ),
+          pw.SizedBox(height: 16),
+          pw.Text(
+            'PCやタブレットから注文したい場合は、以下のURLへアクセスしてください。',
+            style: bodyStyle,
+          ),
+          pw.Text(
+            'https://hirome-rental-shop.web.app/',
+            style: bodyStyle,
+          ),
+          pw.SizedBox(height: 16),
+          pw.Text(
+            '店舗番号「$number」を入力して、ログインボタンを押してください。',
+            style: bodyStyle,
+          ),
+          pw.Text(
+            'ログイン申請が管理者とインフォメーション宛に送信されます。承認されるまで、暫くお待ちください。',
+            style: bodyStyle,
+          ),
+          pw.SizedBox(height: 16),
+          pw.Text(
+            '承認されたら画面が変わり、注文が可能になります。',
+            style: bodyStyle,
           ),
         ],
       ),
     ));
-    await pdfWebDownload(pdf: pdf, fileName: 'shop_manual.pdf');
+    await pdfWebDownload(pdf: pdf, fileName: '${name}_初期設定マニュアル.pdf');
   }
 }
 
