@@ -51,7 +51,62 @@ class OrderProvider with ChangeNotifier {
     );
   }
 
+  Future pdfDownload() async {}
+
   Future csvDownload() async {
+    final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.csv';
+    List<String> header = [
+      '注文日時',
+      '注文番号',
+      '発注元店舗番号',
+      '発注元店舗名',
+      '商品番号',
+      '商品名',
+      '単価',
+      '単位',
+      '希望数量',
+      '納品数量',
+      '合計金額',
+      'ステータス',
+    ];
+    List<OrderModel> orders = await orderService.selectList(
+      shopName: searchShop,
+      searchStart: searchStart,
+      searchEnd: searchEnd,
+    );
+    List<List<String>> rows = [];
+    for (OrderModel order in orders) {
+      for (CartModel cart in order.carts) {
+        List<String> row = [];
+        row.add(dateText('yyyy/MM/dd HH:mm', order.createdAt));
+        row.add(order.number);
+        row.add(order.shopNumber);
+        row.add(order.shopName);
+        row.add(cart.number);
+        row.add(cart.name);
+        row.add('${cart.price}');
+        row.add(cart.unit);
+        row.add('${cart.requestQuantity}');
+        row.add('${cart.deliveryQuantity}');
+        int totalPrice = cart.price * cart.deliveryQuantity;
+        row.add('$totalPrice');
+        row.add(order.statusText());
+        rows.add(row);
+      }
+    }
+    String csv = const ListToCsvConverter().convert(
+      [header, ...rows],
+    );
+    String bom = '\uFEFF';
+    String csvText = bom + csv;
+    csvText = csvText.replaceAll('[', '');
+    csvText = csvText.replaceAll(']', '');
+    AnchorElement(href: 'data:text/plain;charset=utf-8,$csvText')
+      ..setAttribute('download', fileName)
+      ..click();
+  }
+
+  Future csvDownload2() async {
     final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.csv';
     List<String> header = [
       '伝区',
@@ -64,6 +119,7 @@ class OrderProvider with ChangeNotifier {
       '先方担当者名',
       '部門コード',
       '担当者コード',
+      '摘要コード',
       '摘要名',
       '分類コード',
       '伝票区分',
@@ -126,9 +182,9 @@ class OrderProvider with ChangeNotifier {
         row.add(order.shopName);
         row.add('');
         row.add('');
-        row.add('0');
-        row.add('0');
-        row.add('0');
+        row.add('000');
+        row.add('0000');
+        row.add('0000');
         row.add('');
         row.add('');
         row.add('');
@@ -136,7 +192,7 @@ class OrderProvider with ChangeNotifier {
         row.add('0');
         row.add(cart.name);
         row.add('0');
-        row.add('0');
+        row.add('0000');
         row.add('1');
         row.add('0');
         row.add('${cart.deliveryQuantity}');
@@ -160,14 +216,14 @@ class OrderProvider with ChangeNotifier {
         row.add('');
         row.add('');
         row.add('');
+        row.add('00');
         row.add('0');
         row.add('0');
         row.add('0');
         row.add('0');
         row.add('0');
         row.add('0');
-        row.add('0');
-        row.add('10');
+        row.add('10.0');
         row.add('0');
         row.add('');
         row.add('');

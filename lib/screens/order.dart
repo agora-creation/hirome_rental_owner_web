@@ -162,7 +162,9 @@ class _OrderScreenState extends State<OrderScreen> {
                           labelText: 'PDFダウンロード',
                           labelColor: kWhiteColor,
                           backgroundColor: kRedColor,
-                          onPressed: () {},
+                          onPressed: () async {
+                            await widget.orderProvider.pdfDownload();
+                          },
                         ),
                         const SizedBox(width: 8),
                         CustomIconTextButton(
@@ -173,6 +175,17 @@ class _OrderScreenState extends State<OrderScreen> {
                           backgroundColor: kGreenColor,
                           onPressed: () async {
                             await widget.orderProvider.csvDownload();
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        CustomIconTextButton(
+                          iconData: FluentIcons.download,
+                          iconColor: kWhiteColor,
+                          labelText: '商魂用CSVダウンロード',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kGreenColor,
+                          onPressed: () async {
+                            await widget.orderProvider.csvDownload2();
                           },
                         ),
                       ],
