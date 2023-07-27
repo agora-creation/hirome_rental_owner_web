@@ -173,6 +173,7 @@ class _OrderScreenState extends State<OrderScreen> {
                             context: context,
                             builder: (context) => PdfDialog(
                               orderProvider: widget.orderProvider,
+                              shops: shops,
                             ),
                           ),
                         ),
@@ -251,9 +252,11 @@ class _OrderScreenState extends State<OrderScreen> {
 
 class PdfDialog extends StatefulWidget {
   final OrderProvider orderProvider;
+  final List<ShopModel> shops;
 
   const PdfDialog({
     required this.orderProvider,
+    required this.shops,
     super.key,
   });
 
@@ -263,6 +266,7 @@ class PdfDialog extends StatefulWidget {
 
 class _PdfDialogState extends State<PdfDialog> {
   DateTime selectedMonth = DateTime.now();
+  String? selectedShop;
 
   @override
   Widget build(BuildContext context) {
@@ -291,6 +295,22 @@ class _PdfDialogState extends State<PdfDialog> {
               }
             },
           ),
+          const SizedBox(height: 8),
+          ComboBox<String>(
+            value: selectedShop,
+            items: widget.shops.map((shop) {
+              return ComboBoxItem(
+                value: shop.name,
+                child: Text(shop.name),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedShop = value;
+              });
+            },
+            isExpanded: true,
+          ),
         ],
       ),
       actions: [
@@ -305,7 +325,12 @@ class _PdfDialogState extends State<PdfDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
-            await widget.orderProvider.pdfDownload();
+            if (selectedShop != null) {
+              await widget.orderProvider.pdfDownload(
+                selectedMonth,
+                selectedShop!,
+              );
+            }
           },
         ),
       ],

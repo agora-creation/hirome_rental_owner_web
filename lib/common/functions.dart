@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_html/html.dart' as html;
 
 Future<int?> getPrefsInt(String key) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -89,4 +91,20 @@ Timestamp convertTimestamp(DateTime date, bool end) {
   return Timestamp.fromMillisecondsSinceEpoch(
     DateTime.parse(dateTime).millisecondsSinceEpoch,
   );
+}
+
+Future pdfWebDownload({
+  required pw.Document pdf,
+  required String fileName,
+}) async {
+  final bytes = await pdf.save();
+  final blob = html.Blob([bytes], 'application/pdf');
+  final url = html.Url.createObjectUrlFromBlob(blob);
+  final anchor = html.document.createElement('a') as html.AnchorElement
+    ..href = url
+    ..download = fileName;
+  html.document.body?.children.add(anchor);
+  anchor.click();
+  html.document.body?.children.remove(anchor);
+  html.Url.revokeObjectUrl(url);
 }

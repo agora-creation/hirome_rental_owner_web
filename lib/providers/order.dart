@@ -2,10 +2,13 @@ import 'dart:html';
 
 import 'package:csv/csv.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/models/cart.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
 import 'package:hirome_rental_owner_web/services/order.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class OrderProvider with ChangeNotifier {
   OrderService orderService = OrderService();
@@ -51,7 +54,19 @@ class OrderProvider with ChangeNotifier {
     );
   }
 
-  Future pdfDownload() async {}
+  Future pdfDownload(DateTime month, String shopName) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(
+      'assets/fonts/GenShinGothic-Regular.ttf',
+    );
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(),
+    ));
+    await pdfWebDownload(pdf: pdf, fileName: 'shop_manual.pdf');
+  }
 
   Future csvDownload(DateTime month) async {
     final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.csv';

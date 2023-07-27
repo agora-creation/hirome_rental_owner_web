@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:universal_html/html.dart' as html;
 
 class ShopModel {
   String _id = '';
@@ -117,16 +117,7 @@ class ShopModel {
         ],
       ),
     ));
-    final bytes = await pdf.save();
-    final blob = html.Blob([bytes], 'application/pdf');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..download = 'shop_manual.pdf';
-    html.document.body?.children.add(anchor);
-    anchor.click();
-    html.document.body?.children.remove(anchor);
-    html.Url.revokeObjectUrl(url);
+    await pdfWebDownload(pdf: pdf, fileName: 'shop_manual.pdf');
   }
 }
 
