@@ -226,6 +226,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           GridColumn(
                             columnName: 'edit_favorites',
                             label: const CustomCell(label: '操作'),
+                            width: 320,
                           ),
                         ],
                       ),

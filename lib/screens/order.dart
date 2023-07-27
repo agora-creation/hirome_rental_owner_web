@@ -7,10 +7,12 @@ import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/screens/order_source.dart';
 import 'package:hirome_rental_owner_web/services/shop.dart';
 import 'package:hirome_rental_owner_web/widgets/animation_background.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_cell.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_range_box.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
+import 'package:hirome_rental_owner_web/widgets/custom_month_box.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -41,6 +43,27 @@ class _OrderScreenState extends State<OrderScreen> {
     List<ShopModel> tmpShops = await shopService.selectList();
     if (mounted) {
       setState(() => shops = tmpShops);
+    }
+  }
+
+  void _changeSearchRange() async {
+    var selected = await showDataRangePickerDialog(
+      context,
+      widget.orderProvider.searchStart,
+      widget.orderProvider.searchEnd,
+    );
+    if (selected != null && selected.first != null && selected.last != null) {
+      var diff = selected.last!.difference(selected.first!);
+      int diffDays = diff.inDays;
+      if (diffDays > 31) {
+        if (!mounted) return;
+        showMessage(context, '1ヵ月以上の範囲が選択されています', false);
+        return;
+      }
+      setState(() {
+        widget.orderProvider.searchStart = selected.first!;
+        widget.orderProvider.searchEnd = selected.last!;
+      });
     }
   }
 
@@ -83,24 +106,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                 child: CustomDateRangeBox(
                                   startValue: widget.orderProvider.searchStart,
                                   endValue: widget.orderProvider.searchEnd,
-                                  onTap: () async {
-                                    var selected =
-                                        await showDataRangePickerDialog(
-                                      context,
-                                      widget.orderProvider.searchStart,
-                                      widget.orderProvider.searchEnd,
-                                    );
-                                    if (selected != null &&
-                                        selected.first != null &&
-                                        selected.last != null) {
-                                      setState(() {
-                                        widget.orderProvider.searchStart =
-                                            selected.first!;
-                                        widget.orderProvider.searchEnd =
-                                            selected.last!;
-                                      });
-                                    }
-                                  },
+                                  onTap: _changeSearchRange,
                                 ),
                               ),
                               InfoLabel(
@@ -162,9 +168,12 @@ class _OrderScreenState extends State<OrderScreen> {
                           labelText: 'PDFダウンロード',
                           labelColor: kWhiteColor,
                           backgroundColor: kRedColor,
-                          onPressed: () async {
-                            await widget.orderProvider.pdfDownload();
-                          },
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => PdfDialog(
+                              orderProvider: widget.orderProvider,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 8),
                         CustomIconTextButton(
@@ -173,9 +182,12 @@ class _OrderScreenState extends State<OrderScreen> {
                           labelText: 'CSVダウンロード',
                           labelColor: kWhiteColor,
                           backgroundColor: kGreenColor,
-                          onPressed: () async {
-                            await widget.orderProvider.csvDownload();
-                          },
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => CsvDialog(
+                              orderProvider: widget.orderProvider,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 8),
                         CustomIconTextButton(
@@ -184,9 +196,12 @@ class _OrderScreenState extends State<OrderScreen> {
                           labelText: '商魂用CSVダウンロード',
                           labelColor: kWhiteColor,
                           backgroundColor: kGreenColor,
-                          onPressed: () async {
-                            await widget.orderProvider.csvDownload2();
-                          },
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => ShokonCsvDialog(
+                              orderProvider: widget.orderProvider,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -227,6 +242,162 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class PdfDialog extends StatefulWidget {
+  final OrderProvider orderProvider;
+
+  const PdfDialog({
+    required this.orderProvider,
+    super.key,
+  });
+
+  @override
+  State<PdfDialog> createState() => _PdfDialogState();
+}
+
+class _PdfDialogState extends State<PdfDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        'PDFダウンロード',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('PDFファイルをダウンロードします。対象の年月と対象の店舗を選択してください。'),
+          const SizedBox(height: 8),
+          CustomMonthBox(
+            value: DateTime.now(),
+            onTap: () {},
+          ),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          labelText: 'ダウンロード',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            await widget.orderProvider.pdfDownload();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class CsvDialog extends StatefulWidget {
+  final OrderProvider orderProvider;
+
+  const CsvDialog({
+    required this.orderProvider,
+    super.key,
+  });
+
+  @override
+  State<CsvDialog> createState() => _CsvDialogState();
+}
+
+class _CsvDialogState extends State<CsvDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        'CSVダウンロード',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('CSVファイルをダウンロードします。対象の年月を選択してください。'),
+          const SizedBox(height: 8),
+          CustomMonthBox(
+            value: DateTime.now(),
+            onTap: () {},
+          ),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          labelText: 'ダウンロード',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreenColor,
+          onPressed: () async {
+            await widget.orderProvider.csvDownload();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ShokonCsvDialog extends StatefulWidget {
+  final OrderProvider orderProvider;
+
+  const ShokonCsvDialog({
+    required this.orderProvider,
+    super.key,
+  });
+
+  @override
+  State<ShokonCsvDialog> createState() => _ShokonCsvDialogState();
+}
+
+class _ShokonCsvDialogState extends State<ShokonCsvDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        '商魂用CSVダウンロード',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('商魂ソフトへ取り込むためのCSVファイルをダウンロードします。対象の年月を選択してください。'),
+          const SizedBox(height: 8),
+          CustomMonthBox(
+            value: DateTime.now(),
+            onTap: () {},
+          ),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          labelText: 'ダウンロード',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreenColor,
+          onPressed: () async {
+            await widget.orderProvider.shokonCsvDownload();
+          },
         ),
       ],
     );

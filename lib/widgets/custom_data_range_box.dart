@@ -19,12 +19,12 @@ class CustomDateRangeBox extends StatelessWidget {
     String text = '';
     if (startValue != null && endValue != null) {
       text =
-          '${dateText('yyyy-MM-dd', startValue)} ～ ${dateText('yyyy-MM-dd', endValue)}';
+          '${dateText('yyyy/MM/dd', startValue)} ～ ${dateText('yyyy/MM/dd', endValue)}';
     }
 
     return TextBox(
       controller: TextEditingController(text: text),
-      placeholder: '年-月-日 ～ 年-月-日',
+      placeholder: '年/月/日 ～ 年/月/日',
       suffix: const Padding(
         padding: EdgeInsets.all(8),
         child: Icon(

@@ -40,7 +40,7 @@ class OrderProvider with ChangeNotifier {
 
   Future<List<OrderModel>> selectList() async {
     searchText =
-        '[注文日]${dateText('yyyy-MM-dd', searchStart)} ～ ${dateText('yyyy-MM-dd', searchEnd)} ';
+        '[注文日]${dateText('yyyy/MM/dd', searchStart)} ～ ${dateText('yyyy/MM/dd', searchEnd)} ';
     if (searchShop != null) {
       searchText += '[発注元店舗]$searchShop ';
     }
@@ -106,7 +106,7 @@ class OrderProvider with ChangeNotifier {
       ..click();
   }
 
-  Future csvDownload2() async {
+  Future shokonCsvDownload() async {
     final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.csv';
     List<String> header = [
       '伝区',

@@ -104,6 +104,15 @@ class ShopSource extends DataGridSource {
             ),
           ),
         ),
+        const SizedBox(width: 4),
+        CustomButton(
+          labelText: '初期設定マニュアル',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            await shop.manualDownload();
+          },
+        ),
       ],
     ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);

@@ -31,7 +31,7 @@ class ShopLoginSource extends DataGridSource {
         ),
         DataGridCell(
           columnName: 'createdAt',
-          value: shopLogin.createdAt,
+          value: dateText('yyyy/MM/dd HH:mm', shopLogin.createdAt),
         ),
         DataGridCell(
           columnName: 'shopName',

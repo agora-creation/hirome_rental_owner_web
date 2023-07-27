@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:universal_html/html.dart' as html;
 
 class ShopModel {
   String _id = '';
@@ -50,6 +54,79 @@ class ShopModel {
         break;
     }
     return ret;
+  }
+
+  Future manualDownload() async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(
+      'assets/fonts/GenShinGothic-Regular.ttf',
+    );
+    final ttf = pw.Font.ttf(font);
+    final titleStyle = pw.TextStyle(font: ttf, fontSize: 18);
+    final bodyStyle = pw.TextStyle(font: ttf, fontSize: 14);
+    final urlStyle = pw.TextStyle(font: ttf, fontSize: 12);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        children: [
+          pw.Center(
+            child: pw.Text('$name - 初期設定マニュアル', style: titleStyle),
+          ),
+          pw.SizedBox(height: 40),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '① スマホから注文したい場合は、以下のURLからアプリをダウンロードしてください。',
+                style: bodyStyle,
+              ),
+              pw.Text(
+                '[iOS]\nhttps://apps.apple.com/jp/app/',
+                style: urlStyle,
+              ),
+              pw.Text(
+                '[Android]\nhttps://play.google.com/store/apps/details?id=com.agoracreation.hatarakujikan_tablet',
+                style: urlStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '② PCやタブレット端末から注文したい場合は、以下のURLへアクセスしてください。',
+                style: bodyStyle,
+              ),
+              pw.Text(
+                'https://hirome-rental-shop.web.app/',
+                style: urlStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '③ 以下の店舗番号を入力してログインしてください。\nログイン申請が管理者宛に送信されます。',
+                style: bodyStyle,
+              ),
+              pw.Text(
+                '[店舗番号] $number',
+                style: urlStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '④ ログイン申請が承認されると、注文が可能な画面になります。',
+                style: bodyStyle,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ));
+    final bytes = await pdf.save();
+    final blob = html.Blob([bytes], 'application/pdf');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..download = 'shop_manual.pdf';
+    html.document.body?.children.add(anchor);
+    anchor.click();
+    html.document.body?.children.remove(anchor);
+    html.Url.revokeObjectUrl(url);
   }
 }
 
