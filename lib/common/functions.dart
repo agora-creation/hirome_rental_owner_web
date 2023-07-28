@@ -93,6 +93,18 @@ Timestamp convertTimestamp(DateTime date, bool end) {
   );
 }
 
+pw.Widget generateCell({
+  required String label,
+  required pw.TextStyle style,
+  double? width,
+}) {
+  return pw.Container(
+    padding: const pw.EdgeInsets.all(4),
+    child: pw.Text(label, style: style),
+    width: width,
+  );
+}
+
 Future pdfWebDownload({
   required pw.Document pdf,
   required String fileName,

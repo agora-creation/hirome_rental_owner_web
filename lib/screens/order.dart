@@ -268,6 +268,18 @@ class _PdfDialogState extends State<PdfDialog> {
   DateTime selectedMonth = DateTime.now();
   String? selectedShop;
 
+  void _init() {
+    setState(() {
+      selectedShop = widget.shops.first.name;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(

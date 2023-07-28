@@ -4,6 +4,7 @@ import 'package:csv/csv.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
+import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/cart.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
 import 'package:hirome_rental_owner_web/services/order.dart';
@@ -56,16 +57,114 @@ class OrderProvider with ChangeNotifier {
 
   Future pdfDownload(DateTime month, String shopName) async {
     final pdf = pw.Document();
-    final font = await rootBundle.load(
-      'assets/fonts/GenShinGothic-Regular.ttf',
-    );
+    final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
-    pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
-      pageFormat: PdfPageFormat.a4,
-      build: (context) => pw.Column(),
+    final titleStyle = pw.TextStyle(font: ttf, fontSize: 16);
+    final bodyStyle = pw.TextStyle(font: ttf, fontSize: 12);
+    final cellStyle = pw.TextStyle(font: ttf, fontSize: 8);
+    const thDecoration = pw.BoxDecoration(color: PdfColors.grey300);
+    DateTime monthStart = DateTime(month.year, month.month, 1);
+    DateTime monthEnd = DateTime(month.year, month.month + 1, 1).add(
+      const Duration(days: -1),
+    );
+    List<OrderModel> orders = await orderService.selectList(
+      shopName: shopName,
+      searchStart: monthStart,
+      searchEnd: monthEnd,
+    );
+    List<pw.TableRow> rows = [];
+    rows.add(pw.TableRow(
+      decoration: thDecoration,
+      children: [
+        generateCell(label: '商品番号', style: cellStyle, width: 20),
+        generateCell(label: '商品名', style: cellStyle),
+        generateCell(label: '単価/単位', style: cellStyle, width: 10),
+        generateCell(label: '納品数量', style: cellStyle, width: 10),
+        generateCell(label: '合計金額', style: cellStyle, width: 20),
+      ],
     ));
-    await pdfWebDownload(pdf: pdf, fileName: 'shop_manual.pdf');
+    Map numberMap = {};
+    Map nameMap = {};
+    Map priceUnitMap = {};
+    Map quantityMap = {};
+    Map totalPriceMap = {};
+    int allTotalPrice = 0;
+    for (OrderModel order in orders) {
+      for (CartModel cart in order.carts) {
+        String key = cart.number;
+        numberMap[key] = cart.number;
+        nameMap[key] = cart.name;
+        priceUnitMap[key] = '${cart.price}/${cart.unit}';
+        if (quantityMap[key] == null) {
+          quantityMap[key] = '${cart.deliveryQuantity}';
+        } else {
+          int addQuantity = int.parse(quantityMap[key]) + cart.deliveryQuantity;
+          quantityMap[key] = '$addQuantity';
+        }
+        int totalPrice = cart.price * cart.deliveryQuantity;
+        allTotalPrice += totalPrice;
+        if (totalPriceMap[key] == null) {
+          totalPriceMap[key] = '$totalPrice';
+        } else {
+          int addTotalPrice = int.parse(totalPriceMap[key]) + totalPrice;
+          totalPriceMap[key] = '$addTotalPrice';
+        }
+      }
+    }
+    numberMap.forEach((key, value) {
+      rows.add(pw.TableRow(
+        children: [
+          generateCell(
+            label: '$value',
+            style: cellStyle,
+            width: 20,
+          ),
+          generateCell(
+            label: '${nameMap[value]}',
+            style: cellStyle,
+          ),
+          generateCell(
+            label: '${priceUnitMap[value]}',
+            style: cellStyle,
+            width: 10,
+          ),
+          generateCell(
+            label: '${quantityMap[value]}',
+            style: cellStyle,
+            width: 10,
+          ),
+          generateCell(
+            label: '￥${totalPriceMap[value]}',
+            style: cellStyle,
+            width: 20,
+          ),
+        ],
+      ));
+    });
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(16),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '$shopNameの${dateText('yyyy年MM月', month)}分の注文履歴書',
+              style: titleStyle,
+            ),
+          ),
+          pw.SizedBox(height: 16),
+          pw.Text('総合計金額　￥$allTotalPrice', style: bodyStyle),
+          pw.SizedBox(height: 8),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            children: rows,
+          ),
+        ],
+      ),
+    ));
+    final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.pdf';
+    await pdfWebDownload(pdf: pdf, fileName: fileName);
   }
 
   Future csvDownload(DateTime month) async {
