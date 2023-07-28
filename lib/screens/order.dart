@@ -113,16 +113,17 @@ class _OrderScreenState extends State<OrderScreen> {
                               InfoLabel(
                                 label: '発注元店舗',
                                 child: ComboBox<String>(
-                                  value: widget.orderProvider.searchShop,
+                                  value: widget.orderProvider.searchShopNumber,
                                   items: shops.map((shop) {
                                     return ComboBoxItem(
-                                      value: shop.name,
+                                      value: shop.number,
                                       child: Text(shop.name),
                                     );
                                   }).toList(),
                                   onChanged: (value) {
                                     setState(() {
-                                      widget.orderProvider.searchShop = value;
+                                      widget.orderProvider.searchShopNumber =
+                                          value;
                                     });
                                   },
                                   isExpanded: true,
@@ -266,11 +267,11 @@ class PdfDialog extends StatefulWidget {
 
 class _PdfDialogState extends State<PdfDialog> {
   DateTime selectedMonth = DateTime.now();
-  String? selectedShop;
+  String? selectedShopNumber;
 
   void _init() {
     setState(() {
-      selectedShop = widget.shops.first.name;
+      selectedShopNumber = widget.shops.first.number;
     });
   }
 
@@ -309,16 +310,16 @@ class _PdfDialogState extends State<PdfDialog> {
           ),
           const SizedBox(height: 8),
           ComboBox<String>(
-            value: selectedShop,
+            value: selectedShopNumber,
             items: widget.shops.map((shop) {
               return ComboBoxItem(
-                value: shop.name,
+                value: shop.number,
                 child: Text(shop.name),
               );
             }).toList(),
             onChanged: (value) {
               setState(() {
-                selectedShop = value;
+                selectedShopNumber = value;
               });
             },
             isExpanded: true,
@@ -337,10 +338,10 @@ class _PdfDialogState extends State<PdfDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
-            if (selectedShop != null) {
+            if (selectedShopNumber != null) {
               await widget.orderProvider.pdfDownload(
                 selectedMonth,
-                selectedShop!,
+                selectedShopNumber!,
               );
             }
           },

@@ -24,7 +24,7 @@ class OrderProvider with ChangeNotifier {
     DateTime.now().month + 1,
     1,
   ).add(const Duration(days: -1));
-  String? searchShop;
+  String? searchShopNumber;
   String searchText = 'なし';
 
   void searchClear() {
@@ -39,23 +39,23 @@ class OrderProvider with ChangeNotifier {
       DateTime.now().month + 1,
       1,
     ).add(const Duration(days: -1));
-    searchShop = null;
+    searchShopNumber = null;
   }
 
   Future<List<OrderModel>> selectList() async {
     searchText =
         '[注文日]${dateText('yyyy/MM/dd', searchStart)} ～ ${dateText('yyyy/MM/dd', searchEnd)} ';
-    if (searchShop != null) {
-      searchText += '[発注元店舗]$searchShop ';
+    if (searchShopNumber != null) {
+      searchText += '[発注元店舗]$searchShopNumber ';
     }
     return await orderService.selectList(
-      shopName: searchShop,
+      shopNumber: searchShopNumber,
       searchStart: searchStart,
       searchEnd: searchEnd,
     );
   }
 
-  Future pdfDownload(DateTime month, String shopName) async {
+  Future pdfDownload(DateTime month, String shopNumber) async {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
@@ -68,7 +68,7 @@ class OrderProvider with ChangeNotifier {
       const Duration(days: -1),
     );
     List<OrderModel> orders = await orderService.selectList(
-      shopName: shopName,
+      shopNumber: shopNumber,
       searchStart: monthStart,
       searchEnd: monthEnd,
     );
@@ -134,7 +134,7 @@ class OrderProvider with ChangeNotifier {
             width: 10,
           ),
           generateCell(
-            label: '￥${totalPriceMap[value]}',
+            label: '￥${addCommaToNum(int.parse(totalPriceMap[value]))}',
             style: cellStyle,
             width: 20,
           ),
@@ -149,12 +149,12 @@ class OrderProvider with ChangeNotifier {
         children: [
           pw.Center(
             child: pw.Text(
-              '$shopNameの${dateText('yyyy年MM月', month)}分の注文履歴書',
+              '${orders.first.shopName}の${dateText('yyyy年MM月', month)}分の注文履歴書',
               style: titleStyle,
             ),
           ),
           pw.SizedBox(height: 16),
-          pw.Text('総合計金額　￥$allTotalPrice', style: bodyStyle),
+          pw.Text('総合計金額　￥${addCommaToNum(allTotalPrice)}', style: bodyStyle),
           pw.SizedBox(height: 8),
           pw.Table(
             border: pw.TableBorder.all(color: PdfColors.grey),

@@ -93,6 +93,12 @@ Timestamp convertTimestamp(DateTime date, bool end) {
   );
 }
 
+String addCommaToNum(int num) {
+  final formatter = NumberFormat("#,###");
+  String numWithComma = formatter.format(num);
+  return numWithComma;
+}
+
 pw.Widget generateCell({
   required String label,
   required pw.TextStyle style,
