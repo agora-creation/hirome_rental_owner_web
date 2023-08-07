@@ -5,6 +5,7 @@ const kSystemName = '食器レンタルシステム';
 const kForName = '管理者専用';
 
 const kDefaultImageUrl = 'assets/images/default.png';
+const kLoginImageUrl = 'assets/images/login.png';
 
 const kPdfFontUrl = 'assets/fonts/GenShinGothic-Regular.ttf';
 
@@ -52,3 +53,7 @@ const SliverGridDelegate kSearchGrid =
   crossAxisCount: 4,
   crossAxisSpacing: 8,
 );
+
+const kGooglePlayStoreUrl =
+    'https://play.google.com/store/apps/details?id=com.agoracreation.hirome_rental_shop_app';
+const kAppStore = 'https://apple.co/3KtWJpM';
