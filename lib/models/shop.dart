@@ -71,7 +71,7 @@ class ShopModel {
     );
     final qrAndroidImage = pw.MemoryImage(qrAndroidUint8List);
     final qrIosByteData = await rootBundle.load(kQrIosImageUrl);
-    final qrIosUint8List = qrAndroidByteData.buffer.asUint8List(
+    final qrIosUint8List = qrIosByteData.buffer.asUint8List(
       qrIosByteData.offsetInBytes,
       qrIosByteData.lengthInBytes,
     );
@@ -83,7 +83,7 @@ class ShopModel {
     );
     final ssLoginImage = pw.MemoryImage(ssLoginUint8List);
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(32),
+      margin: const pw.EdgeInsets.all(40),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -94,16 +94,32 @@ class ShopModel {
               style: titleStyle,
             ),
           ),
-          pw.SizedBox(height: 16),
+          pw.SizedBox(height: 24),
           pw.Text(
             'スマホから利用したい場合は、以下のQRコードからアプリストアを開き、アプリをインストールしてください。',
             style: bodyStyle,
           ),
           pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
             children: [
-              pw.Image(qrAndroidImage, fit: pw.BoxFit.fitWidth),
-              pw.SizedBox(width: 8),
-              pw.Image(qrIosImage, fit: pw.BoxFit.fitWidth),
+              pw.Column(
+                children: [
+                  pw.Text('Androidの方', style: bodyStyle),
+                  pw.SizedBox(
+                    width: 200,
+                    child: pw.Image(qrAndroidImage),
+                  ),
+                ],
+              ),
+              pw.Column(
+                children: [
+                  pw.Text('iOSの方', style: bodyStyle),
+                  pw.SizedBox(
+                    width: 200,
+                    child: pw.Image(qrIosImage),
+                  ),
+                ],
+              ),
             ],
           ),
           pw.SizedBox(height: 8),
@@ -115,8 +131,14 @@ class ShopModel {
             'https://hirome-rental-shop.web.app/',
             style: accentStyle,
           ),
+          pw.SizedBox(height: 32),
+          pw.Center(
+            child: pw.SizedBox(
+              width: 250,
+              child: pw.Image(ssLoginImage),
+            ),
+          ),
           pw.SizedBox(height: 8),
-          pw.Image(ssLoginImage, fit: pw.BoxFit.fitWidth),
           pw.Text(
             '上記の画面が表示されたら、店舗番号を入力して、ログインボタンを押してください。',
             style: bodyStyle,
@@ -125,12 +147,11 @@ class ShopModel {
             'あなたの店舗番号は『$number』です。',
             style: accentStyle,
           ),
-          pw.SizedBox(height: 8),
+          pw.SizedBox(height: 16),
           pw.Text(
             'ログインを押すと、管理者宛にログイン申請が送信されます。承認されるまで、しばらくお待ちください。',
             style: bodyStyle,
           ),
-          pw.SizedBox(height: 8),
           pw.Text(
             '承認されたら画面が変わり、ご利用が可能になります。',
             style: bodyStyle,
