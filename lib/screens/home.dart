@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.account_activity),
-            title: const Text('店舗アカウントログイン'),
+            title: const Text('店舗ログイン申請'),
             body: ShopLoginScreen(shopLoginProvider: shopLoginProvider),
             infoBadge: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: shopLoginService.streamList(),
