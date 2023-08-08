@@ -106,7 +106,7 @@ class ShopSource extends DataGridSource {
         ),
         const SizedBox(width: 4),
         CustomButton(
-          labelText: '初期設定マニュアル',
+          labelText: '初期設定PDF',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
