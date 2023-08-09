@@ -165,6 +165,19 @@ class _OrderScreenState extends State<OrderScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CustomIconTextButton(
+                          iconData: FluentIcons.numbered_list,
+                          iconColor: kWhiteColor,
+                          labelText: '注文商品集計表示',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kGreyColor,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) =>
+                                const OrderProductTotalDialog(),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        CustomIconTextButton(
                           iconData: FluentIcons.download,
                           iconColor: kWhiteColor,
                           labelText: 'PDFダウンロード',
@@ -245,6 +258,39 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class OrderProductTotalDialog extends StatefulWidget {
+  const OrderProductTotalDialog({super.key});
+
+  @override
+  State<OrderProductTotalDialog> createState() =>
+      _OrderProductTotalDialogState();
+}
+
+class _OrderProductTotalDialogState extends State<OrderProductTotalDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        '注文商品集計',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [],
+      ),
+      actions: [
+        CustomButton(
+          labelText: '閉じる',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
         ),
       ],
     );

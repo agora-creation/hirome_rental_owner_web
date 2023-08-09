@@ -73,12 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           PaneItemSeparator(),
           PaneItem(
-            icon: const Icon(FluentIcons.shopping_cart),
-            title: const Text('注文商品集計'),
-            body: Container(),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
             icon: const Icon(FluentIcons.bank),
             title: const Text('店舗アカウント管理'),
             body: ShopScreen(shopProvider: shopProvider),
