@@ -280,10 +280,71 @@ class _OrderProductTotalDialogState extends State<OrderProductTotalDialog> {
         '注文商品集計',
         style: TextStyle(fontSize: 18),
       ),
-      content: const Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [],
+        children: [
+          SizedBox(
+            height: 350,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: 100,
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    border: Border(bottom: BorderSide(color: kGreyColor)),
+                  ),
+                  padding: const EdgeInsets.all(4),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '商品番号 : 1',
+                            style: TextStyle(
+                              color: kGreyColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            '丸和皿(大)',
+                            style: TextStyle(
+                              color: kBlackColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '合計納品数量',
+                            style: TextStyle(
+                              color: kGreyColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            '0枚',
+                            style: TextStyle(
+                              color: kBlackColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       actions: [
         CustomButton(
