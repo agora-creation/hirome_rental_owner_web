@@ -59,9 +59,27 @@ class OrderProvider with ChangeNotifier {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
-    final titleStyle = pw.TextStyle(font: ttf, fontSize: 16);
-    final bodyStyle = pw.TextStyle(font: ttf, fontSize: 12);
-    final cellStyle = pw.TextStyle(font: ttf, fontSize: 8);
+    final headerStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 16,
+      fontWeight: pw.FontWeight.bold,
+    );
+    final shopStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 12,
+    );
+    final bodyStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 10,
+    );
+    final priceStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 14,
+    );
+    final productStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 8,
+    );
     const thDecoration = pw.BoxDecoration(color: PdfColors.grey300);
     DateTime monthStart = DateTime(month.year, month.month, 1);
     DateTime monthEnd = DateTime(month.year, month.month + 1, 1).add(
@@ -76,11 +94,22 @@ class OrderProvider with ChangeNotifier {
     rows.add(pw.TableRow(
       decoration: thDecoration,
       children: [
-        generateCell(label: '商品番号', style: cellStyle, width: 20),
-        generateCell(label: '商品名', style: cellStyle),
-        generateCell(label: '単価/単位', style: cellStyle, width: 10),
-        generateCell(label: '納品数量', style: cellStyle, width: 10),
-        generateCell(label: '合計金額', style: cellStyle, width: 20),
+        generateCell(label: '商品番号', style: productStyle, width: 20),
+        generateCell(label: '商品名', style: productStyle),
+        generateCell(label: '単価', style: productStyle, width: 10),
+        generateCell(label: '納品数量', style: productStyle, width: 10),
+        generateCell(label: '合計金額', style: productStyle, width: 10),
+      ],
+    ));
+    List<pw.TableRow> rows2 = [];
+    rows2.add(pw.TableRow(
+      decoration: thDecoration,
+      children: [
+        generateCell(label: '商品番号', style: productStyle, width: 20),
+        generateCell(label: '商品名', style: productStyle),
+        generateCell(label: '単価', style: productStyle, width: 10),
+        generateCell(label: '納品数量', style: productStyle, width: 10),
+        generateCell(label: '合計金額', style: productStyle, width: 10),
       ],
     ));
     Map numberMap = {};
@@ -94,7 +123,7 @@ class OrderProvider with ChangeNotifier {
         String key = cart.number;
         numberMap[key] = cart.number;
         nameMap[key] = cart.name;
-        priceUnitMap[key] = '${cart.price}/${cart.unit}';
+        priceUnitMap[key] = '${cart.price}';
         if (quantityMap[key] == null) {
           quantityMap[key] = '${cart.deliveryQuantity}';
         } else {
@@ -111,50 +140,110 @@ class OrderProvider with ChangeNotifier {
         }
       }
     }
+    int rowCount = 0;
     numberMap.forEach((key, value) {
-      rows.add(pw.TableRow(
-        children: [
-          generateCell(
-            label: '$value',
-            style: cellStyle,
-            width: 20,
-          ),
-          generateCell(
-            label: '${nameMap[value]}',
-            style: cellStyle,
-          ),
-          generateCell(
-            label: '${priceUnitMap[value]}',
-            style: cellStyle,
-            width: 10,
-          ),
-          generateCell(
-            label: '${quantityMap[value]}',
-            style: cellStyle,
-            width: 10,
-          ),
-          generateCell(
-            label: '￥${addCommaToNum(int.parse(totalPriceMap[value]))}',
-            style: cellStyle,
-            width: 20,
-          ),
-        ],
-      ));
+      rowCount++;
+      if (rowCount < 35) {
+        rows.add(pw.TableRow(
+          children: [
+            generateCell(
+              label: '$value',
+              style: productStyle,
+              width: 20,
+            ),
+            generateCell(
+              label: '${nameMap[value]}',
+              style: productStyle,
+            ),
+            generateCell(
+              label: '${priceUnitMap[value]}',
+              style: productStyle,
+              width: 10,
+            ),
+            generateCell(
+              label: '${quantityMap[value]}',
+              style: productStyle,
+              width: 10,
+            ),
+            generateCell(
+              label: '￥${addCommaToNum(int.parse(totalPriceMap[value]))}',
+              style: productStyle,
+              width: 10,
+            ),
+          ],
+        ));
+      } else {
+        rows2.add(pw.TableRow(
+          children: [
+            generateCell(
+              label: '$value',
+              style: productStyle,
+              width: 20,
+            ),
+            generateCell(
+              label: '${nameMap[value]}',
+              style: productStyle,
+            ),
+            generateCell(
+              label: '${priceUnitMap[value]}',
+              style: productStyle,
+              width: 10,
+            ),
+            generateCell(
+              label: '${quantityMap[value]}',
+              style: productStyle,
+              width: 10,
+            ),
+            generateCell(
+              label: '￥${addCommaToNum(int.parse(totalPriceMap[value]))}',
+              style: productStyle,
+              width: 10,
+            ),
+          ],
+        ));
+      }
     });
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(16),
+      margin: const pw.EdgeInsets.all(32),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Center(
             child: pw.Text(
-              '${orders.first.shopName}の${dateText('yyyy年MM月', month)}分の注文履歴書',
-              style: titleStyle,
+              '${dateText('yyyy年MM月', month)}分の注文履歴書',
+              style: headerStyle,
             ),
           ),
+          pw.SizedBox(height: 8),
+          pw.Container(
+            decoration: const pw.BoxDecoration(
+              border: pw.Border(
+                bottom: pw.BorderSide(color: PdfColors.black),
+              ),
+            ),
+            child: pw.Text(
+              '${orders.first.shopName} 御中',
+              style: shopStyle,
+            ),
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            '下記のとおり納品いたしました。',
+            style: bodyStyle,
+          ),
           pw.SizedBox(height: 16),
-          pw.Text('総合計金額　￥${addCommaToNum(allTotalPrice)}', style: bodyStyle),
+          pw.Container(
+            decoration: const pw.BoxDecoration(
+              border: pw.Border(
+                bottom: pw.BorderSide(color: PdfColors.black),
+              ),
+            ),
+            child: pw.Text(
+              '合計金額　￥${addCommaToNum(allTotalPrice)}',
+              style: priceStyle,
+            ),
+          ),
           pw.SizedBox(height: 8),
           pw.Table(
             border: pw.TableBorder.all(color: PdfColors.grey),
@@ -163,6 +252,21 @@ class OrderProvider with ChangeNotifier {
         ],
       ),
     ));
+    if (rows2.length > 1) {
+      pdf.addPage(pw.Page(
+        margin: const pw.EdgeInsets.all(32),
+        pageFormat: PdfPageFormat.a4,
+        build: (context) => pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Table(
+              border: pw.TableBorder.all(color: PdfColors.grey),
+              children: rows2,
+            ),
+          ],
+        ),
+      ));
+    }
     final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.pdf';
     await pdfWebDownload(pdf: pdf, fileName: fileName);
   }
