@@ -1,10 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
+import 'package:hirome_rental_owner_web/models/cart.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
+import 'package:hirome_rental_owner_web/models/product.dart';
 import 'package:hirome_rental_owner_web/models/shop.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/screens/order_source.dart';
+import 'package:hirome_rental_owner_web/services/product.dart';
 import 'package:hirome_rental_owner_web/services/shop.dart';
 import 'package:hirome_rental_owner_web/widgets/animation_background.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_button.dart';
@@ -13,6 +16,7 @@ import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_range_box.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_month_box.dart';
+import 'package:hirome_rental_owner_web/widgets/order_product_total_list.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -172,8 +176,9 @@ class _OrderScreenState extends State<OrderScreen> {
                           backgroundColor: kGreyColor,
                           onPressed: () => showDialog(
                             context: context,
-                            builder: (context) =>
-                                const OrderProductTotalDialog(),
+                            builder: (context) => OrderProductTotalDialog(
+                              orders: orders,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -265,7 +270,12 @@ class _OrderScreenState extends State<OrderScreen> {
 }
 
 class OrderProductTotalDialog extends StatefulWidget {
-  const OrderProductTotalDialog({super.key});
+  final List<OrderModel> orders;
+
+  const OrderProductTotalDialog({
+    required this.orders,
+    super.key,
+  });
 
   @override
   State<OrderProductTotalDialog> createState() =>
@@ -273,78 +283,45 @@ class OrderProductTotalDialog extends StatefulWidget {
 }
 
 class _OrderProductTotalDialogState extends State<OrderProductTotalDialog> {
+  ProductService productService = ProductService();
+  List<ProductModel> products = [];
+
+  void _init() async {
+    List<ProductModel> tmpProducts = await productService.selectList();
+    setState(() {
+      products = tmpProducts;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Map<String, int> totalMap = {};
+    for (OrderModel order in widget.orders) {
+      for (CartModel cart in order.carts) {
+        totalMap[cart.number] = cart.deliveryQuantity;
+      }
+    }
     return ContentDialog(
       title: const Text(
         '注文商品集計',
         style: TextStyle(fontSize: 18),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 350,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: 100,
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: kGreyColor)),
-                  ),
-                  padding: const EdgeInsets.all(4),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '商品番号 : 1',
-                            style: TextStyle(
-                              color: kGreyColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            '丸和皿(大)',
-                            style: TextStyle(
-                              color: kBlackColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '合計納品数量',
-                            style: TextStyle(
-                              color: kGreyColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            '0枚',
-                            style: TextStyle(
-                              color: kBlackColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+      content: ListView.builder(
+        shrinkWrap: true,
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          ProductModel product = products[index];
+          return OrderProductTotalList(
+            product: product,
+            total: totalMap[product.number],
+          );
+        },
       ),
       actions: [
         CustomButton(
