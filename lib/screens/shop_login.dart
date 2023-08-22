@@ -71,6 +71,10 @@ class _ShopLoginScreenState extends State<ShopLoginScreen> {
                                 label: const CustomCell(label: '店舗アカウント名'),
                               ),
                               GridColumn(
+                                columnName: 'requestName',
+                                label: const CustomCell(label: '申請者名'),
+                              ),
+                              GridColumn(
                                 columnName: 'deviceName',
                                 label: const CustomCell(label: '端末名'),
                               ),

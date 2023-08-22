@@ -38,6 +38,10 @@ class ShopLoginSource extends DataGridSource {
           value: shopLogin.shopName,
         ),
         DataGridCell(
+          columnName: 'requestName',
+          value: shopLogin.requestName,
+        ),
+        DataGridCell(
           columnName: 'deviceName',
           value: shopLogin.deviceName,
         ),
@@ -62,6 +66,7 @@ class ShopLoginSource extends DataGridSource {
     cells.add(CustomCell(label: '${row.getCells()[1].value}'));
     cells.add(CustomCell(label: '${row.getCells()[2].value}'));
     cells.add(CustomCell(label: '${row.getCells()[3].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[4].value}'));
     cells.add(Row(
       children: [
         CustomButton(
@@ -179,6 +184,7 @@ class _ShopLoginDetailsDialogState extends State<ShopLoginDetailsDialog> {
             'ログイン日時 : ${dateText('yyyy/MM/dd HH:mm', widget.shopLogin.createdAt)}',
           ),
           Text('店舗アカウント名 : ${widget.shopLogin.shopName}'),
+          Text('申請者名 : ${widget.shopLogin.requestName}'),
           Text('端末名 : ${widget.shopLogin.deviceName}'),
         ],
       ),
