@@ -94,7 +94,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '各店舗が注文したデータを一覧で表示します。検索で絞り込んだり、帳票の出力を行うことができます。',
+                      '各店舗が注文して、食器センターが受注した注文データを表示しています。',
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 8),
@@ -312,16 +312,25 @@ class _OrderProductTotalDialogState extends State<OrderProductTotalDialog> {
         '注文商品集計',
         style: TextStyle(fontSize: 18),
       ),
-      content: ListView.builder(
-        shrinkWrap: true,
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          ProductModel product = products[index];
-          return OrderProductTotalList(
-            product: product,
-            total: totalMap[product.number],
-          );
-        },
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('注文データを、商品データ毎に集計しています。'),
+          const SizedBox(height: 8),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                ProductModel product = products[index];
+                return OrderProductTotalList(
+                  product: product,
+                  total: totalMap[product.number],
+                );
+              },
+            ),
+          ),
+        ],
       ),
       actions: [
         CustomButton(
@@ -376,7 +385,7 @@ class _PdfDialogState extends State<PdfDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('PDFファイルをダウンロードします。対象の年月と対象の店舗を選択してください。'),
+          const Text('店舗向けの納品書PDFファイルをダウンロードします。対象の年月と対象の店舗を選択してください。'),
           const SizedBox(height: 8),
           CustomMonthBox(
             value: selectedMonth,

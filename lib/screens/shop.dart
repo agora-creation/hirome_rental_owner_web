@@ -55,7 +55,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '店舗アカウントデータを一覧で表示します。検索で絞り込んだり、登録・編集・削除することができます。',
+                      '店舗アカウントデータを表示してます。',
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 8),
