@@ -39,7 +39,7 @@ class _ShopLoginScreenState extends State<ShopLoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '店舗アカウントのログインがあった場合に、二段階認証の為、管理者宛に申請が送られます。\n『承認』するまでは、店舗はログインできません。身に覚えのないログインは『却下』してください。',
+                      '各店舗が注文するアプリで、店舗アカウントのログインがあった場合に、二段階認証の為、こちらにログイン申請が送られます。\n『承認』するまでは、店舗はログインできません。身に覚えのないログイン申請は『却下』してください。',
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 8),

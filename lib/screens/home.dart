@@ -137,7 +137,7 @@ class _SignOutDialogState extends State<SignOutDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('最終更新日: 2023/07/04 15:49'),
+          Text('最終更新日: 2023/09/05 11:07'),
           Text('ログインID: owner'),
         ],
       ),

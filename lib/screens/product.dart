@@ -59,7 +59,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '各店舗が注文するための商品データを一覧で表示します。検索で絞り込んだり、登録・編集・削除することができます。',
+                      '各店舗が注文するための商品データを表示しています。',
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 8),

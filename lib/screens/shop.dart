@@ -55,7 +55,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '店舗アカウントデータを表示してます。',
+                      '店舗アカウントデータを表示しています。各店舗が注文するアプリにログインするには、『店舗番号』が必要になりますので、お伝えください。',
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 8),
