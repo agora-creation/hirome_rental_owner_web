@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "hirome-rental",
     "public": "build/web",
     "ignore": [
       "firebase.json",
