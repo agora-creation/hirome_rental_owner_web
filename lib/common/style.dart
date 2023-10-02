@@ -63,6 +63,6 @@ DateTime kFirstDate = DateTime(
 );
 DateTime kLastDate = DateTime(
   DateTime.now().year,
-  DateTime.now().month,
+  DateTime.now().month + 1,
   1,
 ).subtract(const Duration(days: 1));
