@@ -393,6 +393,8 @@ class _PdfDialogState extends State<PdfDialog> {
               var selected = await showMonthPicker(
                 context: context,
                 initialDate: selectedMonth,
+                firstDate: kFirstDate,
+                lastDate: kLastDate,
               );
               if (selected != null) {
                 setState(() {
@@ -478,6 +480,8 @@ class _CsvDialogState extends State<CsvDialog> {
               var selected = await showMonthPicker(
                 context: context,
                 initialDate: selectedMonth,
+                firstDate: kFirstDate,
+                lastDate: kLastDate,
               );
               if (selected != null) {
                 setState(() {
@@ -542,6 +546,8 @@ class _ShokonCsvDialogState extends State<ShokonCsvDialog> {
               var selected = await showMonthPicker(
                 context: context,
                 initialDate: selectedMonth,
+                firstDate: kFirstDate,
+                lastDate: kLastDate,
               );
               if (selected != null) {
                 setState(() {

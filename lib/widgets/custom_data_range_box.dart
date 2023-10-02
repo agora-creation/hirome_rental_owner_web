@@ -21,7 +21,6 @@ class CustomDateRangeBox extends StatelessWidget {
       text =
           '${dateText('yyyy/MM/dd', startValue)} ～ ${dateText('yyyy/MM/dd', endValue)}';
     }
-
     return TextBox(
       controller: TextEditingController(text: text),
       placeholder: '年/月/日 ～ 年/月/日',
