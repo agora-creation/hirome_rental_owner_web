@@ -22,6 +22,11 @@ async function backupToXserver() {
     let orderQuerySnapshot = await admin.firestore().collection("order").where("status", "==", 1).where("createdAt", ">=", searchStart).where("createdAt", "<=", searchEnd).get();
     orderQuerySnapshot.forEach((orderDoc) => {
         let orderData = orderDoc.data();
+
+        console.log(orderData["carts"]);
+        console.log(orderData["updatedAt"]);
+        console.log(orderData["updatedAt"]);
+
         //Xserverに設置してあるPHPを実行
         const post_data = querystring.stringify({
             "id": orderData["id"],
