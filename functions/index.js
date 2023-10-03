@@ -4,7 +4,6 @@ const {logger} = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
 
-const querystring = require('querystring');
 const https = require('https');
 
 //exports.onceYearFunction = onSchedule("00 0 1 1 *", async (event) => {
@@ -19,28 +18,16 @@ async function backupToXserver() {
     //let searchEnd = new Date(dt.getFullYear() - 2, 12, 31, 23, 59, 59);
     let searchStart = new Date(dt.getFullYear(), 1, 1, 0, 0, 0);
     let searchEnd = new Date(dt.getFullYear(), 12, 31, 23, 59, 59);
-    let orderQuerySnapshot = await admin.firestore().collection("order").where("createdAt", ">", searchStart).where("createdAt", "<", searchEnd).get();
+    let orderQuerySnapshot = await admin.firestore().collection("order").where("status", "==", 1).where("createdAt", ">=", searchStart).where("createdAt", "<=", searchEnd).get();
     orderQuerySnapshot.forEach((orderDoc) => {
-        let orderData = orderDoc.data();
         //Xserverに設置してあるPHPを実行
-        const post_data = querystring.stringify({
-            "mode": "flutter_send",
-            "id": orderData["id"],
-            "shopId": orderData["shopId"],
-            "shopNumber": orderData["shopNumber"],
-            "shopName": orderData["shopName"],
-            "shopInvoiceName": orderData["shopInvoiceName"],
-            "carts": orderData["carts"],
-            "status": orderData["status"],
-            "updatedAt": orderData["updatedAt"],
-            "createdAt": orderData["createdAt"],
-        });
+        const post_data = JSON.stringify(orderDoc.data());
         const options = {
             protocol: "https:",
             host: "hirome.co.jp",
             path: "/rental/ajax-order.php",
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
+                "Content-Type": "application/json",
                 "Content-Length": Buffer.byteLength(post_data)
             },
             method: "POST",
