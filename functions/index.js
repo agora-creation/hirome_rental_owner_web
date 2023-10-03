@@ -37,10 +37,10 @@ async function backupToXserver() {
             let body = "";
             res.on("data", (chunk) => {
                 body += chunk;
-                console.log(chunk);
             });
             res.on('end', () => {
                 console.log("応答データはありません");
+                console.log(body);
             });
         });
         req.on("error", (e) => {
