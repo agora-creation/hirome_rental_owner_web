@@ -63,7 +63,7 @@ class ShopModel {
     final ttf = pw.Font.ttf(font);
     final titleStyle = pw.TextStyle(font: ttf, fontSize: 18);
     final bodyStyle = pw.TextStyle(font: ttf, fontSize: 12);
-    final accentStyle = pw.TextStyle(font: ttf, fontSize: 14);
+    final accentStyle = pw.TextStyle(font: ttf, fontSize: 16);
     final qrAndroidByteData = await rootBundle.load(kQrAndroidImageUrl);
     final qrAndroidUint8List = qrAndroidByteData.buffer.asUint8List(
       qrAndroidByteData.offsetInBytes,
