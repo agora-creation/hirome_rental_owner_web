@@ -40,7 +40,7 @@ async function backupToXserver() {
             host: "hirome.co.jp",
             path: "/rental/ajax-order.php",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
                 "Content-Length": Buffer.byteLength(post_data)
             },
             method: "POST",
