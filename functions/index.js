@@ -21,7 +21,7 @@ async function backupToXserver() {
     let orderQuerySnapshot = await admin.firestore().collection("order").where("status", "==", 1).where("createdAt", ">=", searchStart).where("createdAt", "<=", searchEnd).get();
     orderQuerySnapshot.forEach((orderDoc) => {
         //Xserverに設置してあるPHPを実行
-        const post_data = JSON.stringify(orderDoc.data());
+        const post_data = orderDoc.data();
         const options = {
             protocol: "https:",
             host: "hirome.co.jp",
