@@ -14,8 +14,10 @@ async function backupToXserver() {
     let result = "失敗";
     //Firestoreから2年前の注文データを取得
     let dt = new Date();
-    let searchStart = new Date(dt.getFullYear() - 2, 1, 1, 0, 0, 0);
-    let searchEnd = new Date(dt.getFullYear() - 2, 12, 31, 23, 59, 59);
+    //let searchStart = new Date(dt.getFullYear() - 2, 1, 1, 0, 0, 0);
+    //let searchEnd = new Date(dt.getFullYear() - 2, 12, 31, 23, 59, 59);
+    let searchStart = new Date(dt.getFullYear(), 1, 1, 0, 0, 0);
+    let searchEnd = new Date(dt.getFullYear(), 12, 31, 23, 59, 59);
     let orderQuerySnapshot = await admin.firestore().collection("order").where("createdAt", ">", searchStart).where("createdAt", "<", searchEnd).get();
     orderQuerySnapshot.forEach((orderDoc) => {
         console.log(orderDoc.data());
