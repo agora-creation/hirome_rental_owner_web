@@ -10,11 +10,9 @@ const https = require('https');
 //exports.onceYearFunction = onSchedule("00 0 1 1 *", async (event) => {
 exports.onceYearFunction = onSchedule("00 0 * * *", async (event) => {
     let result = await backupToXserver();
-    console.log(result);
 });
 
 async function backupToXserver() {
-    let result = "失敗";
     //Firestoreから2年前の注文データを取得
     let dt = new Date();
     //let searchStart = new Date(dt.getFullYear() - 2, 1, 1, 0, 0, 0);
@@ -32,6 +30,7 @@ async function backupToXserver() {
             "shopNumber": orderData["shopNumber"],
             "shopName": orderData["shopName"],
             "shopInvoiceName": orderData["shopInvoiceName"],
+            "carts": orderData["carts"],
             "status": orderData["status"],
             "updatedAt": orderData["updatedAt"],
             "createdAt": orderData["createdAt"],
@@ -51,6 +50,7 @@ async function backupToXserver() {
             let body = "";
             res.on("data", (chunk) => {
                 body += chunk;
+                console.log(chunk);
             });
             res.on('end', () => {
                 console.log("応答データはありません");
@@ -64,5 +64,5 @@ async function backupToXserver() {
         //最後にDocを削除
         //orderDoc.ref.delete();
     });
-    return result;
+    return "成功";
 }
