@@ -4,7 +4,8 @@ const {logger} = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
 
-const https = require('https');
+const querystring = require('querystring');
+const https = require("https");
 
 //exports.onceYearFunction = onSchedule("00 0 1 1 *", async (event) => {
 exports.onceYearFunction = onSchedule("00 0 * * *", async (event) => {
@@ -20,8 +21,20 @@ async function backupToXserver() {
     let searchEnd = new Date(dt.getFullYear(), 12, 31, 23, 59, 59);
     let orderQuerySnapshot = await admin.firestore().collection("order").where("status", "==", 1).where("createdAt", ">=", searchStart).where("createdAt", "<=", searchEnd).get();
     orderQuerySnapshot.forEach((orderDoc) => {
+        let orderData = orderDoc.data();
         //Xserverに設置してあるPHPを実行
-        const post_data = orderDoc.data();
+        const post_data = querystring.stringify({
+            "id": orderData["id"],
+            "number": orderData["number"],
+            "shopId": orderData["shopId"],
+            "shopNumber": orderData["shopNumber"],
+            "shopName": orderData["shopName"],
+            "shopInvoiceName": orderData["shopInvoiceName"],
+            "carts": String(orderData["carts"]),
+            "status": orderData["status"],
+            "updatedAt": String(orderData["updatedAt"]),
+            "createdAt": String(orderData["createdAt"]),
+        });
         const options = {
             protocol: "https:",
             host: "hirome.co.jp",
@@ -33,7 +46,6 @@ async function backupToXserver() {
             method: "POST",
         };
         const req = https.request(options, (res) => {
-            //PHPからの返答
             let body = "";
             res.on("data", (chunk) => {
                 body += chunk;
