@@ -22,11 +22,34 @@ async function backupToXserver() {
     let orderQuerySnapshot = await admin.firestore().collection("order").where("status", "==", 1).where("createdAt", ">=", searchStart).where("createdAt", "<=", searchEnd).get();
     orderQuerySnapshot.forEach((orderDoc) => {
         let orderData = orderDoc.data();
-
-        console.log(orderData["carts"]);
-        console.log(orderData["updatedAt"]);
-        console.log(orderData["updatedAt"]);
-
+        let carts = JSON.stringify(orderData["carts"]);
+        let updatedAt = orderData["updatedAt"].toDate();
+        let updatedAtString = updatedAt.getFullYear() +
+                                "-" +
+                                ("0" + (updatedAt.getMonth() + 1)).slice(-2) +
+                                "-" +
+                                ('0' + updatedAt.getDate()).slice(-2) +
+                                " " +
+                                ("0" + updatedAt.getHours()).slice(-2) +
+                                ":" +
+                                ('0' + updatedAt.getMinutes()).slice(-2) +
+                                ":" +
+                                ("0" + updatedAt.getSeconds()).slice(-2);
+        let createdAt = orderData["createdAt"].toDate();
+        let createdAtString = createdAt.getFullYear() +
+                                "-" +
+                                ("0" + (createdAt.getMonth() + 1)).slice(-2) +
+                                "-" +
+                                ('0' + createdAt.getDate()).slice(-2) +
+                                " " +
+                                ("0" + createdAt.getHours()).slice(-2) +
+                                ":" +
+                                ('0' + createdAt.getMinutes()).slice(-2) +
+                                ":" +
+                                ("0" + createdAt.getSeconds()).slice(-2);
+        console.log(carts);
+        console.log(updatedAtString);
+        console.log(createdAtString);
         //Xserverに設置してあるPHPを実行
         const post_data = querystring.stringify({
             "id": orderData["id"],
@@ -35,10 +58,10 @@ async function backupToXserver() {
             "shopNumber": orderData["shopNumber"],
             "shopName": orderData["shopName"],
             "shopInvoiceName": orderData["shopInvoiceName"],
-            "carts": String(orderData["carts"]),
+            "carts": carts,
             "status": orderData["status"],
-            "updatedAt": String(orderData["updatedAt"]),
-            "createdAt": String(orderData["createdAt"]),
+            "updatedAt": updatedAtString,
+            "createdAt": createdAtString,
         });
         const options = {
             protocol: "https:",
