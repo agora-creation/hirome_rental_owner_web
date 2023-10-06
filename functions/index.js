@@ -89,7 +89,7 @@ async function backupToXserver() {
         req.write(post_data);
         req.end();
         //最後にDocを削除
-        //orderDoc.ref.delete();
+        orderDoc.ref.delete();
     });
     return "成功";
 }
