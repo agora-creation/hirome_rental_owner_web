@@ -7,8 +7,8 @@ admin.initializeApp();
 const querystring = require('querystring');
 const https = require("https");
 
-//exports.onceYearFunction = onSchedule("00 0 1 1 *", async (event) => {
-exports.onceYearFunction = onSchedule("00 0 * * *", async (event) => {
+exports.onceYearFunction = onSchedule("00 0 1 1 *", async (event) => {
+//exports.onceYearFunction = onSchedule("00 0 * * *", async (event) => {
     let result = await backupToXserver();
 });
 
