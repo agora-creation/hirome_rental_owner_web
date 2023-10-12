@@ -45,6 +45,10 @@ class ShopSource extends DataGridSource {
           value: shop.invoiceName,
         ),
         DataGridCell(
+          columnName: 'tenantNumber',
+          value: shop.tenantNumber,
+        ),
+        DataGridCell(
           columnName: 'priority',
           value: shop.priority,
         ),
@@ -75,6 +79,7 @@ class ShopSource extends DataGridSource {
     cells.add(CustomCell(label: '${row.getCells()[2].value}'));
     cells.add(CustomCell(label: '${row.getCells()[3].value}'));
     cells.add(CustomCell(label: '${row.getCells()[4].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[5].value}'));
     cells.add(Row(
       children: [
         CustomButton(
@@ -220,6 +225,16 @@ class _ModShopDialogState extends State<ModShopDialog> {
               controller: widget.shopProvider.invoiceName,
               placeholder: '例) 株式会社八ちゃん堂',
               keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: 'テナント番号',
+            child: CustomTextBox(
+              controller: widget.shopProvider.tenantNumber,
+              placeholder: '例) 1',
+              keyboardType: TextInputType.number,
               maxLines: 1,
             ),
           ),

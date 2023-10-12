@@ -8,6 +8,7 @@ class ShopProvider with ChangeNotifier {
   TextEditingController number = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController invoiceName = TextEditingController();
+  TextEditingController tenantNumber = TextEditingController();
   TextEditingController priority = TextEditingController();
   int authority = 0;
   String? searchNumber;
@@ -19,6 +20,7 @@ class ShopProvider with ChangeNotifier {
   void setController(ShopModel shop) {
     name.text = shop.name;
     invoiceName.text = shop.invoiceName;
+    tenantNumber.text = shop.tenantNumber;
     priority.text = shop.priority.toString();
     authority = shop.authority;
   }
@@ -27,6 +29,7 @@ class ShopProvider with ChangeNotifier {
     number.clear();
     name.clear();
     invoiceName.clear();
+    tenantNumber.clear();
     priority.clear();
     authority = 0;
   }
@@ -73,7 +76,6 @@ class ShopProvider with ChangeNotifier {
     if (await shopService.select(number.text) != null) {
       return '店舗番号が重複しています';
     }
-
     try {
       String id = shopService.id();
       shopService.create({
@@ -81,6 +83,7 @@ class ShopProvider with ChangeNotifier {
         'number': number.text,
         'name': name.text,
         'invoiceName': invoiceName.text,
+        'tenantNumber ': tenantNumber.text,
         'favorites': [],
         'priority': int.parse(priority.text),
         'authority': authority,
@@ -100,6 +103,7 @@ class ShopProvider with ChangeNotifier {
         'id': shop.id,
         'name': name.text,
         'invoiceName': invoiceName.text,
+        'tenantNumber ': tenantNumber.text,
         'priority': int.parse(priority.text),
         'authority': authority,
       });

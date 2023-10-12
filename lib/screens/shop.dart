@@ -216,6 +216,10 @@ class _ShopScreenState extends State<ShopScreen> {
                             label: const CustomCell(label: '請求用店舗名'),
                           ),
                           GridColumn(
+                            columnName: 'tenantNumber',
+                            label: const CustomCell(label: 'テナント番号'),
+                          ),
+                          GridColumn(
                             columnName: 'priority',
                             label: const CustomCell(label: '表示順'),
                           ),
@@ -300,6 +304,16 @@ class _AddShopDialogState extends State<AddShopDialog> {
               controller: widget.shopProvider.invoiceName,
               placeholder: '例) 株式会社八ちゃん堂',
               keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: 'テナント番号',
+            child: CustomTextBox(
+              controller: widget.shopProvider.tenantNumber,
+              placeholder: '例) 1',
+              keyboardType: TextInputType.number,
               maxLines: 1,
             ),
           ),
