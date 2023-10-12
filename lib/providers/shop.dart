@@ -83,7 +83,7 @@ class ShopProvider with ChangeNotifier {
         'number': number.text,
         'name': name.text,
         'invoiceName': invoiceName.text,
-        'tenantNumber ': tenantNumber.text,
+        'tenantNumber': tenantNumber.text,
         'favorites': [],
         'priority': int.parse(priority.text),
         'authority': authority,
@@ -103,7 +103,7 @@ class ShopProvider with ChangeNotifier {
         'id': shop.id,
         'name': name.text,
         'invoiceName': invoiceName.text,
-        'tenantNumber ': tenantNumber.text,
+        'tenantNumber': tenantNumber.text,
         'priority': int.parse(priority.text),
         'authority': authority,
       });
