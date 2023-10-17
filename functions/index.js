@@ -67,7 +67,7 @@ async function backupToXserver() {
         });
         const options = {
             protocol: "https:",
-            host: "hirome.co.jp",
+            host: "hirome.co.jp:8080",
             path: "/rental/ajax-order.php",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
