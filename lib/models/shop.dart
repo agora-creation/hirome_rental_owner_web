@@ -93,7 +93,7 @@ class ShopModel {
         children: [
           pw.Center(
             child: pw.Text(
-              '$name - 初期設定',
+              '食器注文専用アプリ - 初期設定',
               style: titleStyle,
             ),
           ),
@@ -143,11 +143,11 @@ class ShopModel {
           ),
           pw.SizedBox(height: 8),
           pw.Text(
-            '上記の画面が表示されたら、店舗番号を入力して、ログインボタンを押してください。',
+            '上記の画面が表示されたら、店舗番号とお名前を入力して、ログインボタンを押してください。',
             style: bodyStyle,
           ),
           pw.Text(
-            'あなたの店舗番号は『$number』です。',
+            'あなたの店舗番号は『　　　』です。',
             style: accentStyle,
           ),
           pw.SizedBox(height: 16),
