@@ -30,6 +30,7 @@ dependencies:
   pdf: ^3.10.4
   universal_html: ^2.2.3
   file_selector: ^0.9.3
+  url_launcher: ^6.1.14
   firebase_core: ^2.14.0
   firebase_auth: ^4.6.3
   cloud_firestore: ^4.8.1
