@@ -36,7 +36,9 @@ class ShopModel {
     favorites = _convertFavorites(map['favorites']);
     _priority = map['priority'] ?? 0;
     _authority = map['authority'] ?? 0;
-    _createdAt = map['createdAt'].toDate() ?? DateTime.now();
+    if (map['createdAt'] != null) {
+      _createdAt = map['createdAt'].toDate() ?? DateTime.now();
+    }
   }
 
   List<String> _convertFavorites(List list) {

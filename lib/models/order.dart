@@ -37,8 +37,12 @@ class OrderModel {
     _shopInvoiceName = map['shopInvoiceName'] ?? '';
     carts = _convertCarts(map['carts']);
     _status = map['status'] ?? 0;
-    _updatedAt = map['updatedAt'].toDate() ?? DateTime.now();
-    _createdAt = map['createdAt'].toDate() ?? DateTime.now();
+    if (map['updatedAt'] != null) {
+      _updatedAt = map['updatedAt'].toDate() ?? DateTime.now();
+    }
+    if (map['createdAt'] != null) {
+      _createdAt = map['createdAt'].toDate() ?? DateTime.now();
+    }
   }
 
   List<CartModel> _convertCarts(List carts) {

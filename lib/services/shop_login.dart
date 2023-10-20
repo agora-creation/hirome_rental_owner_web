@@ -15,7 +15,7 @@ class ShopLoginService {
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList() {
     return FirebaseFirestore.instance
         .collection(collection)
-        .where('accept', isEqualTo: false)
+        .orderBy('accept')
         .orderBy('createdAt', descending: true)
         .snapshots();
   }

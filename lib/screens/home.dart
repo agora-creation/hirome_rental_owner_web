@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.account_activity),
-            title: const Text('店舗ログイン申請'),
+            title: const Text('店舗ログイン一覧'),
             body: ShopLoginScreen(shopLoginProvider: shopLoginProvider),
             infoBadge: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: shopLoginService.streamList(),
@@ -89,7 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.hasData) {
                   for (DocumentSnapshot<Map<String, dynamic>> doc
                       in snapshot.data!.docs) {
-                    shopLogins.add(ShopLoginModel.fromSnapshot(doc));
+                    ShopLoginModel shopLogin = ShopLoginModel.fromSnapshot(doc);
+                    if (shopLogin.accept == false) {
+                      shopLogins.add(shopLogin);
+                    }
                   }
                 }
                 if (shopLogins.isEmpty) return Container();

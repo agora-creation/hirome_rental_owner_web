@@ -67,37 +67,59 @@ class ShopLoginSource extends DataGridSource {
     cells.add(CustomCell(label: '${row.getCells()[2].value}'));
     cells.add(CustomCell(label: '${row.getCells()[3].value}'));
     cells.add(CustomCell(label: '${row.getCells()[4].value}'));
-    cells.add(Row(
-      children: [
-        CustomButton(
-          labelText: '承認',
-          labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => ShopLoginDetailsDialog(
-              shopLoginProvider: shopLoginProvider,
-              shopLogin: shopLogin,
-              accept: true,
+    if (shopLogin.accept == false) {
+      backgroundColor = kRedColor.withOpacity(0.3);
+      cells.add(Row(
+        children: [
+          CustomButton(
+            labelText: '承認する',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => ShopLoginDetailsDialog(
+                shopLoginProvider: shopLoginProvider,
+                shopLogin: shopLogin,
+                accept: true,
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 4),
-        CustomButton(
-          labelText: '却下',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => ShopLoginDetailsDialog(
-              shopLoginProvider: shopLoginProvider,
-              shopLogin: shopLogin,
-              accept: false,
+          const SizedBox(width: 4),
+          CustomButton(
+            labelText: 'ブロックする',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => ShopLoginDetailsDialog(
+                shopLoginProvider: shopLoginProvider,
+                shopLogin: shopLogin,
+                accept: false,
+              ),
             ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ));
+    } else {
+      cells.add(Row(
+        children: [
+          CustomButton(
+            labelText: 'ブロックする',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => ShopLoginDetailsDialog(
+                shopLoginProvider: shopLoginProvider,
+                shopLogin: shopLogin,
+                accept: false,
+              ),
+            ),
+          ),
+        ],
+      ));
+    }
+
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
 
@@ -169,7 +191,7 @@ class _ShopLoginDetailsDialogState extends State<ShopLoginDetailsDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: Text(
-        widget.accept ? '店舗アカウントログイン - 承認' : '店舗アカウントログイン - 承認',
+        widget.accept ? '店舗アカウントログイン - 承認' : '店舗アカウントログイン - ブロック',
         style: const TextStyle(fontSize: 18),
       ),
       content: Column(
@@ -178,12 +200,12 @@ class _ShopLoginDetailsDialogState extends State<ShopLoginDetailsDialog> {
         children: [
           widget.accept
               ? const Text('以下のログインを承認しますか？')
-              : const Text('以下のログインを却下しますか？'),
+              : const Text('以下のログインをブロックしますか？'),
           const SizedBox(height: 8),
           Text(
-            'ログイン日時 : ${dateText('yyyy/MM/dd HH:mm', widget.shopLogin.createdAt)}',
+            '申請日時 : ${dateText('yyyy/MM/dd HH:mm', widget.shopLogin.createdAt)}',
           ),
-          Text('店舗アカウント名 : ${widget.shopLogin.shopName}'),
+          Text('店舗名 : ${widget.shopLogin.shopName}'),
           Text('申請者名 : ${widget.shopLogin.requestName}'),
           Text('端末名 : ${widget.shopLogin.deviceName}'),
         ],
@@ -214,19 +236,19 @@ class _ShopLoginDetailsDialogState extends State<ShopLoginDetailsDialog> {
                 },
               )
             : CustomButton(
-                labelText: '却下する',
+                labelText: 'ブロックする',
                 labelColor: kWhiteColor,
                 backgroundColor: kRedColor,
                 onPressed: () async {
                   String? error =
-                      await widget.shopLoginProvider.reject(widget.shopLogin);
+                      await widget.shopLoginProvider.delete(widget.shopLogin);
                   if (error != null) {
                     if (!mounted) return;
                     showMessage(context, error, false);
                     return;
                   }
                   if (!mounted) return;
-                  showMessage(context, '却下しました', true);
+                  showMessage(context, 'ブロックしました', true);
                   Navigator.pop(context);
                 },
               ),

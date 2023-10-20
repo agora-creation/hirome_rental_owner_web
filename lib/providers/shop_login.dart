@@ -18,12 +18,12 @@ class ShopLoginProvider with ChangeNotifier {
     return error;
   }
 
-  Future<String?> reject(ShopLoginModel shopLogin) async {
+  Future<String?> delete(ShopLoginModel shopLogin) async {
     String? error;
     try {
       shopLoginService.delete({'id': shopLogin.id});
     } catch (e) {
-      error = '却下に失敗しました';
+      error = 'ブロックに失敗しました';
     }
     return error;
   }

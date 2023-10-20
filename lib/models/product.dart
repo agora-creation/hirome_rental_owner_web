@@ -35,7 +35,9 @@ class ProductModel {
     _image = map['image'] ?? '';
     _category = map['category'] ?? 0;
     _priority = map['priority'] ?? 0;
-    _createdAt = map['createdAt'].toDate() ?? DateTime.now();
+    if (map['createdAt'] != null) {
+      _createdAt = map['createdAt'].toDate() ?? DateTime.now();
+    }
   }
 
   String categoryText() {

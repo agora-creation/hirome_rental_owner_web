@@ -39,7 +39,7 @@ class _ShopLoginScreenState extends State<ShopLoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '各店舗が注文するアプリで、店舗アカウントのログインがあった場合に、二段階認証の為、こちらにログイン申請が送られます。\n『承認』するまでは、店舗はログインできません。身に覚えのないログイン申請は『却下』してください。',
+                      '各店舗が注文するアプリで、店舗アカウントのログインがあった場合に、二段階認証の為、こちらにログイン申請が送られます。\n『承認』するまでは、店舗はログインできません。身に覚えのないログイン申請は『ブロック』してください。',
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 8),
@@ -64,11 +64,11 @@ class _ShopLoginScreenState extends State<ShopLoginScreen> {
                             columns: [
                               GridColumn(
                                 columnName: 'createdAt',
-                                label: const CustomCell(label: 'ログイン日時'),
+                                label: const CustomCell(label: '申請日時'),
                               ),
                               GridColumn(
                                 columnName: 'shopName',
-                                label: const CustomCell(label: '店舗アカウント名'),
+                                label: const CustomCell(label: '店舗名'),
                               ),
                               GridColumn(
                                 columnName: 'requestName',
