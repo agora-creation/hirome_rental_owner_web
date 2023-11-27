@@ -1,4 +1,6 @@
+import 'package:csv/csv.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/cart.dart';
@@ -240,6 +242,25 @@ class _OrderScreenState extends State<OrderScreen> {
                               orderProvider: widget.orderProvider,
                             ),
                           ),
+                        ),
+                        const SizedBox(width: 8),
+                        CustomIconTextButton(
+                          iconData: FluentIcons.upload,
+                          iconColor: kWhiteColor,
+                          labelText: '固定CSVアップロード',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kGreenColor,
+                          onPressed: () async {
+                            try {
+                              final csvData = await rootBundle
+                                  .loadString('assets/csv/backup.csv');
+                              List<List<dynamic>> csvTable =
+                                  const CsvToListConverter().convert(csvData);
+                              print(csvTable);
+                            } catch (e) {
+                              print(e.toString());
+                            }
+                          },
                         ),
                       ],
                     ),
