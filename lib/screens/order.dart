@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/cart.dart';
@@ -72,6 +74,26 @@ class _OrderScreenState extends State<OrderScreen> {
         widget.orderProvider.searchStart = selected.first!;
         widget.orderProvider.searchEnd = selected.last!;
       });
+    }
+  }
+
+  void _importCSV() async {
+    FilePickerResult? csvFile = await FilePicker.platform.pickFiles(
+      allowedExtensions: ['csv'],
+      type: FileType.custom,
+      allowMultiple: false,
+    );
+    if (csvFile != null) {
+      final bytes = utf8.decode(csvFile.files[0].bytes as List<int>);
+      List<List<dynamic>> rowsAsListOfValues =
+          const CsvToListConverter().convert(bytes);
+      for (int i = 0; i < rowsAsListOfValues.length; i++) {
+        for (int j = 0; j < rowsAsListOfValues.elementAt(i).length; j++) {
+          print('${(rowsAsListOfValues.elementAt(i).elementAt(0))}');
+          print('${(rowsAsListOfValues.elementAt(i).elementAt(1))}');
+          print('${(rowsAsListOfValues.elementAt(i).elementAt(2))}');
+        }
+      }
     }
   }
 
@@ -247,20 +269,10 @@ class _OrderScreenState extends State<OrderScreen> {
                         CustomIconTextButton(
                           iconData: FluentIcons.upload,
                           iconColor: kWhiteColor,
-                          labelText: '固定CSVアップロード',
+                          labelText: 'CSVアップロード',
                           labelColor: kWhiteColor,
                           backgroundColor: kGreenColor,
-                          onPressed: () async {
-                            try {
-                              final csvData = await rootBundle
-                                  .loadString('assets/csv/backup.csv');
-                              List<List<dynamic>> csvTable =
-                                  const CsvToListConverter().convert(csvData);
-                              print(csvTable);
-                            } catch (e) {
-                              print(e.toString());
-                            }
-                          },
+                          onPressed: () => _importCSV(),
                         ),
                       ],
                     ),
