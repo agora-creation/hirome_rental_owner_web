@@ -1,7 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:csv/csv.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
@@ -79,54 +78,19 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _importCSV() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
-        withData: true,
-        type: FileType.custom,
-        allowedExtensions: ['csv'],
-      );
-      if (result == null) return;
-      final bytes = utf8.decode((result.files.first.bytes)!.toList());
-      List<List<dynamic>> resultData = const CsvToListConverter(
-        eol: "\r\n",
-        fieldDelimiter: ",",
-      ).convert(bytes);
-      print(resultData.length);
-      return;
-
-      FilePickerResult? csvFile = await FilePicker.platform.pickFiles(
-        allowedExtensions: ['csv'],
-        type: FileType.custom,
-        allowMultiple: false,
-      );
-      if (csvFile != null) {
-        PlatformFile file = csvFile.files[0];
-        final bytes = utf8.decode(file.bytes!);
-        List<List<dynamic>> rowsAsListOfValues =
-            const CsvToListConverter().convert(bytes);
-        for (int i = 0; i < rowsAsListOfValues.length; i++) {
-          for (int j = 0; j < rowsAsListOfValues.elementAt(i).length; j++) {
-            print('${rowsAsListOfValues.elementAt(i).elementAt(0).toString()}');
-            print('${rowsAsListOfValues.elementAt(i).elementAt(1).toString()}');
-            print('${rowsAsListOfValues.elementAt(i).elementAt(2).toString()}');
-          }
-        }
-
-        // for (int i = 0; i < rowsAsListOfValues[0].length; i++) {
-        //   for (int j = 0; j < rowsAsListOfValues[0].elementAt(i).length; j++) {
-        //     print(rowsAsListOfValues[0].elementAt(i));
-        //     // String createdAt = rowsAsListOfValues.elementAt(i)[0];
-        //     // String shopNumber = rowsAsListOfValues.elementAt(i)[1];
-        //     // String status = rowsAsListOfValues.elementAt(i)[2];
-        //     // String productNumber = rowsAsListOfValues.elementAt(i)[5];
-        //     // String requestQuantity = rowsAsListOfValues.elementAt(i)[6];
-        //     // String deliveryQuantity = rowsAsListOfValues.elementAt(i)[7];
-        //     //
-        //     // print(
-        //     //     '$createdAt | $shopNumber | $status | $productNumber | $requestQuantity | $deliveryQuantity');
-        //   }
-        // }
-      }
+      final File importFile = File('assets/csv/backup1_15.csv');
+      List<List> importList = [];
+      Stream fRead = importFile.openRead();
+      await fRead
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen(
+        (String line) {
+          importList.add(line.split(','));
+        },
+      ).asFuture();
+      importList = await Future<List<List>>.value(importList);
+      print(importList);
     } catch (e) {
       print(e.toString());
     }
