@@ -78,23 +78,42 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   void _importCSV() async {
-    FilePickerResult? csvFile = await FilePicker.platform.pickFiles(
-      allowedExtensions: ['csv'],
-      type: FileType.custom,
-      allowMultiple: false,
-    );
-    if (csvFile != null) {
-      PlatformFile file = csvFile.files.first;
-      final bytes = utf8.decode(file.bytes!);
-      List<List<dynamic>> rowsAsListOfValues =
-          const CsvToListConverter().convert(bytes);
-      for (int i = 0; i < rowsAsListOfValues.length; i++) {
-        for (int j = 0; j < rowsAsListOfValues.elementAt(i).length; j++) {
-          print('${(rowsAsListOfValues.elementAt(i).elementAt(0))}');
-          print('${(rowsAsListOfValues.elementAt(i).elementAt(1))}');
-          print('${(rowsAsListOfValues.elementAt(i).elementAt(2))}');
+    try {
+      FilePickerResult? csvFile = await FilePicker.platform.pickFiles(
+        allowedExtensions: ['csv'],
+        type: FileType.custom,
+        allowMultiple: false,
+      );
+      if (csvFile != null) {
+        PlatformFile file = csvFile.files[0];
+        final bytes = utf8.decode(file.bytes!);
+        List<List<dynamic>> rowsAsListOfValues =
+            const CsvToListConverter().convert(bytes);
+        for (int i = 0; i < rowsAsListOfValues.length; i++) {
+          for (int j = 0; j < rowsAsListOfValues.elementAt(i).length; j++) {
+            print('${rowsAsListOfValues.elementAt(i).elementAt(0).toString()}');
+            print('${rowsAsListOfValues.elementAt(i).elementAt(1).toString()}');
+            print('${rowsAsListOfValues.elementAt(i).elementAt(2).toString()}');
+          }
         }
+
+        // for (int i = 0; i < rowsAsListOfValues[0].length; i++) {
+        //   for (int j = 0; j < rowsAsListOfValues[0].elementAt(i).length; j++) {
+        //     print(rowsAsListOfValues[0].elementAt(i));
+        //     // String createdAt = rowsAsListOfValues.elementAt(i)[0];
+        //     // String shopNumber = rowsAsListOfValues.elementAt(i)[1];
+        //     // String status = rowsAsListOfValues.elementAt(i)[2];
+        //     // String productNumber = rowsAsListOfValues.elementAt(i)[5];
+        //     // String requestQuantity = rowsAsListOfValues.elementAt(i)[6];
+        //     // String deliveryQuantity = rowsAsListOfValues.elementAt(i)[7];
+        //     //
+        //     // print(
+        //     //     '$createdAt | $shopNumber | $status | $productNumber | $requestQuantity | $deliveryQuantity');
+        //   }
+        // }
       }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
