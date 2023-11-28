@@ -79,6 +79,21 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _importCSV() async {
     try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        withData: true,
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+      if (result == null) return;
+      final bytes = utf8.decode((result.files.first.bytes)!.toList());
+      List<List<dynamic>> resultData = const CsvToListConverter(
+        eol: "\r\n",
+        fieldDelimiter: ",",
+      ).convert(bytes);
+      print(resultData.length);
+      return;
+
       FilePickerResult? csvFile = await FilePicker.platform.pickFiles(
         allowedExtensions: ['csv'],
         type: FileType.custom,
