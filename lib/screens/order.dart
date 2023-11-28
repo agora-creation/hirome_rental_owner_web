@@ -84,7 +84,8 @@ class _OrderScreenState extends State<OrderScreen> {
       allowMultiple: false,
     );
     if (csvFile != null) {
-      final bytes = utf8.decode(csvFile.files[0].bytes as List<int>);
+      PlatformFile file = csvFile.files.first;
+      final bytes = utf8.decode(file.bytes!);
       List<List<dynamic>> rowsAsListOfValues =
           const CsvToListConverter().convert(bytes);
       for (int i = 0; i < rowsAsListOfValues.length; i++) {
