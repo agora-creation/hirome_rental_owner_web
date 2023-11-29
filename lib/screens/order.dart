@@ -91,69 +91,67 @@ class _OrderScreenState extends State<OrderScreen> {
       var outputAsUint8List = Uint8List.fromList(s.codeUnits);
       var csvFileContentList = utf8.decode(outputAsUint8List).split('\n');
       csvFileContentList.removeAt(0);
-      csvFileContentList.forEach((element) {
+      for (String data in csvFileContentList) {
         List currentRow = [];
-        element.toString().split(",").forEach((items) {
+        data.toString().split(",").forEach((items) {
           currentRow.add(items.trim());
         });
         finalCsvContent.add(currentRow);
-      });
-      finalCsvContent.forEach((rows) async {
-        DateTime createdAt = DateTime.parse('${rows[0]}');
-        ShopModel? shop = await ShopService().select('${rows[1]}');
-        if (shop != null) {
-          String id = OrderService().id();
-          String number =
-              '${shop.number}-${dateText('yyyyMMddHHmmss', createdAt)}';
-          String shopId = shop.id;
-          String shopNumber = shop.number;
-          String shopName = shop.name;
-          String shopInvoiceName = shop.invoiceName;
-          int status = int.parse('${rows[2]}');
-          Map cart = {};
-          ProductModel? product = await ProductService().select('${rows[3]}');
-          if (product != null) {
-            cart = {
-              'id': product.id,
-              'number': product.number,
-              'name': product.name,
-              'invoiceNumber': product.invoiceNumber,
-              'price': product.price,
-              'unit': product.unit,
-              'category': product,
-              'requestQuantity': int.parse('${rows[4]}'),
-              'deliveryQuantity': int.parse('${rows[5]}'),
-            };
+      }
+      for (dynamic data in finalCsvContent) {
+        String id = OrderService().id();
+        DateTime createdAt = DateTime.parse(data[0].toString());
+        ShopModel? shop = await ShopService().select(data[1].toString());
+        if (shop == null) continue;
+        String number =
+            '${shop.number}-${dateText('yyyyMMddHHmmss', createdAt)}';
+        String shopId = shop.id;
+        String shopNumber = shop.number;
+        String shopName = shop.name;
+        String shopInvoiceName = shop.invoiceName;
+        int status = int.parse(data[2].toString());
+        ProductModel? product =
+            await ProductService().select(data[3].toString());
+        if (product == null) continue;
+        Map cart = {
+          'id': product.id,
+          'number': product.number,
+          'name': product.name,
+          'invoiceNumber': product.invoiceNumber,
+          'price': product.price,
+          'unit': product.unit,
+          'category': product.category,
+          'requestQuantity': int.parse(data[4].toString()),
+          'deliveryQuantity': int.parse(data[5].toString()),
+        };
+        OrderModel? order = await OrderService().select(number);
+        if (order != null) {
+          List<Map> carts = [];
+          for (CartModel tmpCart in order.carts) {
+            carts.add(tmpCart.toMap());
           }
-          OrderModel? order = await OrderService().select(number);
-          if (order != null) {
-            List<Map> carts = [];
-            for (CartModel tmpCart in order.carts) {
-              carts.add(tmpCart.toMap());
-            }
-            carts.add(cart);
-            OrderService().update({
-              'id': order.id,
-              'carts': carts,
-            });
-          } else {
-            List<Map> carts = [];
-            carts.add(cart);
-            OrderService().create({
-              'id': id,
-              'number': number,
-              'shopId': shopId,
-              'shopNumber': shopNumber,
-              'shopName': shopName,
-              'shopInvoiceName': shopInvoiceName,
-              'carts': carts,
-              'status': status,
-              'updatedAt': createdAt,
-              'createdAt': createdAt,
-            });
-          }
+          carts.add(cart);
+          OrderService().update({
+            'id': order.id,
+            'carts': carts,
+          });
+        } else {
+          List<Map> carts = [];
+          carts.add(cart);
+          OrderService().create({
+            'id': id,
+            'number': number,
+            'shopId': shopId,
+            'shopNumber': shopNumber,
+            'shopName': shopName,
+            'shopInvoiceName': shopInvoiceName,
+            'carts': carts,
+            'status': status,
+            'updatedAt': createdAt,
+            'createdAt': createdAt,
+          });
         }
-      });
+      }
     } catch (e) {
       print(e.toString());
     }
