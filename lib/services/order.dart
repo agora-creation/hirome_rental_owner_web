@@ -22,6 +22,20 @@ class OrderService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
+  Future<OrderModel?> select(String? number) async {
+    OrderModel? ret;
+    await firestore
+        .collection(collection)
+        .where('number', isEqualTo: number ?? 'error')
+        .get()
+        .then((value) {
+      for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
+        ret = OrderModel.fromSnapshot(map);
+      }
+    });
+    return ret;
+  }
+
   Future<List<OrderModel>> selectList({
     String? shopNumber,
     required DateTime searchStart,

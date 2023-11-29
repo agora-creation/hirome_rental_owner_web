@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/cart.dart';
@@ -10,6 +11,7 @@ import 'package:hirome_rental_owner_web/models/product.dart';
 import 'package:hirome_rental_owner_web/models/shop.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/screens/order_source.dart';
+import 'package:hirome_rental_owner_web/services/order.dart';
 import 'package:hirome_rental_owner_web/services/product.dart';
 import 'package:hirome_rental_owner_web/services/shop.dart';
 import 'package:hirome_rental_owner_web/widgets/animation_background.dart';
@@ -78,19 +80,80 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _importCSV() async {
     try {
-      final File importFile = File('assets/csv/backup1_15.csv');
-      List<List> importList = [];
-      Stream fRead = importFile.openRead();
-      await fRead
-          .transform(utf8.decoder)
-          .transform(const LineSplitter())
-          .listen(
-        (String line) {
-          importList.add(line.split(','));
-        },
-      ).asFuture();
-      importList = await Future<List<List>>.value(importList);
-      print(importList);
+      final List finalCsvContent = [];
+      FilePickerResult? result = (await FilePicker.platform.pickFiles(
+        withData: true,
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      ));
+      var file = result?.files.first.bytes;
+      String s = String.fromCharCodes(file!);
+      var outputAsUint8List = Uint8List.fromList(s.codeUnits);
+      var csvFileContentList = utf8.decode(outputAsUint8List).split('\n');
+      csvFileContentList.removeAt(0);
+      csvFileContentList.forEach((element) {
+        List currentRow = [];
+        element.toString().split(",").forEach((items) {
+          currentRow.add(items.trim());
+        });
+        finalCsvContent.add(currentRow);
+      });
+      finalCsvContent.forEach((rows) async {
+        DateTime createdAt = DateTime.parse('${rows[0]}');
+        ShopModel? shop = await ShopService().select('${rows[1]}');
+        if (shop != null) {
+          String id = OrderService().id();
+          String number =
+              '${shop.number}-${dateText('yyyyMMddHHmmss', createdAt)}';
+          String shopId = shop.id;
+          String shopNumber = shop.number;
+          String shopName = shop.name;
+          String shopInvoiceName = shop.invoiceName;
+          int status = int.parse('${rows[2]}');
+          Map cart = {};
+          ProductModel? product = await ProductService().select('${rows[3]}');
+          if (product != null) {
+            cart = {
+              'id': product.id,
+              'number': product.number,
+              'name': product.name,
+              'invoiceNumber': product.invoiceNumber,
+              'price': product.price,
+              'unit': product.unit,
+              'category': product,
+              'requestQuantity': int.parse('${rows[4]}'),
+              'deliveryQuantity': int.parse('${rows[5]}'),
+            };
+          }
+          OrderModel? order = await OrderService().select(number);
+          if (order != null) {
+            List<Map> carts = [];
+            for (CartModel tmpCart in order.carts) {
+              carts.add(tmpCart.toMap());
+            }
+            carts.add(cart);
+            OrderService().update({
+              'id': order.id,
+              'carts': carts,
+            });
+          } else {
+            List<Map> carts = [];
+            carts.add(cart);
+            OrderService().create({
+              'id': id,
+              'number': number,
+              'shopId': shopId,
+              'shopNumber': shopNumber,
+              'shopName': shopName,
+              'shopInvoiceName': shopInvoiceName,
+              'carts': carts,
+              'status': status,
+              'updatedAt': createdAt,
+              'createdAt': createdAt,
+            });
+          }
+        }
+      });
     } catch (e) {
       print(e.toString());
     }
