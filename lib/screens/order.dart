@@ -105,6 +105,7 @@ class _OrderScreenState extends State<OrderScreen> {
         if (shop == null) continue;
         String number =
             '${shop.number}-${dateText('yyyyMMddHHmmss', createdAt)}';
+        print(number);
         String shopId = shop.id;
         String shopNumber = shop.number;
         String shopName = shop.name;
@@ -325,15 +326,15 @@ class _OrderScreenState extends State<OrderScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        CustomIconTextButton(
-                          iconData: FluentIcons.upload,
-                          iconColor: kWhiteColor,
-                          labelText: 'CSVアップロード',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kGreenColor,
-                          onPressed: () => _importCSV(),
-                        ),
+                        // const SizedBox(width: 8),
+                        // CustomIconTextButton(
+                        //   iconData: FluentIcons.upload,
+                        //   iconColor: kWhiteColor,
+                        //   labelText: 'CSVアップロード',
+                        //   labelColor: kWhiteColor,
+                        //   backgroundColor: kGreenColor,
+                        //   onPressed: () => _importCSV(),
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 8),
