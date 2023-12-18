@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +22,6 @@ import 'package:hirome_rental_owner_web/widgets/custom_data_grid.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_data_range_box.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_icon_text_button.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_month_box.dart';
-import 'package:hirome_rental_owner_web/widgets/order_product_total_list.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,18 +39,11 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  OrderService orderService = OrderService();
   ShopService shopService = ShopService();
-  List<OrderModel> orders = [];
   List<ShopModel> shops = [];
 
-  void _getOrders() async {
-    List<OrderModel> tmpOrders = await widget.orderProvider.selectList();
-    if (mounted) {
-      setState(() => orders = tmpOrders);
-    }
-  }
-
-  void _getShops() async {
+  void _init() async {
     List<ShopModel> tmpShops = await shopService.selectList();
     if (mounted) {
       setState(() => shops = tmpShops);
@@ -71,10 +64,10 @@ class _OrderScreenState extends State<OrderScreen> {
         showMessage(context, '1ヵ月以上の範囲が選択されています', false);
         return;
       }
-      setState(() {
-        widget.orderProvider.searchStart = selected.first!;
-        widget.orderProvider.searchEnd = selected.last!;
-      });
+      widget.orderProvider.searchDateChange(
+        selected.first!,
+        selected.last!,
+      );
     }
   }
 
@@ -161,8 +154,7 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void initState() {
     super.initState();
-    _getOrders();
-    _getShops();
+    _init();
   }
 
   @override
@@ -184,71 +176,55 @@ class _OrderScreenState extends State<OrderScreen> {
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 8),
-                    Expander(
-                      header: Text('検索条件 : ${widget.orderProvider.searchText}'),
-                      content: Column(
-                        children: [
-                          GridView(
-                            shrinkWrap: true,
-                            gridDelegate: kSearchGrid,
-                            children: [
-                              InfoLabel(
-                                label: '注文日',
-                                child: CustomDateRangeBox(
-                                  startValue: widget.orderProvider.searchStart,
-                                  endValue: widget.orderProvider.searchEnd,
-                                  onTap: _changeSearchRange,
-                                ),
+                    Column(
+                      children: [
+                        GridView(
+                          shrinkWrap: true,
+                          gridDelegate: kSearchGrid,
+                          children: [
+                            InfoLabel(
+                              label: '注文日',
+                              child: CustomDateRangeBox(
+                                startValue: widget.orderProvider.searchStart,
+                                endValue: widget.orderProvider.searchEnd,
+                                onTap: _changeSearchRange,
                               ),
-                              InfoLabel(
-                                label: '発注元店舗',
-                                child: ComboBox<String>(
-                                  value: widget.orderProvider.searchShopNumber,
-                                  items: shops.map((shop) {
-                                    return ComboBoxItem(
-                                      value: shop.number,
-                                      child: Text(shop.name),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      widget.orderProvider.searchShopNumber =
-                                          value;
-                                    });
-                                  },
-                                  isExpanded: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomIconTextButton(
-                                iconData: FluentIcons.clear,
-                                iconColor: kLightBlueColor,
-                                labelText: '検索リセット',
-                                labelColor: kLightBlueColor,
-                                backgroundColor: kWhiteColor,
-                                onPressed: () {
-                                  widget.orderProvider.searchClear();
-                                  _getOrders();
+                            ),
+                            InfoLabel(
+                              label: '発注元店舗',
+                              child: ComboBox<String>(
+                                value: widget.orderProvider.searchShop,
+                                items: shops.map((shop) {
+                                  return ComboBoxItem(
+                                    value: shop.number,
+                                    child: Text(shop.name),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  widget.orderProvider.searchShopChange(value);
                                 },
+                                isExpanded: true,
                               ),
-                              const SizedBox(width: 8),
-                              CustomIconTextButton(
-                                iconData: FluentIcons.search,
-                                iconColor: kWhiteColor,
-                                labelText: '検索する',
-                                labelColor: kWhiteColor,
-                                backgroundColor: kLightBlueColor,
-                                onPressed: () => _getOrders(),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomIconTextButton(
+                              iconData: FluentIcons.clear,
+                              iconColor: kLightBlueColor,
+                              labelText: '検索リセット',
+                              labelColor: kLightBlueColor,
+                              backgroundColor: kWhiteColor,
+                              onPressed: () {
+                                widget.orderProvider.searchClear();
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -268,20 +244,6 @@ class _OrderScreenState extends State<OrderScreen> {
                               throw Exception('Could not launch $url');
                             }
                           },
-                        ),
-                        const SizedBox(width: 8),
-                        CustomIconTextButton(
-                          iconData: FluentIcons.numbered_list,
-                          iconColor: kWhiteColor,
-                          labelText: '注文商品集計表示',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kGreyColor,
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => OrderProductTotalDialog(
-                              orders: orders,
-                            ),
-                          ),
                         ),
                         const SizedBox(width: 8),
                         CustomIconTextButton(
@@ -340,33 +302,49 @@ class _OrderScreenState extends State<OrderScreen> {
                     const SizedBox(height: 8),
                     SizedBox(
                       height: 600,
-                      child: CustomDataGrid(
-                        source: OrderSource(
-                          context: context,
-                          orders: orders,
+                      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: orderService.streamList(
+                          searchStart: widget.orderProvider.searchStart,
+                          searchEnd: widget.orderProvider.searchEnd,
+                          searchShop: widget.orderProvider.searchShop,
                         ),
-                        columns: [
-                          GridColumn(
-                            columnName: 'createdAt',
-                            label: const CustomCell(label: '注文日時'),
-                          ),
-                          GridColumn(
-                            columnName: 'number',
-                            label: const CustomCell(label: '注文番号'),
-                          ),
-                          GridColumn(
-                            columnName: 'shopName',
-                            label: const CustomCell(label: '発注元店舗'),
-                          ),
-                          GridColumn(
-                            columnName: 'carts',
-                            label: const CustomCell(label: '注文商品'),
-                          ),
-                          GridColumn(
-                            columnName: 'details',
-                            label: const CustomCell(label: '詳細'),
-                          ),
-                        ],
+                        builder: (context, snapshot) {
+                          List<OrderModel> orders = [];
+                          if (snapshot.hasData) {
+                            for (DocumentSnapshot<Map<String, dynamic>> doc
+                                in snapshot.data!.docs) {
+                              orders.add(OrderModel.fromSnapshot(doc));
+                            }
+                          }
+                          return CustomDataGrid(
+                            source: OrderSource(
+                              context: context,
+                              orders: orders,
+                            ),
+                            columns: [
+                              GridColumn(
+                                columnName: 'createdAt',
+                                label: const CustomCell(label: '注文日時'),
+                              ),
+                              GridColumn(
+                                columnName: 'number',
+                                label: const CustomCell(label: '注文番号'),
+                              ),
+                              GridColumn(
+                                columnName: 'shopName',
+                                label: const CustomCell(label: '発注元店舗'),
+                              ),
+                              GridColumn(
+                                columnName: 'carts',
+                                label: const CustomCell(label: '注文商品'),
+                              ),
+                              GridColumn(
+                                columnName: 'details',
+                                label: const CustomCell(label: '詳細'),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -374,81 +352,6 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class OrderProductTotalDialog extends StatefulWidget {
-  final List<OrderModel> orders;
-
-  const OrderProductTotalDialog({
-    required this.orders,
-    super.key,
-  });
-
-  @override
-  State<OrderProductTotalDialog> createState() =>
-      _OrderProductTotalDialogState();
-}
-
-class _OrderProductTotalDialogState extends State<OrderProductTotalDialog> {
-  ProductService productService = ProductService();
-  List<ProductModel> products = [];
-
-  void _init() async {
-    List<ProductModel> tmpProducts = await productService.selectList();
-    setState(() {
-      products = tmpProducts;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Map<String, int> totalMap = {};
-    for (OrderModel order in widget.orders) {
-      for (CartModel cart in order.carts) {
-        totalMap[cart.number] = cart.deliveryQuantity;
-      }
-    }
-    return ContentDialog(
-      title: const Text(
-        '注文商品集計',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('注文データを、商品データ毎に集計しています。'),
-          const SizedBox(height: 8),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                ProductModel product = products[index];
-                return OrderProductTotalList(
-                  product: product,
-                  total: totalMap[product.number],
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        CustomButton(
-          labelText: '閉じる',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
         ),
       ],
     );

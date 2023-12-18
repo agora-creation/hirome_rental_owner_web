@@ -24,11 +24,21 @@ class OrderProvider with ChangeNotifier {
     DateTime.now().month + 1,
     1,
   ).add(const Duration(days: -1));
-  String? searchShopNumber;
-  String searchText = 'なし';
+
+  String? searchShop;
+
+  void searchDateChange(DateTime start, DateTime end) {
+    searchStart = start;
+    searchEnd = end;
+    notifyListeners();
+  }
+
+  void searchShopChange(String? value) {
+    searchShop = value;
+    notifyListeners();
+  }
 
   void searchClear() {
-    searchText = 'なし';
     searchStart = DateTime(
       DateTime.now().year,
       DateTime.now().month,
@@ -39,20 +49,8 @@ class OrderProvider with ChangeNotifier {
       DateTime.now().month + 1,
       1,
     ).add(const Duration(days: -1));
-    searchShopNumber = null;
-  }
-
-  Future<List<OrderModel>> selectList() async {
-    searchText =
-        '[注文日]${dateText('yyyy/MM/dd', searchStart)} ～ ${dateText('yyyy/MM/dd', searchEnd)} ';
-    if (searchShopNumber != null) {
-      searchText += '[発注元店舗]$searchShopNumber ';
-    }
-    return await orderService.selectList(
-      shopNumber: searchShopNumber,
-      searchStart: searchStart,
-      searchEnd: searchEnd,
-    );
+    searchShop = null;
+    notifyListeners();
   }
 
   Future pdfDownload(DateTime month, String shopNumber) async {
