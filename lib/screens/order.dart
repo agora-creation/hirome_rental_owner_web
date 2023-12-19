@@ -176,53 +176,48 @@ class _OrderScreenState extends State<OrderScreen> {
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 8),
-                    Column(
+                    Row(
                       children: [
-                        GridView(
-                          shrinkWrap: true,
-                          gridDelegate: kSearchGrid,
-                          children: [
-                            InfoLabel(
-                              label: '注文日',
-                              child: CustomDateRangeBox(
-                                startValue: widget.orderProvider.searchStart,
-                                endValue: widget.orderProvider.searchEnd,
-                                onTap: _changeSearchRange,
-                              ),
-                            ),
-                            InfoLabel(
-                              label: '発注元店舗',
-                              child: ComboBox<String>(
-                                value: widget.orderProvider.searchShop,
-                                items: shops.map((shop) {
-                                  return ComboBoxItem(
-                                    value: shop.number,
-                                    child: Text(shop.name),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  widget.orderProvider.searchShopChange(value);
-                                },
-                                isExpanded: true,
-                              ),
-                            ),
-                          ],
+                        InfoLabel(
+                          label: '注文日',
+                          child: CustomDateRangeBox(
+                            startValue: widget.orderProvider.searchStart,
+                            endValue: widget.orderProvider.searchEnd,
+                            onTap: _changeSearchRange,
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomIconTextButton(
-                              iconData: FluentIcons.clear,
-                              iconColor: kLightBlueColor,
-                              labelText: '検索リセット',
-                              labelColor: kLightBlueColor,
-                              backgroundColor: kWhiteColor,
-                              onPressed: () {
-                                widget.orderProvider.searchClear();
-                              },
-                            ),
-                          ],
+                        const SizedBox(width: 8),
+                        InfoLabel(
+                          label: '発注元店舗',
+                          child: ComboBox<String>(
+                            value: widget.orderProvider.searchShop,
+                            items: shops.map((shop) {
+                              return ComboBoxItem(
+                                value: shop.number,
+                                child: Text(shop.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              widget.orderProvider.searchShopChange(value);
+                            },
+                            isExpanded: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomIconTextButton(
+                          iconData: FluentIcons.clear,
+                          iconColor: kLightBlueColor,
+                          labelText: '検索リセット',
+                          labelColor: kLightBlueColor,
+                          backgroundColor: kWhiteColor,
+                          onPressed: () {
+                            widget.orderProvider.searchClear();
+                          },
                         ),
                       ],
                     ),
