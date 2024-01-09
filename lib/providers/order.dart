@@ -467,7 +467,8 @@ class OrderProvider with ChangeNotifier {
       'no': voucherNo,
     });
     String csv = const ListToCsvConverter().convert(
-      [header, ...rows],
+      // [header, ...rows],
+      [...rows],
     );
     String bom = '\uFEFF';
     String csvText = bom + csv;
