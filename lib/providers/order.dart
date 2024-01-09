@@ -393,13 +393,14 @@ class OrderProvider with ChangeNotifier {
       searchEnd: monthEnd,
     );
     List<List<String>> rows = [];
+    int startNumber = 984179;
     for (OrderModel order in orders) {
+      String number = startNumber.toString();
       for (CartModel cart in order.carts) {
         List<String> row = [];
         row.add('0');
         row.add(dateText('yyyyMMdd', order.createdAt));
         row.add(dateText('yyyyMMdd', order.createdAt));
-        String number = order.number.replaceAll('-', '');
         row.add(number);
         row.add(order.shopNumber);
         row.add(order.shopName);
@@ -456,6 +457,7 @@ class OrderProvider with ChangeNotifier {
         row.add('');
         rows.add(row);
       }
+      startNumber++;
     }
     String csv = const ListToCsvConverter().convert(
       [header, ...rows],
