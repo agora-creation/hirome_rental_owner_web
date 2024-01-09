@@ -7,7 +7,9 @@ import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/cart.dart';
 import 'package:hirome_rental_owner_web/models/order.dart';
+import 'package:hirome_rental_owner_web/models/voucher.dart';
 import 'package:hirome_rental_owner_web/services/order.dart';
+import 'package:hirome_rental_owner_web/services/voucher.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -393,15 +395,16 @@ class OrderProvider with ChangeNotifier {
       searchEnd: monthEnd,
     );
     List<List<String>> rows = [];
-    int startNumber = 984179;
+    VoucherService voucherService = VoucherService();
+    VoucherModel? voucher = await voucherService.select();
+    int voucherNo = voucher?.no ?? 0;
     for (OrderModel order in orders) {
-      String number = startNumber.toString();
       for (CartModel cart in order.carts) {
         List<String> row = [];
         row.add('0');
         row.add(dateText('yyyyMMdd', order.createdAt));
         row.add(dateText('yyyyMMdd', order.createdAt));
-        row.add(number);
+        row.add(voucherNo.toString());
         row.add(order.shopNumber);
         row.add(order.shopName);
         row.add('');
@@ -457,8 +460,12 @@ class OrderProvider with ChangeNotifier {
         row.add('');
         rows.add(row);
       }
-      startNumber++;
+      voucherNo++;
     }
+    voucherService.update({
+      'id': '1',
+      'no': voucherNo,
+    });
     String csv = const ListToCsvConverter().convert(
       [header, ...rows],
     );
