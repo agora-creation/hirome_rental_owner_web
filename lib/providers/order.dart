@@ -399,7 +399,8 @@ class OrderProvider with ChangeNotifier {
         row.add('0');
         row.add(dateText('yyyyMMdd', order.createdAt));
         row.add(dateText('yyyyMMdd', order.createdAt));
-        row.add(order.number);
+        String number = order.number.replaceAll('-', '');
+        row.add(number);
         row.add(order.shopNumber);
         row.add(order.shopName);
         row.add('');
@@ -410,7 +411,7 @@ class OrderProvider with ChangeNotifier {
         row.add('');
         row.add('');
         row.add('');
-        row.add(cart.number);
+        row.add(cart.invoiceNumber);
         row.add('0');
         row.add(cart.name);
         row.add('0');
