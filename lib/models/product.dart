@@ -8,6 +8,7 @@ class ProductModel {
   String _invoiceNumber = '';
   int _price = 0;
   String _unit = '';
+  int _singleQuantity = 0;
   String _image = '';
   int _category = 0;
   int _priority = 0;
@@ -19,6 +20,7 @@ class ProductModel {
   String get invoiceNumber => _invoiceNumber;
   int get price => _price;
   String get unit => _unit;
+  int get singleQuantity => _singleQuantity;
   String get image => _image;
   int get category => _category;
   int get priority => _priority;
@@ -32,6 +34,7 @@ class ProductModel {
     _invoiceNumber = map['invoiceNumber'] ?? '';
     _price = map['price'] ?? 0;
     _unit = map['unit'] ?? '';
+    _singleQuantity = map['singleQuantity'] ?? 0;
     _image = map['image'] ?? '';
     _category = map['category'] ?? 0;
     _priority = map['priority'] ?? 0;

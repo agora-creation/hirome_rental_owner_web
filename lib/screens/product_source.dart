@@ -54,6 +54,10 @@ class ProductSource extends DataGridSource {
           value: product.unit,
         ),
         DataGridCell(
+          columnName: 'singleQuantity',
+          value: product.singleQuantity,
+        ),
+        DataGridCell(
           columnName: 'image',
           value: product.image,
         ),
@@ -88,9 +92,10 @@ class ProductSource extends DataGridSource {
     cells.add(CustomCell(label: '${row.getCells()[2].value}'));
     cells.add(CustomCell(label: '${row.getCells()[3].value}'));
     cells.add(CustomCell(label: '${row.getCells()[4].value}'));
-    cells.add(CustomImageCell(image: '${row.getCells()[5].value}'));
-    cells.add(CustomCell(label: '${row.getCells()[6].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[5].value}'));
+    cells.add(CustomImageCell(image: '${row.getCells()[6].value}'));
     cells.add(CustomCell(label: '${row.getCells()[7].value}'));
+    cells.add(CustomCell(label: '${row.getCells()[8].value}'));
     cells.add(Row(
       children: [
         CustomButton(

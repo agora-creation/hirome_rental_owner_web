@@ -233,6 +233,10 @@ class _ProductScreenState extends State<ProductScreen> {
                             label: const CustomCell(label: '単位'),
                           ),
                           GridColumn(
+                            columnName: 'singleQuantity',
+                            label: const CustomCell(label: '単数'),
+                          ),
+                          GridColumn(
                             columnName: 'image',
                             label: const CustomCell(label: '画像'),
                           ),
