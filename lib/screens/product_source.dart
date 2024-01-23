@@ -246,6 +246,16 @@ class _ModProductDialogState extends State<ModProductDialog> {
             ),
             const SizedBox(height: 8),
             InfoLabel(
+              label: '単数',
+              child: CustomTextBox(
+                controller: widget.productProvider.singleQuantity,
+                placeholder: '例) 1',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
               label: '画像',
               child: CustomInputImage(
                 url: widget.product.image,

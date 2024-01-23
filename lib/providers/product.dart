@@ -13,6 +13,7 @@ class ProductProvider with ChangeNotifier {
   TextEditingController invoiceNumber = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController unit = TextEditingController();
+  TextEditingController singleQuantity = TextEditingController();
   int category = 0;
   TextEditingController priority = TextEditingController();
   String? searchNumber;
@@ -26,6 +27,7 @@ class ProductProvider with ChangeNotifier {
     invoiceNumber.text = product.invoiceNumber;
     price.text = product.price.toString();
     unit.text = product.unit;
+    singleQuantity.text = product.singleQuantity.toString();
     category = product.category;
     priority.text = product.priority.toString();
   }
@@ -36,6 +38,7 @@ class ProductProvider with ChangeNotifier {
     invoiceNumber.clear();
     price.clear();
     unit.clear();
+    singleQuantity.clear();
     category = 0;
     priority.clear();
   }
@@ -103,6 +106,7 @@ class ProductProvider with ChangeNotifier {
         'invoiceNumber': invoiceNumber.text,
         'price': int.parse(price.text),
         'unit': unit.text,
+        'singleQuantity': int.parse(singleQuantity.text),
         'image': image,
         'category': category,
         'priority': int.parse(priority.text),
@@ -139,6 +143,7 @@ class ProductProvider with ChangeNotifier {
         'invoiceNumber': invoiceNumber.text,
         'price': int.parse(price.text),
         'unit': unit.text,
+        'singleQuantity': int.parse(singleQuantity.text),
         'image': image,
         'category': category,
         'priority': int.parse(priority.text),
