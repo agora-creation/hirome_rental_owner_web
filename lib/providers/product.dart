@@ -38,7 +38,7 @@ class ProductProvider with ChangeNotifier {
     invoiceNumber.clear();
     price.clear();
     unit.clear();
-    singleQuantity.clear();
+    singleQuantity.text = '1';
     category = 0;
     priority.clear();
   }
