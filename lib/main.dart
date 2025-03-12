@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
-import 'package:hirome_rental_owner_web/providers/auth.dart';
+import 'package:hirome_rental_owner_web/providers/login.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: AuthProvider.initialize()),
+        ChangeNotifierProvider.value(value: LoginProvider.initialize()),
         ChangeNotifierProvider.value(value: OrderProvider()),
         ChangeNotifierProvider.value(value: ProductProvider()),
         ChangeNotifierProvider.value(value: ShopProvider()),
@@ -74,8 +74,8 @@ class SplashController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    switch (authProvider.status) {
+    final loginProvider = Provider.of<LoginProvider>(context);
+    switch (loginProvider.status) {
       case AuthStatus.uninitialized:
         return const SplashScreen();
       case AuthStatus.unauthenticated:
@@ -83,8 +83,6 @@ class SplashController extends StatelessWidget {
         return const LoginScreen();
       case AuthStatus.authenticated:
         return const HomeScreen();
-      default:
-        return const LoginScreen();
     }
   }
 }

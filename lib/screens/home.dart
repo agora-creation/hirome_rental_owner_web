@@ -3,7 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
 import 'package:hirome_rental_owner_web/models/shop_login.dart';
-import 'package:hirome_rental_owner_web/providers/auth.dart';
+import 'package:hirome_rental_owner_web/providers/login.dart';
 import 'package:hirome_rental_owner_web/providers/order.dart';
 import 'package:hirome_rental_owner_web/providers/product.dart';
 import 'package:hirome_rental_owner_web/providers/shop.dart';
@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final loginProvider = Provider.of<LoginProvider>(context);
     final orderProvider = Provider.of<OrderProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
     final shopProvider = Provider.of<ShopProvider>(context);
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) => SignOutDialog(
-                  authProvider: authProvider,
+                  loginProvider: loginProvider,
                 ),
               ),
             ),
@@ -117,10 +117,10 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class SignOutDialog extends StatefulWidget {
-  final AuthProvider authProvider;
+  final LoginProvider loginProvider;
 
   const SignOutDialog({
-    required this.authProvider,
+    required this.loginProvider,
     super.key,
   });
 
@@ -156,7 +156,7 @@ class _SignOutDialogState extends State<SignOutDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
-            await widget.authProvider.signOut();
+            await widget.loginProvider.signOut();
             if (!mounted) return;
             showMessage(context, 'ログアウトしました', true);
             Navigator.pushReplacement(

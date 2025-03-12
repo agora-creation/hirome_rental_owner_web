@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hirome_rental_owner_web/common/functions.dart';
 import 'package:hirome_rental_owner_web/common/style.dart';
-import 'package:hirome_rental_owner_web/providers/auth.dart';
+import 'package:hirome_rental_owner_web/providers/login.dart';
 import 'package:hirome_rental_owner_web/screens/home.dart';
 import 'package:hirome_rental_owner_web/widgets/animation_background.dart';
 import 'package:hirome_rental_owner_web/widgets/custom_big_button.dart';
@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final loginProvider = Provider.of<LoginProvider>(context);
 
     return ScaffoldPage(
       content: Stack(
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           InfoLabel(
                             label: 'ログインID',
                             child: CustomTextBox(
-                              controller: authProvider.loginId,
+                              controller: loginProvider.loginId,
                               placeholder: '',
                               keyboardType: TextInputType.text,
                               maxLines: 1,
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           InfoLabel(
                             label: 'パスワード',
                             child: CustomTextBox(
-                              controller: authProvider.password,
+                              controller: loginProvider.password,
                               placeholder: '',
                               keyboardType: TextInputType.visiblePassword,
                               maxLines: 1,
@@ -64,13 +64,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             labelColor: kWhiteColor,
                             backgroundColor: kBlueColor,
                             onPressed: () async {
-                              String? error = await authProvider.signIn();
+                              String? error = await loginProvider.signIn();
                               if (error != null) {
                                 if (!mounted) return;
                                 showMessage(context, error, false);
                                 return;
                               }
-                              authProvider.clearController();
+                              loginProvider.clearController();
                               if (!mounted) return;
                               Navigator.pushReplacement(
                                 context,

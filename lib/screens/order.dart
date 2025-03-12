@@ -233,22 +233,6 @@ class _OrderScreenState extends State<OrderScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        // CustomIconTextButton(
-                        //   iconData: FluentIcons.search_data,
-                        //   iconColor: kWhiteColor,
-                        //   labelText: 'バックアップシステムへ',
-                        //   labelColor: kWhiteColor,
-                        //   backgroundColor: kGreyColor,
-                        //   onPressed: () async {
-                        //     final url = Uri.parse(
-                        //       'https://hirome.co.jp/rental/system/',
-                        //     );
-                        //     if (!await launchUrl(url)) {
-                        //       throw Exception('Could not launch $url');
-                        //     }
-                        //   },
-                        // ),
-                        // const SizedBox(width: 8),
                         CustomIconTextButton(
                           iconData: FluentIcons.download,
                           iconColor: kWhiteColor,
